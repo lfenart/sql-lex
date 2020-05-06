@@ -32,16 +32,17 @@ parser code {:
 :}
 
 terminal TERM, SEP;
-terminal SELECT, FROM, WHERE, CREATE_TABLE, DELETE, UPDATE, TABLE, SET, PRIMARY_KEY, INSERT_INTO, VALUES;
+terminal SELECT, FROM, WHERE, CREATE, TABLE, DELETE, UPDATE, SET, PRIMARY, KEY, INSERT, INTO, VALUES;
 terminal Integer NUMBER;
 terminal String ID;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE, EQUAL;
-terminal NOT_NULL;
+terminal NOT, NULL;
 terminal INT, VARCHAR;
 terminal WILDCARD;
-terminal ORDER_BY, GROUP_BY;
+terminal ORDER, GROUP, BY;
+terminal DROP;
 
-nonterminal Node    Commandes, Instruction, Instructions;
+nonterminal Node  Commandes, Instruction, Instructions;
 nonterminal Node 	Expression;
 nonterminal Node	Columns, Column;
 nonterminal Node	Table;
@@ -50,9 +51,9 @@ nonterminal Node	GroupByOpt, GroupBy;
 nonterminal Node	OrderByOpt, OrderBy;
 nonterminal Node	Condition;
 nonterminal Node	Set;
-nonterminal Node	Datas, Data, Type, Null, PrimaryKey;
+nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Val;
-
+nonterminal Node	PrimaryKeyOpt;
  
 Commandes	::= Instructions 
          	;
@@ -61,12 +62,13 @@ Instructions	::=
             	|	Instructions:l Instruction:i TERM
             	;
 
-Instruction ::=	CREATE_TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKey CLOSE_PARENTHESIS
+Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt CLOSE_PARENTHESIS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
-			|	INSERT_INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
-			| 	SELECT Columns:cols FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w 
+			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
+			| SELECT Columns:cols FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w 
 			|	SELECT WILDCARD FROM Table:t WhereOpt:w
+			|	DROP TABLE Table:t
 			;
 			
 Columns	::= Column:n
@@ -94,17 +96,17 @@ GroupByOpt	::=
 			| GroupBy:g
 			;
 
-GroupBy ::= GROUP_BY Column:c
+GroupBy ::= GROUP BY Column:c
 		;
 		
 OrderByOpt	::=
 			| OrderBy:o
 			;
 
-OrderBy ::= ORDER_BY Column:c
+OrderBy ::= ORDER BY Column:c
 		;
 		
-Condition	::=	
+Condition	::=	Column:c EQUAL ID:i
          	;
          	
 Set		::= SET Column:c EQUAL QUOTE Val:v QUOTE
@@ -114,15 +116,19 @@ Datas	::= Data:d
      	|	Datas:ds SEP Data:d
      	;
 		
-Data	::=	Column:c Type:t Null:e
+Data	::=	Column:c Type:t NullOpt:e
     	;
     	
 Type 	::= INT
 		| VARCHAR OPEN_PARENTHESIS NUMBER CLOSE_PARENTHESIS
 		;
 		
-Null	::=
-		| NOT_NULL
+NullOpt	::= 
+		|	NotOpt:n NULL
+		;
+		
+NotOpt	::=	
+		|	NOT
 		;
 		
 Values 	::=	VALUES OPEN_PARENTHESIS Value:vs CLOSE_PARENTHESIS
@@ -135,3 +141,7 @@ Value	::=	QUOTE Val QUOTE
 Val		::= NUMBER
 		| ID
 		;
+
+PrimaryKeyOpt	::= 
+				| SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
+				;

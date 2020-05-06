@@ -13,24 +13,29 @@
 [ \t\n\r]		{ }
 ^#.*			{ }
 
-"select" | "SELECT"		{ return getSymbolFactory().newSymbol("SELECT", Sym.SELECT); }
-"from" | "FROM"			{ return getSymbolFactory().newSymbol("FROM", Sym.FROM); }
-"where"	| "WHERE"		{ return getSymbolFactory().newSymbol("WHERE", Sym.WHERE); }
-"create table" | "CREATE TABLE"	{ return getSymbolFactory().newSymbol("CREATE_TABLE", Sym.CREATE_TABLE); }
-"primary key" | "PRIMARY KEY"		{ return getSymbolFactory().newSymbol("PRIMARY_KEY", Sym.PRIMARY_KEY); }
-"delete" | "DELETE"			{ return getSymbolFactory().newSymbol("DELETE", Sym.DELETE); }
-"update" | "UPDATE"			{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
-"insert into" | "INSERT INTO"		{ return getSymbolFactory().newSymbol("INSERT_INTO", Sym.INSERT_INTO); }
-"*" 					{ return getSymbolFactory().newSymbol("WILDCARD", Sym.WILDCARD); }
-"int" | "INT"				{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
-"varchar" | "VARCHAR"			{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
-"not null" | "NOT NULL"			{ return getSymbolFactory().newSymbol("NOT_NULL", Sym.NOT_NULL); }
-"set" | "SET"				{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
-"values" | "VALUES"			{ return getSymbolFactory().newSymbol("VALUES", Sym.VALUES); }
-"group by" | "GROUP BY"			{ return getSymbolFactory().newSymbol("GROUP_BY", Sym.GROUP_BY); }
-"order by" | "ORDER BY"			{ return getSymbolFactory().newSymbol("ORDER_BY", Sym.ORDER_BY); }
+"select"|"SELECT"		{ return getSymbolFactory().newSymbol("SELECT", Sym.SELECT); }
+"from"|"FROM"			{ return getSymbolFactory().newSymbol("FROM", Sym.FROM); }
+"where"|"WHERE"			{ return getSymbolFactory().newSymbol("WHERE", Sym.WHERE); }
+"create"|"CREATE"		{ return getSymbolFactory().newSymbol("CREATE", Sym.CREATE); }
+"table"|"TABLE"			{ return getSymbolFactory().newSymbol("TABLE", Sym.TABLE); }
+"primary"|"PRIMARY"		{ return getSymbolFactory().newSymbol("PRIMARY", Sym.PRIMARY); }
+"key"|"KEY"			{ return getSymbolFactory().newSymbol("KEY", Sym.KEY); }
+"delete"|"DELETE"		{ return getSymbolFactory().newSymbol("DELETE", Sym.DELETE); }
+"update"|"UPDATE"		{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
+"insert"|"INSERT"		{ return getSymbolFactory().newSymbol("INSERT", Sym.INSERT); }
+"into"|"INTO"			{ return getSymbolFactory().newSymbol("INTO", Sym.INTO); }
+"int"|"INT			{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
+"varchar"|"VARCHAR"		{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
+"not"|"NOT"			{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
+"null"|"NULL"			{ return getSymbolFactory().newSymbol("NULL", Sym.NULL); }
+"set"|"SET"			{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
+"values"|"VALUES"		{ return getSymbolFactory().newSymbol("VALUES", Sym.VALUES); }
+"drop"|"DROP"			{ return getSymbolFactory().newSymbol("DROP", Sym.DROP); }
+"group"|"GROUP"			{ return getSymbolFactory().newSymbol("GROUP", Sym.GROUP); }
+"order"|"ORDER"			{ return getSymbolFactory().newSymbol("ORDER", Sym.ORDER); }
+"by"|"BY"           { return getSymbolFactory().newSymbol("BY", Sym.BY); }
 
-
+"*"				{ return getSymbolFactory().newSymbol("WILDCARD", Sym.WILDCARD); }
 "'"				{ return getSymbolFactory().newSymbol("QUOTE", Sym.QUOTE); }
 ","				{ return getSymbolFactory().newSymbol("SEP", Sym.SEP); }
 ";"				{ return getSymbolFactory().newSymbol("TERM", Sym.TERM); }
