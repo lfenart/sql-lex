@@ -39,15 +39,18 @@ terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE, EQUAL;
 terminal NOT_NULL;
 terminal INT, VARCHAR;
 terminal WILDCARD;
+terminal ORDER_BY, GROUP_BY;
 
 nonterminal Node    Commandes, Instruction, Instructions;
 nonterminal Node 	Expression;
 nonterminal Node	Columns, Column;
 nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
+nonterminal Node	GroupByOpt, GroupBy;
+nonterminal Node	OrderByOpt, OrderBy;
 nonterminal Node	Condition;
 nonterminal Node	Set;
-nonterminal Node	Datas, Data, Type, Null;
+nonterminal Node	Datas, Data, Type, Null, PrimaryKey;
 nonterminal Node	Values, Value, Val;
 
  
@@ -58,11 +61,11 @@ Instructions	::=
             	|	Instructions:l Instruction:i TERM
             	;
 
-Instruction ::=	CREATE_TABLE Table:t OPEN_PARENTHESIS Datas:d SEP PRIMARY_KEY Column:n CLOSE_PARENTHESIS
+Instruction ::=	CREATE_TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKey CLOSE_PARENTHESIS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
 			|	INSERT_INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
-			| 	SELECT Columns:cols FROM Table:t WhereOpt:w
+			| 	SELECT Columns:cols FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w 
 			|	SELECT WILDCARD FROM Table:t WhereOpt:w
 			;
 			
@@ -75,6 +78,10 @@ Column	::=	ID
 		
 Table	::=	ID
      	;
+     	
+PrimaryKey ::= 
+			| SEP PRIMARY_KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
+			;
 		
 WhereOpt	::=	
         	|	Where:w
@@ -82,6 +89,20 @@ WhereOpt	::=
 
 Where	::=	WHERE Condition:c
      	;
+     	
+GroupByOpt	::=
+			| GroupBy:g
+			;
+
+GroupBy ::= GROUP_BY Column:c
+		;
+		
+OrderByOpt	::=
+			| OrderBy:o
+			;
+
+OrderBy ::= ORDER_BY Column:c
+		;
 		
 Condition	::=	
          	;

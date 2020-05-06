@@ -1,2 +1,2 @@
-CREATE TABLE films (idFilm INT not null AUTO_INCREMENT, Titre VARCHAR (255) not null ,
- Réalisateur VARCHAR (255) not null , PRIMARY KEY (idFilm))
+create table films (idFilm int not null, Titre varchar (255) not null ,
+ Réalisateur varchar (255) not null , primary key (idFilm)).
