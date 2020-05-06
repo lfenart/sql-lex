@@ -32,16 +32,17 @@ parser code {:
 :}
 
 terminal TERM, SEP;
-terminal SELECT, FROM, WHERE, CREATE_TABLE, DELETE, UPDATE, TABLE, PRIMARY_KEY, INSERT_INTO, VALUES;
+terminal SELECT, FROM, WHERE, CREATE_TABLE, DELETE, UPDATE, TABLE, SET, PRIMARY_KEY, INSERT_INTO, VALUES;
 terminal Integer NUMBER;
 terminal String ID;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE, EQUAL;
 terminal NOT_NULL;
 terminal INT, VARCHAR;
+terminal WILDCARD;
 
 nonterminal Node    Commandes, Instruction, Instructions;
 nonterminal Node 	Expression;
-nonterminal Node	Names, Name;
+nonterminal Node	Columns, Column;
 nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	Condition;
@@ -57,17 +58,19 @@ Instructions	::=
             	|	Instructions:l Instruction:i TERM
             	;
 
-Instruction ::=	CREATE_TABLE Table:t OPEN_PARENTHESIS Datas:d SEP PRIMARY_KEY Name:n CLOSE_PARENTHESIS
+Instruction ::=	CREATE_TABLE Table:t OPEN_PARENTHESIS Datas:d SEP PRIMARY_KEY Column:n CLOSE_PARENTHESIS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
-			|	INSERT_INTO Table:t OPEN_PARENTHESIS Names:ns CLOSE_PARENTHESIS Values
+			|	INSERT_INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
+			| 	SELECT Columns:cols FROM Table:t WhereOpt:w
+			|	SELECT WILDCARD FROM Table:t WhereOpt:w
 			;
 			
-Names	::= Name:n
-     	|	Names:ns SEP Name:n
+Columns	::= Column:n
+     	|	Columns:ns SEP Column:n
      	;
 		
-Name	::=	ID
+Column	::=	ID
     	;
 		
 Table	::=	ID
@@ -83,14 +86,14 @@ Where	::=	WHERE Condition:c
 Condition	::=	
          	;
          	
-Set		::= Name:n EQUAL QUOTE Val:v QUOTE
+Set		::= SET Column:c EQUAL QUOTE Val:v QUOTE
 		;
 		
 Datas	::= Data:d
      	|	Datas:ds SEP Data:d
      	;
 		
-Data	::=	Name:n Type:t Null:e
+Data	::=	Column:c Type:t Null:e
     	;
     	
 Type 	::= INT
