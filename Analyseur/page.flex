@@ -24,7 +24,7 @@
 "update"|"UPDATE"		{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
 "insert"|"INSERT"		{ return getSymbolFactory().newSymbol("INSERT", Sym.INSERT); }
 "into"|"INTO"			{ return getSymbolFactory().newSymbol("INTO", Sym.INTO); }
-"int"|"INT			{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
+"int"|"INT"				{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
 "varchar"|"VARCHAR"		{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
 "not"|"NOT"			{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
 "null"|"NULL"			{ return getSymbolFactory().newSymbol("NULL", Sym.NULL); }
