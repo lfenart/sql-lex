@@ -82,7 +82,7 @@ Table	::=	ID
      	;
      	
 PrimaryKey ::= 
-			| SEP PRIMARY_KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
+			| SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
 			;
 		
 WhereOpt	::=	

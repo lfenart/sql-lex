@@ -19,21 +19,21 @@
 "create"|"CREATE"		{ return getSymbolFactory().newSymbol("CREATE", Sym.CREATE); }
 "table"|"TABLE"			{ return getSymbolFactory().newSymbol("TABLE", Sym.TABLE); }
 "primary"|"PRIMARY"		{ return getSymbolFactory().newSymbol("PRIMARY", Sym.PRIMARY); }
-"key"|"KEY"			{ return getSymbolFactory().newSymbol("KEY", Sym.KEY); }
+"key"|"KEY"				{ return getSymbolFactory().newSymbol("KEY", Sym.KEY); }
 "delete"|"DELETE"		{ return getSymbolFactory().newSymbol("DELETE", Sym.DELETE); }
 "update"|"UPDATE"		{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
 "insert"|"INSERT"		{ return getSymbolFactory().newSymbol("INSERT", Sym.INSERT); }
 "into"|"INTO"			{ return getSymbolFactory().newSymbol("INTO", Sym.INTO); }
-"int"|"INT			{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
+"int"|"INT"				{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
 "varchar"|"VARCHAR"		{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
-"not"|"NOT"			{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
+"not"|"NOT"				{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
 "null"|"NULL"			{ return getSymbolFactory().newSymbol("NULL", Sym.NULL); }
-"set"|"SET"			{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
+"set"|"SET"				{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
 "values"|"VALUES"		{ return getSymbolFactory().newSymbol("VALUES", Sym.VALUES); }
 "drop"|"DROP"			{ return getSymbolFactory().newSymbol("DROP", Sym.DROP); }
 "group"|"GROUP"			{ return getSymbolFactory().newSymbol("GROUP", Sym.GROUP); }
 "order"|"ORDER"			{ return getSymbolFactory().newSymbol("ORDER", Sym.ORDER); }
-"by"|"BY"           { return getSymbolFactory().newSymbol("BY", Sym.BY); }
+"by"|"BY"				{ return getSymbolFactory().newSymbol("BY", Sym.BY); }
 
 "*"				{ return getSymbolFactory().newSymbol("WILDCARD", Sym.WILDCARD); }
 "'"				{ return getSymbolFactory().newSymbol("QUOTE", Sym.QUOTE); }
