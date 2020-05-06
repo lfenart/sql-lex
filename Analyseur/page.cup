@@ -1,0 +1,52 @@
+package compiler;
+
+import ui.Node;
+
+parser code {:
+    
+   public void report_error(String message, Object info) {
+        StringBuffer m = new StringBuffer("Error");
+		m.append (info.toString());
+        m.append(" : "+message);
+        System.err.println(m.toString());
+    }
+   
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+    
+	private SQLContext context;
+    public void setContext (SQLContext context) {
+    	this.context = context;
+    }
+
+    public SQLContext getContext () {
+		return context;
+    }
+
+	public SQLFactory getFactory () {
+		return getContext().getFactory();
+	}
+
+:}
+
+terminal TERM, SEP;
+
+terminal Integer NUMBER;
+terminal String ID;
+
+nonterminal Node     Commandes, Instruction, Instructions;
+
+nonterminal Node 	Expression;
+
+ 
+Commandes	::= Instructions 
+			;
+
+Instructions ::= 
+			|	Instructions:l Instruction:i TERM
+			;
+
+Instruction ::=																						 						{: RESULT = null; :}
+			;
