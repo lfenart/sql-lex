@@ -16,17 +16,22 @@
 "select"		{ return getSymbolFactory().newSymbol("SELECT", Sym.SELECT); }
 "from"			{ return getSymbolFactory().newSymbol("FROM", Sym.FROM); }
 "where"			{ return getSymbolFactory().newSymbol("WHERE", Sym.WHERE); }
-"create table"	{ return getSymbolFactory().newSymbol("CREATE_TABLE", Sym.CREATE_TABLE); }
-"primary_key"	{ return getSymbolFactory().newSymbol("PRIMARY_KEY", Sym.PRIMARY_KEY); }
+"create"		{ return getSymbolFactory().newSymbol("CREATE", Sym.CREATE); }
+"table"			{ return getSymbolFactory().newSymbol("TABLE", Sym.TABLE); }
+"primary"		{ return getSymbolFactory().newSymbol("PRIMARY", Sym.PRIMARY); }
+"key"			{ return getSymbolFactory().newSymbol("KEY", Sym.KEY); }
 "delete"		{ return getSymbolFactory().newSymbol("DELETE", Sym.DELETE); }
 "update"		{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
-"insert into"	{ return getSymbolFactory().newSymbol("INSERT_INTO", Sym.INSERT_INTO); }
+"insert"		{ return getSymbolFactory().newSymbol("INSERT", Sym.INSERT); }
+"into"			{ return getSymbolFactory().newSymbol("INTO", Sym.INTO); }
 "*"				{ return getSymbolFactory().newSymbol("WILDCARD", Sym.WILDCARD); }
 "int"			{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
 "varchar"		{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
-"not null"		{ return getSymbolFactory().newSymbol("NOT_NULL", Sym.NOT_NULL); }
+"not"			{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
+"null"			{ return getSymbolFactory().newSymbol("NULL", Sym.NULL); }
 "set"			{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
 "values"		{ return getSymbolFactory().newSymbol("VALUES", Sym.VALUES); }
+"drop"			{ return getSymbolFactory().newSymbol("DROP", Sym.DROP); }
 
 "'"				{ return getSymbolFactory().newSymbol("QUOTE", Sym.QUOTE); }
 ","				{ return getSymbolFactory().newSymbol("SEP", Sym.SEP); }
