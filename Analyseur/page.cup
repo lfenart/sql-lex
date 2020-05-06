@@ -32,21 +32,70 @@ parser code {:
 :}
 
 terminal TERM, SEP;
-
+terminal SELECT, FROM, WHERE, CREATE_TABLE, DELETE, UPDATE, TABLE, PRIMARY_KEY, INSERT_INTO, VALUES;
 terminal Integer NUMBER;
 terminal String ID;
+terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE;
+terminal INT, VARCHAR;
 
-nonterminal Node     Commandes, Instruction, Instructions;
-
+nonterminal Node    Commandes, Instruction, Instructions;
 nonterminal Node 	Expression;
+nonterminal Node	Names, Name;
+nonterminal Node	Table;
+nonterminal Node	WhereOpt, Where;
+nonterminal Node	Condition;
+nonterminal Node	Set;
+nonterminal Node	Datas, Data, Type;
+nonterminal Node	Values, Value;
 
  
 Commandes	::= Instructions 
-			;
+         	;
 
-Instructions ::= 
-			|	Instructions:l Instruction:i TERM
-			;
+Instructions	::= 
+            	|	Instructions:l Instruction:i TERM
+            	;
 
-Instruction ::=																						 						{: RESULT = null; :}
+Instruction ::=	CREATE_TABLE Table:t OPEN_PARENTHESIS Datas:d SEP PRIMARY_KEY Name:n CLOSE_PARENTHESIS
+			|	DELETE FROM Table:t Where:w
+			|	UPDATE Table:t Set:s Where:w
+			|	INSERT_INTO Table:t OPEN_PARENTHESIS Names:ns CLOSE_PARENTHESIS Values
 			;
+			
+Names	::= Name:n
+     	|	Names:ns SEP Name:n
+     	;
+		
+Name	::=	ID
+    	;
+		
+Table	::=	ID
+     	;
+		
+WhereOpt	::=	
+        	|	Where:w
+        	;
+
+Where	::=	WHERE Condition:c
+     	;
+		
+Condition	::=	
+         	;
+         	
+Set		::= 
+		;
+		
+Datas	::= Data:d
+     	|	Datas:ds SEP Data:d
+     	;
+		
+Data	::=	Name:n Type:t 
+    	;
+    	
+Type 	::= INT
+		| VARCHAR OPEN_PARENTHESIS NUMBER CLOSE_PARENTHESIS
+		;
+		
+Values ::= 	Value:v
+		|	Values:vs SEP QUOTE Value:v QUOTE
+		;
