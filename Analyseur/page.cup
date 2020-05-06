@@ -36,6 +36,7 @@ terminal SELECT, FROM, WHERE, CREATE_TABLE, DELETE, UPDATE, TABLE, PRIMARY_KEY, 
 terminal Integer NUMBER;
 terminal String ID;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE, EQUAL;
+terminal NOT_NULL;
 terminal INT, VARCHAR;
 
 nonterminal Node    Commandes, Instruction, Instructions;
@@ -45,7 +46,7 @@ nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	Condition;
 nonterminal Node	Set;
-nonterminal Node	Datas, Data, Type;
+nonterminal Node	Datas, Data, Type, Null;
 nonterminal Node	Values, Value, Val;
 
  
@@ -89,11 +90,15 @@ Datas	::= Data:d
      	|	Datas:ds SEP Data:d
      	;
 		
-Data	::=	Name:n Type:t 
+Data	::=	Name:n Type:t Null:e
     	;
     	
 Type 	::= INT
 		| VARCHAR OPEN_PARENTHESIS NUMBER CLOSE_PARENTHESIS
+		;
+		
+Null	::=
+		| NOT_NULL
 		;
 		
 Values 	::=	VALUES OPEN_PARENTHESIS Value:vs CLOSE_PARENTHESIS
@@ -101,4 +106,8 @@ Values 	::=	VALUES OPEN_PARENTHESIS Value:vs CLOSE_PARENTHESIS
 
 Value	::=	QUOTE Val QUOTE
 		|	Value:vs SEP QUOTE Val:v QUOTE
+		;
+		
+Val		::= NUMBER
+		| ID
 		;
