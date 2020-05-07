@@ -2,10 +2,10 @@ package Instruction;
 
 public class Insert {
 	private Table table;
-	private Data[] columns;
+	private Column[] columns;
 	private String[] values;
 	
-	public Insert(Table table, Data[] columns, String[] values) {
+	public Insert(Table table, Column[] columns, String[] values) {
 		this.table=table;
 		this.columns=columns;
 		this.values=values;
@@ -19,11 +19,11 @@ public class Insert {
 		this.table = table;
 	}
 
-	public Data[] getColumns() {
+	public Column[] getColumns() {
 		return columns;
 	}
 
-	public void setColumns(Data[] columns) {
+	public void setColumns(Column[] columns) {
 		this.columns = columns;
 	}
 

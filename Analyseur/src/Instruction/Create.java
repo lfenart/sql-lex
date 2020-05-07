@@ -3,12 +3,12 @@ package Instruction;
 public class Create {
 	
 	private Table table;
-	private Data[] columns;
+	private Data[] datas;
 	private Data primaryKey;
 	
 	public Create(Table table, Data[] columns,Data primaryKey) {
 		this.table=table;
-		this.columns=columns;
+		this.datas=columns;
 		this.primaryKey=primaryKey;
 	}
 
@@ -21,11 +21,11 @@ public class Create {
 	}
 
 	public Data[] getColumns() {
-		return columns;
+		return datas;
 	}
 
 	public void setColumns(Data[] columns) {
-		this.columns = columns;
+		this.datas = columns;
 	}
 	
 	public Data getPrimaryKey() {
