@@ -41,6 +41,7 @@ terminal INT, VARCHAR;
 terminal WILDCARD;
 terminal ORDER, GROUP, BY, ASC, DESC;
 terminal DROP;
+terminal SPACE;
 
 nonterminal Node  Commandes, Instruction, Instructions;
 nonterminal Node 	Expression;
@@ -54,6 +55,7 @@ nonterminal Node	Set;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Val;
 nonterminal Node	PrimaryKeyOpt;
+nonterminal Node	Ids;
  
 Commandes	::= Instructions 
          	;
@@ -66,8 +68,18 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt CLOS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
 			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
-			| 	SELECT Columns:cols FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o 
-			|	SELECT WILDCARD FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o 
+			| 	SELECT Columns:cols FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o 
+			| 	SELECT Columns:cols FROM Table:t WhereOpt:w OrderByOpt:o GroupByOpt:g 
+			| 	SELECT Columns:cols FROM Table:t GroupByOpt:g WhereOpt:w OrderByOpt:o 
+			| 	SELECT Columns:cols FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w  
+			| 	SELECT Columns:cols FROM Table:t OrderByOpt:o GroupByOpt:g WhereOpt:w  
+			| 	SELECT Columns:cols FROM Table:t OrderByOpt:o WhereOpt:w GroupByOpt:g
+			| 	SELECT WILDCARD FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o 
+			| 	SELECT WILDCARD FROM Table:t WhereOpt:w OrderByOpt:o GroupByOpt:g 
+			| 	SELECT WILDCARD FROM Table:t GroupByOpt:g WhereOpt:w OrderByOpt:o 
+			| 	SELECT WILDCARD FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w  
+			| 	SELECT WILDCARD FROM Table:t OrderByOpt:o GroupByOpt:g WhereOpt:w  
+			| 	SELECT WILDCARD FROM Table:t OrderByOpt:o WhereOpt:w GroupByOpt:g    
 			|	DROP TABLE Table:t
 			;
 			
@@ -145,9 +157,13 @@ Value	::= Val:v
 		;
 		
 Val		::= NUMBER
-		| QUOTE ID QUOTE
+		| QUOTE Ids:is QUOTE
 		;
-
+		
+Ids		::= ID:i
+		| Ids:is SPACE ID:i
+		;
+		
 PrimaryKeyOpt	::= 
 				| SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
 				;
