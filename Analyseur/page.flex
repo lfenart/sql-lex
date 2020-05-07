@@ -1,6 +1,6 @@
      
 %%
-   
+
 %package compiler
 %class Lexer
 %public
@@ -33,8 +33,12 @@
 "drop"|"DROP"			{ return getSymbolFactory().newSymbol("DROP", Sym.DROP); }
 "group"|"GROUP"			{ return getSymbolFactory().newSymbol("GROUP", Sym.GROUP); }
 "order"|"ORDER"			{ return getSymbolFactory().newSymbol("ORDER", Sym.ORDER); }
-"by"|"BY"				{ return getSymbolFactory().newSymbol("BY", Sym.BY); }
+"by"|"BY"           { return getSymbolFactory().newSymbol("BY", Sym.BY); }
+"desc"|"DESC"    { return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
+"asc"|"ASC"    { return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
 
+
+"="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "*"				{ return getSymbolFactory().newSymbol("WILDCARD", Sym.WILDCARD); }
 "'"				{ return getSymbolFactory().newSymbol("QUOTE", Sym.QUOTE); }
 ","				{ return getSymbolFactory().newSymbol("SEP", Sym.SEP); }
@@ -45,5 +49,5 @@
 [0-9]+			{ return getSymbolFactory().newSymbol("NUMBER", Sym.NUMBER, Integer.parseInt(yytext())); }
 
 [a-zA-Z][a-zA-Z_0-9]*	{ return getSymbolFactory().newSymbol("ID", Sym.ID, yytext()); }
-
+\'.*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
 [^]				{ throw new Error("Illegal character <"+yytext()+">"); }
