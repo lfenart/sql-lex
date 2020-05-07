@@ -3,10 +3,10 @@ package Instruction;
 public class Delete {
 
 	private Table from;
-	private Column where;
+	private Data where;
 	private String value;
 
-	public Delete(Table from, Column where, String value) {
+	public Delete(Table from, Data where, String value) {
 		this.from=from;
 		this.where=where;
 		this.value=value;
@@ -20,11 +20,11 @@ public class Delete {
 		this.from = from;
 	}
 
-	public Column getWhere() {
+	public Data getWhere() {
 		return where;
 	}
 
-	public void setWhere(Column where) {
+	public void setWhere(Data where) {
 		this.where = where;
 	}
 

@@ -1,11 +1,11 @@
 package Instruction;
 
-public class Column {
+public class Data {
 	private String name;
 	private boolean notNull;
-	private ColumnType type;
+	private DataType type;
 	
-	public Column(String name, ColumnType type) {
+	public Data(String name, DataType type) {
 		this.name=name;
 		notNull=true;
 		this.type=type;
@@ -27,11 +27,11 @@ public class Column {
 		this.notNull = notNull;
 	}
 
-	public ColumnType getType() {
+	public DataType getType() {
 		return type;
 	}
 
-	public void setType(ColumnType type) {
+	public void setType(DataType type) {
 		this.type = type;
 	}
 	

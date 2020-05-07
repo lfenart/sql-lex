@@ -1,6 +1,6 @@
 package Instruction;
 
-public enum ColumnType {
+public enum DataType {
 
 	INT,VARCHAR;
 }
