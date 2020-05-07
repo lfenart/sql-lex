@@ -3,6 +3,8 @@ package compiler;
 import java.util.ArrayList;
 import java.util.List;
 
+import ui.Node;
+
 
 public class SQLContext {
 	private List<String> errors;
@@ -31,6 +33,9 @@ public class SQLContext {
 	public SQLFactory getFactory () {
 		if (factory == null) factory = new SQLFactory();
 		return factory;
+	}
+	
+	public void addInstruction(Node n) {
 	}
 	
 
