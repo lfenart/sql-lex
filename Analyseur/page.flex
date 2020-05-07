@@ -38,7 +38,6 @@
 "desc"|"DESC"					{ return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
 "asc"|"ASC"						{ return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
 
-[ ]				{ return getSymbolFactory().newSymbol("SPACE", Sym.SPACE); }
 "="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "<>"|"!="		{ return getSymbolFactory().newSymbol("NOT_EQ", Sym.NOT_EQ); }
 "<"				{ return getSymbolFactory().newSymbol("LESS", Sym.LESS); }
