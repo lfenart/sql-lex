@@ -34,7 +34,11 @@
 "group"|"GROUP"			{ return getSymbolFactory().newSymbol("GROUP", Sym.GROUP); }
 "order"|"ORDER"			{ return getSymbolFactory().newSymbol("ORDER", Sym.ORDER); }
 "by"|"BY"           { return getSymbolFactory().newSymbol("BY", Sym.BY); }
+"desc"|"DESC"    { return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
+"asc"|"ASC"    { return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
 
+
+"="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "*"				{ return getSymbolFactory().newSymbol("WILDCARD", Sym.WILDCARD); }
 "'"				{ return getSymbolFactory().newSymbol("QUOTE", Sym.QUOTE); }
 ","				{ return getSymbolFactory().newSymbol("SEP", Sym.SEP); }

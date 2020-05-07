@@ -1,2 +1,11 @@
-create table films (idFilm int not null, Titre varchar (255) not null,
-Réalisateur varchar (255) not null , primary key (idFilm));
+SELECT ville FROM client;
+SELECT prenom, nom FROM client;
+SELECT * FROM client;
+SELECT * FROM entity WHERE name = 'Big' ;
+SELECT col1,col2 FROM my_table GROUP BY col2;
+SELECT * FROM my_table ORDER BY field1;
+SELECT col1,col2 FROM my_table WHERE name = 'name1' GROUP BY col2 ORDER BY col1 ASC;
+create table films (idFilm int not null, Titre varchar (255) not null,Realisateur varchar (255) not null , primary key (idFilm));
+INSERT INTO films (Titre,Realisateur) VALUES ('Matrix','Realisateur_de_Matrix');
+DELETE FROM films where idFilm=2;
+UPDATE films SET Realisateur='John_Woo' where id=1;

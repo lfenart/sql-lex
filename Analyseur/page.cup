@@ -39,7 +39,7 @@ terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE, EQUAL;
 terminal NOT, NULL;
 terminal INT, VARCHAR;
 terminal WILDCARD;
-terminal ORDER, GROUP, BY;
+terminal ORDER, GROUP, BY, ASC, DESC;
 terminal DROP;
 
 nonterminal Node  Commandes, Instruction, Instructions;
@@ -48,7 +48,7 @@ nonterminal Node	Columns, Column;
 nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	GroupByOpt, GroupBy;
-nonterminal Node	OrderByOpt, OrderBy;
+nonterminal Node	OrderByOpt, OrderBy, Order;
 nonterminal Node	Condition;
 nonterminal Node	Set;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
@@ -66,8 +66,8 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt CLOS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
 			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
-			| SELECT Columns:cols FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w 
-			|	SELECT WILDCARD FROM Table:t WhereOpt:w
+			| 	SELECT Columns:cols FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o 
+			|	SELECT WILDCARD FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o 
 			|	DROP TABLE Table:t
 			;
 			
@@ -103,13 +103,19 @@ OrderByOpt	::=
 			| OrderBy:o
 			;
 
-OrderBy ::= ORDER BY Column:c
+OrderBy ::= ORDER BY Column:c Order:o
 		;
 		
-Condition	::=	Column:c EQUAL ID:i
+		
+Order ::= 
+		| ASC
+		| DESC
+		;
+		
+Condition	::=	Column:c EQUAL Val:v 
          	;
          	
-Set		::= SET Column:c EQUAL QUOTE Val:v QUOTE
+Set		::= SET Column:c EQUAL Val:v
 		;
 		
 Datas	::= Data:d
@@ -134,12 +140,12 @@ NotOpt	::=
 Values 	::=	VALUES OPEN_PARENTHESIS Value:vs CLOSE_PARENTHESIS
 		;
 
-Value	::=	QUOTE Val QUOTE
-		|	Value:vs SEP QUOTE Val:v QUOTE
+Value	::= Val:v
+		|	Value:vs SEP Val:v
 		;
 		
 Val		::= NUMBER
-		| ID
+		| QUOTE ID QUOTE
 		;
 
 PrimaryKeyOpt	::= 
