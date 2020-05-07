@@ -2,7 +2,6 @@ SELECT ville FROM client;
 SELECT prenom, nom FROM client;
 SELECT * FROM client;
 SELECT * FROM entity WHERE name = 'Big' ;
-SELECT col1,col2 FROM my_table GROUP BY col2;
 SELECT * FROM my_table ORDER BY field1;
 SELECT col1,col2 FROM my_table WHERE name = 'name1' ORDER BY col1 ASC GROUP BY col2 ;
 create table films (idFilm int not null, Titre varchar (255) not null,Realisateur varchar (255) not null , primary key (idFilm));
