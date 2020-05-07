@@ -4,8 +4,14 @@ SELECT * FROM client;
 SELECT * FROM entity WHERE name = 'Big' ;
 SELECT col1,col2 FROM my_table GROUP BY col2;
 SELECT * FROM my_table ORDER BY field1;
+<<<<<<< Updated upstream
 SELECT col1,col2 FROM my_table WHERE name = 'name1' ORDER BY col1 ASC GROUP BY col2 ;
 create table films (idFilm int not null, Titre varchar (255) not null,Realisateur varchar (255) not null , primary key (idFilm));
 INSERT INTO films (Titre,Realisateur) VALUES ('Matrix','Realisateur de_Matrix');
+=======
+SELECT col1,col2 FROM my_table WHERE name = 'name 1' GROUP BY col2 ORDER BY col1 ASC;
+create table films (idFilm int not null, Titre varchar (255) not null,Réalisateur varchar (255) not null , primary key (idFilm));
+INSERT INTO films (Titre,Realisateur) VALUES ('Matrix','Realisateur de Matrix');
+>>>>>>> Stashed changes
 DELETE FROM films where idFilm=2;
 UPDATE films SET Realisateur='John_Woo' where id=1;

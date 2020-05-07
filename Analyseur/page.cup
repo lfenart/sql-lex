@@ -50,7 +50,10 @@ nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	GroupByOpt, GroupBy;
 nonterminal Node	OrderByOpt, OrderBy, Order;
+<<<<<<< Updated upstream
 nonterminal Node	Condition;
+=======
+>>>>>>> Stashed changes
 nonterminal Node	Set;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Val;
@@ -67,6 +70,7 @@ Instructions	::=
 Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt CLOSE_PARENTHESIS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
+<<<<<<< Updated upstream
 			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
 			| 	SELECT Columns:cols FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o 
 			| 	SELECT Columns:cols FROM Table:t WhereOpt:w OrderByOpt:o GroupByOpt:g 
@@ -80,6 +84,11 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt CLOS
 			| 	SELECT WILDCARD FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w  
 			| 	SELECT WILDCARD FROM Table:t OrderByOpt:o GroupByOpt:g WhereOpt:w  
 			| 	SELECT WILDCARD FROM Table:t OrderByOpt:o WhereOpt:w GroupByOpt:g    
+=======
+			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Values CLOSE_PARENTHESIS
+			|	SELECT Columns:cols FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o 
+			|	SELECT WILDCARD FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o
+>>>>>>> Stashed changes
 			|	DROP TABLE Table:t
 			;
 			
