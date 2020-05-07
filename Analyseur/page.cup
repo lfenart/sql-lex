@@ -3,19 +3,19 @@ package compiler;
 import ui.Node;
 
 parser code {:
-    
+
    public void report_error(String message, Object info) {
         StringBuffer m = new StringBuffer("Error");
 		m.append (info.toString());
         m.append(" : "+message);
         System.err.println(m.toString());
     }
-   
+
     public void report_fatal_error(String message, Object info) {
         report_error(message, info);
         System.exit(1);
     }
-    
+
 	private SQLContext context;
     public void setContext (SQLContext context) {
     	this.context = context;
@@ -50,8 +50,6 @@ nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	GroupByOpt, GroupBy;
 nonterminal Node	OrderByOpt, OrderBy, Order;
-<<<<<<< Updated upstream
-nonterminal Node	Condition;
 =======
 >>>>>>> Stashed changes
 nonterminal Node	Set;
@@ -59,120 +57,108 @@ nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Val;
 nonterminal Node	PrimaryKeyOpt;
 nonterminal Node	Ids;
- 
-Commandes	::= Instructions 
+
+Commandes	::= Instructions
          	;
 
-Instructions	::= 
+Instructions	::=
             	|	Instructions:l Instruction:i TERM
             	;
 
 Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt CLOSE_PARENTHESIS
 			|	DELETE FROM Table:t Where:w
 			|	UPDATE Table:t Set:s Where:w
-<<<<<<< Updated upstream
-			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS Values
-			| 	SELECT Columns:cols FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o 
-			| 	SELECT Columns:cols FROM Table:t WhereOpt:w OrderByOpt:o GroupByOpt:g 
-			| 	SELECT Columns:cols FROM Table:t GroupByOpt:g WhereOpt:w OrderByOpt:o 
-			| 	SELECT Columns:cols FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w  
-			| 	SELECT Columns:cols FROM Table:t OrderByOpt:o GroupByOpt:g WhereOpt:w  
-			| 	SELECT Columns:cols FROM Table:t OrderByOpt:o WhereOpt:w GroupByOpt:g
-			| 	SELECT WILDCARD FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o 
-			| 	SELECT WILDCARD FROM Table:t WhereOpt:w OrderByOpt:o GroupByOpt:g 
-			| 	SELECT WILDCARD FROM Table:t GroupByOpt:g WhereOpt:w OrderByOpt:o 
-			| 	SELECT WILDCARD FROM Table:t GroupByOpt:g OrderByOpt:o WhereOpt:w  
-			| 	SELECT WILDCARD FROM Table:t OrderByOpt:o GroupByOpt:g WhereOpt:w  
-			| 	SELECT WILDCARD FROM Table:t OrderByOpt:o WhereOpt:w GroupByOpt:g    
-=======
 			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Values CLOSE_PARENTHESIS
-			|	SELECT Columns:cols FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o 
+<<<<<<< Updated upstream
+			|	SELECT Columns:cols FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o
+=======
+			| 	SELECT Columns:cols FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o
 			|	SELECT WILDCARD FROM Table:t WhereOpt:w  GroupByOpt:g OrderByOpt:o
 >>>>>>> Stashed changes
 			|	DROP TABLE Table:t
 			;
-			
+
 Columns	::= Column:n
      	|	Columns:ns SEP Column:n
      	;
-		
+
 Column	::=	ID
     	;
-		
+
 Table	::=	ID
      	;
-     	
-PrimaryKey ::= 
+
+PrimaryKey ::=
 			| SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
 			;
-		
-WhereOpt	::=	
+
+WhereOpt	::=
         	|	Where:w
         	;
 
 Where	::=	WHERE Condition:c
      	;
-     	
+
 GroupByOpt	::=
 			| GroupBy:g
 			;
 
 GroupBy ::= GROUP BY Column:c
 		;
-		
+
 OrderByOpt	::=
 			| OrderBy:o
 			;
 
 OrderBy ::= ORDER BY Column:c Order:o
 		;
-		
-		
-Order ::= 
+
+
+Order ::=
 		| ASC
 		| DESC
 		;
-		
-Condition	::=	Column:c EQUAL Val:v 
+
+Condition	::=	Column:c EQUAL Val:v
          	;
-         	
+
 Set		::= SET Column:c EQUAL Val:v
 		;
-		
+
 Datas	::= Data:d
      	|	Datas:ds SEP Data:d
      	;
-		
+
 Data	::=	Column:c Type:t NullOpt:e
     	;
-    	
+
 Type 	::= INT
 		| VARCHAR OPEN_PARENTHESIS NUMBER CLOSE_PARENTHESIS
 		;
-		
-NullOpt	::= 
+
+NullOpt	::=
 		|	NotOpt:n NULL
 		;
-		
-NotOpt	::=	
+
+NotOpt	::=
 		|	NOT
 		;
-		
+
 Values 	::=	VALUES OPEN_PARENTHESIS Value:vs CLOSE_PARENTHESIS
 		;
 
 Value	::= Val:v
 		|	Value:vs SEP Val:v
 		;
-		
+
 Val		::= NUMBER
 		| QUOTE Ids:is QUOTE
 		;
-		
+
 Ids		::= ID:i
 		| Ids:is SPACE ID:i
 		;
-		
-PrimaryKeyOpt	::= 
+
+PrimaryKeyOpt	::=
 				| SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
 				;
