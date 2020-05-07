@@ -38,7 +38,7 @@
 "desc"|"DESC"					{ return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
 "asc"|"ASC"						{ return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
 
-
+[ ]				{ return getSymbolFactory().newSymbol("SPACE", Sym.SPACE); }
 "="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "<>"|"!="		{ return getSymbolFactory().newSymbol("NOT_EQ", Sym.NOT_EQ); }
 "<"				{ return getSymbolFactory().newSymbol("LESS", Sym.LESS); }
@@ -59,4 +59,5 @@
 
 [a-zA-Z][a-zA-Z_0-9]*	{ return getSymbolFactory().newSymbol("ID", Sym.ID, yytext()); }
 \'.*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
+
 [^]				{ throw new Error("Illegal character <"+yytext()+">"); }
