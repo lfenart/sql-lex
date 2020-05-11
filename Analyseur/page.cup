@@ -203,7 +203,7 @@ Set		::= SET Column:c EQUAL Value:v	{: RESULT = getFactory().createNodeSet(c, v)
 		;
 
 Datas	::= Data:d				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(d); :}
-     	|	Datas:ds SEP Data:d	{: RESULT = ds; ds.getChildren().add(d);
+     	|	Datas:ds SEP Data:d	{: RESULT = ds; ds.getChildren().add(d); :}
      	;
 
 Data	::=	Column:c Type:t NullOpt:e	{: RESULT = getFactory().createNodeData(c, t, e); :}
