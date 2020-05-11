@@ -1,21 +1,21 @@
 package Instruction;
 
-public class Expression extends Node {
+public class NodeExpression extends Node {
 
-	private Column column;
+	private NodeColumn column;
 	private String value;
 
-	public Expression(Column column, String value) {
+	public NodeExpression(NodeColumn column, String value) {
 		super();
 		this.column = column;
 		this.value = value;
 	}
 
-	public Column getColumn() {
+	public NodeColumn getColumn() {
 		return column;
 	}
 
-	public void setColumn(Column column) {
+	public void setColumn(NodeColumn column) {
 		this.column = column;
 	}
 

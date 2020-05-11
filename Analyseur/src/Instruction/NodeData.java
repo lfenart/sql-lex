@@ -1,11 +1,11 @@
 package Instruction;
 
-public class Data extends Node {
+public class NodeData extends Node {
 	private String name;
 	private boolean notNull;
 	private DataType type;
 
-	public Data(String name, DataType type) {
+	public NodeData(String name, DataType type) {
 		this.name = name;
 		this.notNull = true;
 		this.type = type;

@@ -1,10 +1,10 @@
 package Instruction;
 
-public class Table extends Node {
+public abstract class NodeSelectExpression extends Node {
 
 	private String name;
 
-	public Table(String name) {
+	public NodeSelectExpression(String name) {
 		this.setName(name);
 	}
 
@@ -15,5 +15,4 @@ public class Table extends Node {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

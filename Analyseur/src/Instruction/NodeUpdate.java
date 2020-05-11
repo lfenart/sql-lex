@@ -1,40 +1,40 @@
 package Instruction;
 
-public class Update extends Node {
+public class NodeUpdate extends Node {
 
-	private Table table;
-	private Where where;
-	private Set set;
+	private NodeTable table;
+	private NodeWhere where;
+	private NodeSet set;
 	private String whereValue;
 
-	public Update(Table table, Where where, Set set, String whereValue) {
+	public NodeUpdate(NodeTable table, NodeWhere where, NodeSet set, String whereValue) {
 		this.table = table;
 		this.where = where;
 		this.set = set;
 		this.whereValue = whereValue;
 	}
 
-	public Table getTable() {
+	public NodeTable getTable() {
 		return table;
 	}
 
-	public void setTable(Table table) {
+	public void setTable(NodeTable table) {
 		this.table = table;
 	}
 
-	public Where getWhere() {
+	public NodeWhere getWhere() {
 		return where;
 	}
 
-	public void setWhere(Where where) {
+	public void setWhere(NodeWhere where) {
 		this.where = where;
 	}
 
-	public Set getSet() {
+	public NodeSet getSet() {
 		return set;
 	}
 
-	public void setSet(Set set) {
+	public void setSet(NodeSet set) {
 		this.set = set;
 	}
 

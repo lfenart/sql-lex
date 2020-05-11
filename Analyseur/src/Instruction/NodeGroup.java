@@ -1,20 +1,20 @@
 package Instruction;
 
-public class Group extends Node {
+public class NodeGroup extends Node {
 
-	private Column column;
+	private NodeColumn column;
 	private String value;
 
-	public Group(Column column, String value) {
+	public NodeGroup(NodeColumn column, String value) {
 		this.column = column;
 		this.value = value;
 	}
 
-	public Column getColumn() {
+	public NodeColumn getColumn() {
 		return column;
 	}
 
-	public void setColumn(Column column) {
+	public void setColumn(NodeColumn column) {
 		this.column = column;
 	}
 

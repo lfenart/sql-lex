@@ -1,29 +1,29 @@
 package Instruction;
 
-public class Insert extends Node {
-	private Table table;
-	private Column[] columns;
+public class NodeInsert extends Node {
+	private NodeTable table;
+	private NodeColumn[] columns;
 	private String[] values;
 
-	public Insert(Table table, Column[] columns, String[] values) {
+	public NodeInsert(NodeTable table, NodeColumn[] columns, String[] values) {
 		this.table = table;
 		this.columns = columns;
 		this.values = values;
 	}
 
-	public Table getTable() {
+	public NodeTable getTable() {
 		return table;
 	}
 
-	public void setTable(Table table) {
+	public void setTable(NodeTable table) {
 		this.table = table;
 	}
 
-	public Column[] getColumns() {
+	public NodeColumn[] getColumns() {
 		return columns;
 	}
 
-	public void setColumns(Column[] columns) {
+	public void setColumns(NodeColumn[] columns) {
 		this.columns = columns;
 	}
 
