@@ -1,6 +1,9 @@
 package compiler;
 
 import ui.Node;
+import Instruction.Order;
+import Instruction.DataType;
+import Instruction.Operator;
 
 parser code {:
 
@@ -36,10 +39,9 @@ terminal SELECT, SELECT_ALL, FROM, WHERE, CREATE, TABLE, DELETE, UPDATE, SET, PR
 terminal Integer NUMBER;
 terminal String ID;
 terminal String	TEXT;
-terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS, QUOTE;
+terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS;
 terminal NOT, NULL;
 terminal INT, VARCHAR;
-terminal WILDCARD;
 terminal ORDER, GROUP, BY, ASC, DESC;
 terminal DROP;
 terminal OR, AND;
@@ -60,9 +62,13 @@ nonterminal Node	Set;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Numeric;
 nonterminal Node	PrimaryKeyOpt;
-nonterminal Node	AndCondition, OrCondition, Condition, Operand, Summand, Compare, Factor, Term;
+nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term;
 nonterminal Node	UminusOpt;
 
+precedence left PLUS, MINUS;
+precedence left MULT, DIV;
+precedence left AND, OR;
+precedence right NOT;
 
 Commandes	::= Instructions 
          	;
@@ -105,13 +111,6 @@ Column	::=	ID:name	{: RESULT = getFactory().createNodeColumn(name); :}
 
 Table	::=	ID:name	{: RESULT = getFactory().createNodeTable(name); :}
      	;
-
-PrimaryKey ::=
-			|	SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
-				{:
-					RESULT = getFactory().createNodePrimaryKey(n);
-				:}
-			;
 
 WhereOpt	::=
         	|	Where:w	{: RESULT = w; :}
@@ -203,15 +202,15 @@ Set		::= SET Column:c EQUAL Value:v	{: RESULT = getFactory().createNodeSet(c, v)
 		;
 
 Datas	::= Data:d				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(d); :}
-     	|	Datas:ds SEP Data:d	{: RESULT = ds; ds.getChildren().add(d);
+     	|	Datas:ds SEP Data:d	{: RESULT = ds; ds.getChildren().add(d); :}
      	;
 
 Data	::=	Column:c Type:t NullOpt:e	{: RESULT = getFactory().createNodeData(c, t, e); :}
     	;
 
 /* enum Type {INT, VARCHAR} */
-Type 	::= INT	{: RESULT = getFactory().createNodeType(Type.INT); :}
-		| VARCHAR OPEN_PARENTHESIS NUMBER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(Type.VARCHAR, n); :}
+Type 	::= INT	{: RESULT = getFactory().createNodeType(DataType.INT); :}
+		| VARCHAR OPEN_PARENTHESIS NUMBER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
 		;
 
 NullOpt	::=

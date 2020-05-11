@@ -48,7 +48,6 @@
 "-"				{ return getSymbolFactory().newSymbol("MINUS", Sym.MINUS); }
 "*"				{ return getSymbolFactory().newSymbol("MULT", Sym.MULT); }
 "/"				{ return getSymbolFactory().newSymbol("DIV", Sym.DIV); }
-"'"				{ return getSymbolFactory().newSymbol("QUOTE", Sym.QUOTE); }
 ","				{ return getSymbolFactory().newSymbol("SEP", Sym.SEP); }
 ";"				{ return getSymbolFactory().newSymbol("TERM", Sym.TERM); }
 "("				{ return getSymbolFactory().newSymbol("OPEN_PARENTHESIS", Sym.OPEN_PARENTHESIS); }
