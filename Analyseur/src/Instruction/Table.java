@@ -1,9 +1,9 @@
 package Instruction;
 
-public class Table  {
-	
+public class Table extends Node {
+
 	private String name;
-	
+
 	public Table(String name) {
 		this.setName(name);
 	}

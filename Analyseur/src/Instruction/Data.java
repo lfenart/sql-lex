@@ -1,14 +1,14 @@
 package Instruction;
 
-public class Data {
+public class Data extends Node {
 	private String name;
 	private boolean notNull;
 	private DataType type;
-	
+
 	public Data(String name, DataType type) {
-		this.name=name;
-		this.notNull=true;
-		this.type=type;
+		this.name = name;
+		this.notNull = true;
+		this.type = type;
 	}
 
 	public String getName() {
@@ -34,7 +34,5 @@ public class Data {
 	public void setType(DataType type) {
 		this.type = type;
 	}
-	
-	
-	
+
 }

@@ -1,15 +1,15 @@
 package Instruction;
 
-public class Delete {
+public class Delete extends Node {
 
 	private Table from;
 	private Column where;
 	private String value;
 
 	public Delete(Table from, Column where, String value) {
-		this.from=from;
-		this.where=where;
-		this.value=value;
+		this.from = from;
+		this.where = where;
+		this.value = value;
 	}
 
 	public Table getFrom() {

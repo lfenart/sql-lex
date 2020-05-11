@@ -1,14 +1,14 @@
 package Instruction;
 
-public class Insert {
+public class Insert extends Node {
 	private Table table;
 	private Column[] columns;
 	private String[] values;
-	
+
 	public Insert(Table table, Column[] columns, String[] values) {
-		this.table=table;
-		this.columns=columns;
-		this.values=values;
+		this.table = table;
+		this.columns = columns;
+		this.values = values;
 	}
 
 	public Table getTable() {

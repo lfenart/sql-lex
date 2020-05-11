@@ -1,9 +1,9 @@
 package Instruction;
 
-public class Where {
+public class Where extends Node {
 
 	private Expression expression;
-	
+
 	public Where(Expression expression) {
 		this.expression = expression;
 	}
@@ -15,5 +15,5 @@ public class Where {
 	public void setExpression(Expression expression) {
 		this.expression = expression;
 	}
-	
+
 }

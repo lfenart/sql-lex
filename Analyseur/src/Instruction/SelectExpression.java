@@ -1,9 +1,9 @@
 package Instruction;
 
-public abstract class SelectExpression {
+public abstract class SelectExpression extends Node {
 
 	private String name;
-	
+
 	public SelectExpression(String name) {
 		this.setName(name);
 	}

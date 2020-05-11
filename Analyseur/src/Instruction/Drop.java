@@ -1,9 +1,9 @@
 package Instruction;
 
-public class Drop {
+public class Drop extends Node {
 
 	private Table table;
-	
+
 	public Drop(Table table) {
 		this.setTable(table);
 	}
@@ -15,6 +15,5 @@ public class Drop {
 	public void setTable(Table table) {
 		this.table = table;
 	}
-	
-	
+
 }

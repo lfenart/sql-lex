@@ -1,15 +1,15 @@
 package Instruction;
 
-public class Create {
-	
+public class Create extends Node {
+
 	private Table table;
 	private Data[] datas;
 	private Data primaryKey;
-	
-	public Create(Table table, Data[] columns,Data primaryKey) {
-		this.table=table;
-		this.datas=columns;
-		this.primaryKey=primaryKey;
+
+	public Create(Table table, Data[] columns, Data primaryKey) {
+		this.table = table;
+		this.datas = columns;
+		this.primaryKey = primaryKey;
 	}
 
 	public Table getTable() {
@@ -27,7 +27,7 @@ public class Create {
 	public void setColumns(Data[] columns) {
 		this.datas = columns;
 	}
-	
+
 	public Data getPrimaryKey() {
 		return primaryKey;
 	}
@@ -36,6 +36,4 @@ public class Create {
 		this.primaryKey = primaryKey;
 	}
 
-
-	
 }
