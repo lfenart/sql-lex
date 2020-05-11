@@ -1,6 +1,6 @@
 package Instruction;
 
-public class NodeText extends Node{
+public class NodeText extends Node {
 
 	private String value;
 
@@ -9,11 +9,7 @@ public class NodeText extends Node{
 	}
 
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
 }

@@ -2,13 +2,19 @@ package compiler;
 
 import java.util.ArrayList;
 
-import Instruction.Create;
 import Instruction.DataType;
 import Instruction.Node;
+import Instruction.NodeConcat;
+import Instruction.NodeCreate;
+import Instruction.NodeData;
+import Instruction.NodeDelete;
+import Instruction.NodeDiv;
+import Instruction.NodeDrop;
+import Instruction.NodeGroup;
+import Instruction.NodeInsert;
 import Instruction.Operator;
 import Instruction.Order;
 import ui.SQLVisitor;
-import ui.Type;
 
 public class SQLFactory {
 
@@ -35,15 +41,15 @@ public class SQLFactory {
 	public Node createNodeText(String str) {
 		return null;
 	}
-	
+
 	public Node createNodeBlock() {
 		return null;
 	}
-	
+
 	public Node createNodeColumn(String s) {
 		return null;
 	}
-	
+
 	public Node createNodeConcat(Node n1, Node n2) {
 		Node n = new NodeConcat();
 		n.getChildren().add(n1);
@@ -87,15 +93,17 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeGroupBy(Node c) {
-		Node n = new NodeGroupBy();
+	public Node createNodeGroup(Node c) {
+		Node n = new NodeGroup();
 		n.getChildren().add(c);
 		return n;
 	}
 
 	public Node createNodeInsert(Node cols, Node vs) {
 		Node n = new NodeInsert();
-		
+		n.getChildren().add(cols);
+		n.getChildren().add(vs);
+		return n;
 	}
 
 	public Node createNodeMinus(Node s, Node f) {
@@ -178,11 +186,9 @@ public class SQLFactory {
 		return null;
 	}
 
-	public Node createPrimaryKey(Node n) {
+	public Node createNodePrimaryKey(Node n) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
 
 }

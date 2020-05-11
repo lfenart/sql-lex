@@ -1,26 +1,21 @@
 package Instruction;
 
-public class NodeType extends Node{
+public class NodeType extends Node {
 
 	private DataType type;
-	private int value;
-	
-	public NodeType(DataType type, int value) {
+	private Integer size;
+
+	public NodeType(DataType type, Integer size) {
 		this.type = type;
-		this.value = value;
+		this.size = size;
 	}
-	
+
 	public DataType getType() {
-		return type;
+		return this.type;
 	}
-	public void setType(DataType type) {
-		this.type = type;
+
+	public int getSize() {
+		return this.size;
 	}
-	public int getValue() {
-		return value;
-	}
-	public void setValue(int value) {
-		this.value = value;
-	}
-	
+
 }

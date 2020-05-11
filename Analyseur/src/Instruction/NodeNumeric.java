@@ -1,20 +1,15 @@
 package Instruction;
 
-public class NodeNumeric extends Node{
+public class NodeNumeric extends Node {
 
-	private float value;
+	private double value;
 
-	public NodeNumeric(float value) {
+	public NodeNumeric(double value) {
 		this.value = value;
 	}
 
-	public float getValue() {
+	public double getValue() {
 		return value;
 	}
 
-	public void setValue(float value) {
-		this.value = value;
-	}
-	
-	
 }

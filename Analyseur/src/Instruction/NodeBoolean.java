@@ -1,9 +1,9 @@
 package Instruction;
 
-public class NodeBoolean extends Node{
+public class NodeBoolean extends Node {
 
 	private boolean b;
-	
+
 	public NodeBoolean(boolean b) {
 		this.setB(b);
 	}

@@ -123,7 +123,7 @@ GroupByOpt	::=
 			| GroupBy:g	{: RESULT = g; :}
 			;
 
-GroupBy ::= GROUP BY Column:c	{: RESULT = getFactory().createNodeGroupBy(c); :}
+GroupBy ::= GROUP BY Column:c	{: RESULT = getFactory().createNodeGroup(c); :}
 		;
 
 OrderByOpt	::=
@@ -264,6 +264,6 @@ PrimaryKeyOpt	::=
 
 PrimaryKey	::=	SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
 				{:
-					RESULT = getFactory().createPrimaryKey(n);
+					RESULT = getFactory().createNodePrimaryKey(n);
 				:}
 			;

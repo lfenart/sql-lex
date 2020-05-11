@@ -1,8 +1,8 @@
 package Instruction;
 
-public class NodeBlock extends Node{
+public class NodeBlock extends Node {
 
 	public NodeBlock() {
-		
+
 	}
 }
