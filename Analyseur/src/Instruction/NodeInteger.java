@@ -1,5 +1,7 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeInteger extends NodeNumeric {
 
 	private Long value;
@@ -10,6 +12,11 @@ public class NodeInteger extends NodeNumeric {
 
 	public Long getValue() {
 		return this.value;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitInteger(this);
 	}
 
 }

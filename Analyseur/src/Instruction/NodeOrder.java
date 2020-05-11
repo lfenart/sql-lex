@@ -1,5 +1,7 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeOrder extends Node {
 
 	private Order order;
@@ -10,6 +12,11 @@ public class NodeOrder extends Node {
 	
 	public Order getOrder() {
 		return this.order;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitOrder(this);
 	}
 
 }

@@ -1,5 +1,7 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeDouble extends NodeNumeric {
 
 	private Double value;
@@ -10,6 +12,11 @@ public class NodeDouble extends NodeNumeric {
 
 	public Double getValue() {
 		return this.value;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitDouble(this);
 	}
 
 }

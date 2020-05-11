@@ -1,5 +1,7 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeOperator extends Node {
 
 	private Operator operator;
@@ -10,6 +12,11 @@ public class NodeOperator extends Node {
 	
 	public Operator getOperator() {
 		return this.operator;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitOperator(this);
 	}
 
 }

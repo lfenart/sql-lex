@@ -1,18 +1,21 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeBoolean extends Node {
 
-	private boolean b;
+	private Boolean value;
 
-	public NodeBoolean(boolean b) {
-		this.setB(b);
+	public NodeBoolean(Boolean value) {
+		this.value = value;
+	}
+	
+	public Boolean getValue() {
+		return this.value;
 	}
 
-	public boolean isB() {
-		return b;
-	}
-
-	public void setB(boolean b) {
-		this.b = b;
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitBoolean(this);
 	}
 }

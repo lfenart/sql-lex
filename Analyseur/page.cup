@@ -62,7 +62,7 @@ nonterminal Node	OrderByOpt, OrderBy, Order, Orders, OrderExpression, OrderOpt;
 nonterminal Node	NullsOpt, Nulls;
 nonterminal Node	Set, Sets;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
-nonterminal Node	Values, Value, Numeric;
+nonterminal Node	Value, Numeric;
 nonterminal Node	PrimaryKeyOpt, PrimaryKey;
 nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term, Terms;
 nonterminal Node	SelectExpression, SelectExpressions;
@@ -105,7 +105,7 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 			;
 			
 SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(e); :}
-					|	SelectExpression:es SEP SelectExpression:e
+					|	SelectExpressions:es SEP SelectExpression:e
 						{:
 							RESULT = es;
 							es.getChildren().add(e);
@@ -144,7 +144,7 @@ OrderByOpt	::=
 			| OrderBy:o	{: RESULT = o; :}
 			;
 
-OrderBy ::= ORDER BY Orders:os	{: RESULT = getFactory().createNodeOrderBy(os); :}
+OrderBy ::= ORDER BY Orders:os	{: RESULT = os; :}
 		;
 
 Orders	::=	OrderExpression:o	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(o); :}
@@ -266,10 +266,6 @@ NullOpt	::=
 
 NotOpt	::=
 		|	NOT	{: RESULT = getFactory().createNodeNot(); :}
-		;
-
-Values	::= Value:v		{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(v); :}
-		|	Values:vs SEP Value:v	{: RESULT = vs; vs.getChildren().add(v); :}
 		;
 
 Value	::= TEXT:t		{: RESULT = getFactory().createNodeText(t); :}

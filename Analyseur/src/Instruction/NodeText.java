@@ -1,5 +1,7 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeText extends Node {
 
 	private String value;
@@ -10,6 +12,11 @@ public class NodeText extends Node {
 
 	public String getValue() {
 		return this.value;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitText(this);
 	}
 
 }

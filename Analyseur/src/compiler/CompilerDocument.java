@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import java_cup.runtime.SimpleSymbolFactory;
 import java_cup.runtime.SymbolFactory;
+import ui.Visitor;
+import ui.XmlVisitor;
 
 
 public class CompilerDocument {
@@ -29,7 +31,9 @@ public class CompilerDocument {
 		    	Parser p = new Parser(l, csf);
 				context = new SQLContext();
 				p.setContext(context);
-		    	p.parse();      
+		    	p.parse();
+		    	Visitor visitor = new XmlVisitor();
+		    	context.getRoot().accept(visitor);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				context.addError("FileNotFoundException");

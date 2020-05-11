@@ -1,5 +1,7 @@
 package Instruction;
 
+import ui.Visitor;
+
 public class NodeType extends Node {
 
 	private DataType type;
@@ -20,6 +22,11 @@ public class NodeType extends Node {
 
 	public Long getSize() {
 		return this.size;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitType(this);
 	}
 
 }

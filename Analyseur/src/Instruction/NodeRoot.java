@@ -2,11 +2,11 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeGroup extends Node {
+public class NodeRoot extends Node {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitGroup(this);
+		visitor.visitRoot(this);
 	}
 
 }
