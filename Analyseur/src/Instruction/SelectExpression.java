@@ -1,10 +1,10 @@
 package Instruction;
 
-public class Table  {
-	
+public abstract class SelectExpression {
+
 	private String name;
 	
-	public Table(String name) {
+	public SelectExpression(String name) {
 		this.setName(name);
 	}
 
@@ -15,5 +15,4 @@ public class Table  {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

@@ -1,15 +1,15 @@
 package Instruction;
 
-public class Expression {
+public class Set {
 
 	private Column column;
 	private String value;
 	
-	public Expression(Column column, String value) {
-		super();
+	public Set(Column column, String value) {
 		this.column = column;
 		this.value = value;
 	}
+	
 	public Column getColumn() {
 		return column;
 	}
@@ -22,4 +22,6 @@ public class Expression {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+	
 }

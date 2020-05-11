@@ -1,6 +1,6 @@
 package Instruction;
 
-public class Column extends Expression{
+public class Column extends SelectExpression{
 
 	public Column(String name) {
 		super(name);

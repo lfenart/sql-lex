@@ -1,57 +1,43 @@
 package Instruction;
 
 public class Update {
+	
 	private Table table;
-	private String setValue;
-	private Column whereColumn,setColumn;
+	private Where where;
+	private Set set;
 	private String whereValue;
 	
-	public Update(Table table, String setvalue, Column whereColumn, Column setColumn, String whereValue) {
-		this.table=table;
-		this.setValue=setvalue;
-		this.whereColumn=whereColumn;
-		this.setColumn=setColumn;
-		this.whereValue=whereValue;
+	public Update(Table table, Where where, Set set, String whereValue) {
+		this.table = table;
+		this.where = where;
+		this.set = set;
+		this.whereValue = whereValue;
 	}
-
+	
 	public Table getTable() {
 		return table;
 	}
-
 	public void setTable(Table table) {
 		this.table = table;
 	}
-
-	public String getSetValue() {
-		return setValue;
+	public Where getWhere() {
+		return where;
 	}
-
-	public void setSetValue(String setValue) {
-		this.setValue = setValue;
+	public void setWhere(Where where) {
+		this.where = where;
 	}
-
-	public Column getWhereColumn() {
-		return whereColumn;
+	public Set getSet() {
+		return set;
 	}
-
-	public void setWhereColumn(Column whereColumn) {
-		this.whereColumn = whereColumn;
+	public void setSet(Set set) {
+		this.set = set;
 	}
-
-	public Column getSetColumn() {
-		return setColumn;
-	}
-
-	public void setSetColumn(Column setColumn) {
-		this.setColumn = setColumn;
-	}
-
 	public String getWhereValue() {
 		return whereValue;
 	}
-
 	public void setWhereValue(String whereValue) {
 		this.whereValue = whereValue;
 	}
+
 	
 }

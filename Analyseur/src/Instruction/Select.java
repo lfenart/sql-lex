@@ -4,17 +4,15 @@ public class Select {
 
 	private Table table;
 	private Column[] columns;
-	private Column whereColumn, orderColumn, groupColumn;
-	private String whereValue, orderValue;
+	private Group group;
+	private Where where;
+	private Order orderValue;
 	
-	public Select(Table table, Column[] columns, Column whereColumn, Column orderColumn, Column groupColumn, String whereValue,
-			String orderValue) {
+	public Select(Table table, Column[] columns, Group group, Where where, Order orderValue) {
 		this.table = table;
 		this.columns = columns;
-		this.whereColumn = whereColumn;
-		this.orderColumn = orderColumn;
-		this.groupColumn = groupColumn;
-		this.whereValue = whereValue;
+		this.group = group;
+		this.where = where;
 		this.orderValue = orderValue;
 	}
 	
@@ -30,36 +28,25 @@ public class Select {
 	public void setColumns(Column[] columns) {
 		this.columns = columns;
 	}
-	public Column getWhereColumn() {
-		return whereColumn;
+	public Group getGroup() {
+		return group;
 	}
-	public void setWhereColumn(Column whereColumn) {
-		this.whereColumn = whereColumn;
+	public void setGroup(Group group) {
+		this.group = group;
 	}
-	public Column getOrderColumn() {
-		return orderColumn;
+	public Where getWhere() {
+		return where;
 	}
-	public void setOrderColumn(Column orderColumn) {
-		this.orderColumn = orderColumn;
+	public void setWhere(Where where) {
+		this.where = where;
 	}
-	public Column getGroupColumn() {
-		return groupColumn;
-	}
-	public void setGroupColumn(Column groupColumn) {
-		this.groupColumn = groupColumn;
-	}
-	public String getWhereValue() {
-		return whereValue;
-	}
-	public void setWhereValue(String whereValue) {
-		this.whereValue = whereValue;
-	}
-	public String getOrderValue() {
+	public Order getOrderValue() {
 		return orderValue;
 	}
-	public void setOrderValue(String orderValue) {
+	public void setOrderValue(Order orderValue) {
 		this.orderValue = orderValue;
 	}
+	
 
 	
 }

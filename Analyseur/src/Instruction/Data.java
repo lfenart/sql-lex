@@ -7,7 +7,7 @@ public class Data {
 	
 	public Data(String name, DataType type) {
 		this.name=name;
-		notNull=true;
+		this.notNull=true;
 		this.type=type;
 	}
 
