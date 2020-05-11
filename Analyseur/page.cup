@@ -1,6 +1,6 @@
 package compiler;
 
-import ui.Node;
+import Instruction.Node;
 import Instruction.Order;
 import Instruction.DataType;
 import Instruction.Operator;
@@ -61,7 +61,7 @@ nonterminal Node	OrderByOpt, OrderBy, Order, OrderOpt;
 nonterminal Node	Set;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Numeric;
-nonterminal Node	PrimaryKeyOpt;
+nonterminal Node	PrimaryKeyOpt, PrimaryKey;
 nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term;
 nonterminal Node	UminusOpt;
 
@@ -259,8 +259,11 @@ UminusOpt	::=
 			;
 
 PrimaryKeyOpt	::= 
-				|	SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
-					{:
-						RESULT = getFactory().createPrimaryKey(n);
-					:}
+				|	PrimaryKey:k	{: RESULT = k; :}
 				;
+
+PrimaryKey	::=	SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
+				{:
+					RESULT = getFactory().createPrimaryKey(n);
+				:}
+			;
