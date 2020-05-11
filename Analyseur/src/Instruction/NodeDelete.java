@@ -1,30 +1,30 @@
 package Instruction;
 
-public class Delete extends Node {
+public class NodeDelete extends Node {
 
-	private Table from;
-	private Column where;
+	private NodeTable from;
+	private NodeColumn where;
 	private String value;
 
-	public Delete(Table from, Column where, String value) {
+	public NodeDelete(NodeTable from, NodeColumn where, String value) {
 		this.from = from;
 		this.where = where;
 		this.value = value;
 	}
 
-	public Table getFrom() {
+	public NodeTable getFrom() {
 		return from;
 	}
 
-	public void setFrom(Table from) {
+	public void setFrom(NodeTable from) {
 		this.from = from;
 	}
 
-	public Column getWhere() {
+	public NodeColumn getWhere() {
 		return where;
 	}
 
-	public void setWhere(Column where) {
+	public void setWhere(NodeColumn where) {
 		this.where = where;
 	}
 

@@ -1,20 +1,20 @@
 package Instruction;
 
-public class Set extends Node {
+public class NodeSet extends Node {
 
-	private Column column;
+	private NodeColumn column;
 	private String value;
 
-	public Set(Column column, String value) {
+	public NodeSet(NodeColumn column, String value) {
 		this.column = column;
 		this.value = value;
 	}
 
-	public Column getColumn() {
+	public NodeColumn getColumn() {
 		return column;
 	}
 
-	public void setColumn(Column column) {
+	public void setColumn(NodeColumn column) {
 		this.column = column;
 	}
 
