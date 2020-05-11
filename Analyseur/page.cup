@@ -36,7 +36,8 @@ parser code {:
 
 terminal TERM, SEP;
 terminal SELECT, SELECT_ALL, FROM, WHERE, CREATE, TABLE, DELETE, UPDATE, SET, PRIMARY, KEY, INSERT, INTO, VALUES;
-terminal Integer NUMBER;
+terminal Long INTEGER;
+terminal Double DOUBLE;
 terminal String ID;
 terminal String	TEXT;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS;
@@ -49,21 +50,24 @@ terminal NOT_EQ, EQUAL, LESS, GREATER, LESS_OR_EQ, GREATER_OR_EQ;
 terminal CONCAT;
 terminal PLUS, MINUS, MULT, DIV;
 terminal TRUE, FALSE;
-terminal DOT;
+terminal NULLS, FIRST, LAST;
 
 nonterminal Node	Commandes, Instruction, Instructions;
-nonterminal Node 	Expression;
+nonterminal Node 	Expression, Expressions;
 nonterminal Node	Columns, Column;
 nonterminal Node	Table;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	GroupByOpt, GroupBy;
-nonterminal Node	OrderByOpt, OrderBy, Order, OrderOpt;
-nonterminal Node	Set;
+nonterminal Node	OrderByOpt, OrderBy, Order, Orders, OrderExpression, OrderOpt;
+nonterminal Node	NullsOpt, Nulls;
+nonterminal Node	Set, Sets;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Numeric;
 nonterminal Node	PrimaryKeyOpt, PrimaryKey;
 nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term;
 nonterminal Node	UminusOpt;
+nonterminal Node	SelectExpression, SelectExpressions;
+nonterminal Node	Number;
 
 precedence left PLUS, MINUS;
 precedence left MULT, DIV;
@@ -74,7 +78,7 @@ Commandes	::= Instructions
          	;
 
 Instructions	::=
-            	|	Instructions:l Instruction:i TERM	{: getContext().addInstruction(i); :}
+            	|	Instructions Instruction:i TERM	{: getContext().addInstruction(i); :}
             	;
 
 Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CLOSE_PARENTHESIS
@@ -82,14 +86,14 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 					RESULT = getFactory().createNodeCreate(t, d, p);
 				:}
 			|	DELETE FROM Table:t WhereOpt:w	{: RESULT = getFactory().createNodeDelete(t, w); :}
-			|	UPDATE Table:t Set:s WhereOpt:w	{: RESULT = getFactory().createNodeUpdate(t, w); :}
+			|	UPDATE Table:t SET Sets:s WhereOpt:w	{: RESULT = getFactory().createNodeUpdate(t, s, w); :}
 			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Values:vs CLOSE_PARENTHESIS
 				{:
 					RESULT = getFactory().createNodeInsert(cols, vs);
 				:}
-			|	SELECT Columns:cols FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o
+			|	SELECT SelectExpressions:e FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o
 				{:
-					RESULT = getFactory().createNodeSelect(cols, t, w, g, o);
+					RESULT = getFactory().createNodeSelect(e,  t, w, g, o);
 				:}
 			|	SELECT_ALL FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o
 				{:
@@ -100,6 +104,17 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 					RESULT = getFactory().createNodeDrop(t);
 				:}
 			;
+			
+SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(e); :}
+					|	SelectExpression:es SEP SelectExpression:e
+						{:
+							RESULT = es;
+							es.getChildren().add(e);
+						:}
+					;
+			
+SelectExpression	::=	Term:t	{: RESULT = t; :}
+					;
 
 
 Columns	::= Column:n				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(n); :}
@@ -123,24 +138,42 @@ GroupByOpt	::=
 			| GroupBy:g	{: RESULT = g; :}
 			;
 
-GroupBy ::= GROUP BY Column:c	{: RESULT = getFactory().createNodeGroup(c); :}
+GroupBy ::= GROUP BY Expressions:es	{: RESULT = getFactory().createNodeGroup(es); :}
 		;
 
 OrderByOpt	::=
 			| OrderBy:o	{: RESULT = o; :}
 			;
 
-OrderBy ::= ORDER BY Column:c OrderOpt:o	{: RESULT = getFactory().createNodeOrderBy(c, o); :}
+OrderBy ::= ORDER BY Orders:os	{: RESULT = getFactory().createNodeOrderBy(os); :}
 		;
 
-OrderOpt	::=
+Orders	::=	OrderExpression:o	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(o); :}
+		|	Orders:os SEP OrderExpression:o	{: RESULT = os; os.getChildren().add(o); :}
+		;
+		
+OrderExpression	::=	Expression:e OrderOpt:o NullsOpt:n	{: RESULT = getFactory().createNodeOrderExpression(e, o, n); :}
+				;
+
+OrderOpt	::=	
 			|	Order:o	{: RESULT = o; :}
 			;
 
-/* enum Order { ASC, DESC } */
 Order	::=	ASC		{: RESULT = getFactory().createNodeOrder(Order.ASC); :}
 		|	DESC	{: RESULT = getFactory().createNodeOrder(Order.DESC); :}
 		;
+		
+NullsOpt	::=	
+			|	Nulls:n	{: RESULT = n; :}
+			;
+			
+Nulls	::=	NULLS FIRST
+		|	NULLS LAST
+		;
+		
+Expressions	::=	Expression:e	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(e); :}
+			|	Expressions:es SEP Expression:e	{: RESULT = es; es.getChildren().add(e); :}
+			;
 
 Expression	::=	AndCondition:c					{: RESULT = c; :}
 			|	Expression:e OR AndCondition:c
@@ -171,7 +204,6 @@ Condition	::=	Operand:o	{: RESULT = o; :}
 			|	OPEN_PARENTHESIS Expression:e CLOSE_PARENTHESIS	{: RESULT = e; :}
 			;
 
-/* enum Operator { NOT_EQ, EQUAL, ... } */
 Compare	::=	NOT_EQ			{: RESULT = getFactory().createNodeOperator(Operator.NOT_EQ); :}
 		|	EQUAL			{: RESULT = getFactory().createNodeOperator(Operator.EQUAL); :}
 		|	LESS_OR_EQ		{: RESULT = getFactory().createNodeOperator(Operator.LESS_OR_EQ); :}
@@ -197,8 +229,12 @@ Factor	::=	Term:t					{: RESULT = t; :}
 Term	::= Value:v		{: RESULT = v; :}
 		|	Column:c	{: RESULT = c; :}
 		;
+		
+Sets	::=	Set:s	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(s); :}
+		|	Sets:ss SEP Set:s	{: RESULT = ss; ss.getChildren().add(s); :}
+		;
 
-Set		::= SET Column:c EQUAL Value:v	{: RESULT = getFactory().createNodeSet(c, v); :}
+Set		::= Column:c EQUAL Expression:e	{: RESULT = getFactory().createNodeSet(c, e); :}
 		;
 
 Datas	::= Data:d				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(d); :}
@@ -208,9 +244,9 @@ Datas	::= Data:d				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildr
 Data	::=	Column:c Type:t NullOpt:e	{: RESULT = getFactory().createNodeData(c, t, e); :}
     	;
 
-/* enum Type {INT, VARCHAR} */
+
 Type 	::= INT	{: RESULT = getFactory().createNodeType(DataType.INT); :}
-		| VARCHAR OPEN_PARENTHESIS NUMBER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
+		|	VARCHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
 		;
 
 NullOpt	::=
@@ -240,17 +276,13 @@ Value	::= TEXT:t		{: RESULT = getFactory().createNodeText(t); :}
 		|	NULL		{: RESULT = getFactory().createNodeNull(); :}
 		;
 
-Numeric	::=	UminusOpt:m NUMBER:n
+Numeric	::=	UminusOpt:m Number:n
 			{:
 				if (m == null) {
-					RESULT = getFactory().createNodeNumber(n);
+					RESULT = n;
 				} else {
-					RESULT = getFactory().createNodeNumber(-n);
+					RESULT = m; m.getChildren().add(n);
 				}
-			:}
-		|	UminusOpt:m NUMBER:n1 DOT NUMBER:n2
-			{:
-				/* todo */
 			:}
 		;
 
@@ -267,3 +299,7 @@ PrimaryKey	::=	SEP PRIMARY KEY OPEN_PARENTHESIS Column:n CLOSE_PARENTHESIS
 					RESULT = getFactory().createNodePrimaryKey(n);
 				:}
 			;
+
+Number	::=	INTEGER:n	{: RESULT = getFactory().createNodeInteger(n); :}
+		|	DOUBLE:n	{: RESULT = getFactory().createNodeDouble(n); :}
+		;

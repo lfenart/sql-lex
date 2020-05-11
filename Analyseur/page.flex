@@ -37,6 +37,9 @@
 "by"|"BY"						{ return getSymbolFactory().newSymbol("BY", Sym.BY); }
 "desc"|"DESC"					{ return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
 "asc"|"ASC"						{ return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
+"nulls"|"NULLS"					{ return getSymbolFactory().newSymbol("NULLS", Sym.NULLS); }
+"first"|"FIRST"					{ return getSymbolFactory().newSymbol("FIRST", Sym.FIRST); }
+"last"|"LAST"					{ return getSymbolFactory().newSymbol("LAST", Sym.LAST); }
 
 "="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "<>"|"!="		{ return getSymbolFactory().newSymbol("NOT_EQ", Sym.NOT_EQ); }
@@ -53,9 +56,15 @@
 "("				{ return getSymbolFactory().newSymbol("OPEN_PARENTHESIS", Sym.OPEN_PARENTHESIS); }
 ")"				{ return getSymbolFactory().newSymbol("CLOSE_PARENTHESIS", Sym.CLOSE_PARENTHESIS); }
 
-[0-9]+			{ return getSymbolFactory().newSymbol("NUMBER", Sym.NUMBER, Integer.parseInt(yytext())); }
+[0-9]*"."[0-9]+	{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
+[0-9]+"."			{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
+[0-9]+			{ return getSymbolFactory().newSymbol("INTEGER", Sym.INTEGER, Long.parseLong(yytext())); }
 
 [a-zA-Z][a-zA-Z_0-9]*	{ return getSymbolFactory().newSymbol("ID", Sym.ID, yytext()); }
 \'.*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
+
+"--".*\n	{}
+"//".*\n	{}
+"/*".*"*/"	{}
 
 [^]				{ throw new Error("Illegal character <"+yytext()+">"); }

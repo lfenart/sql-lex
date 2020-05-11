@@ -8,3 +8,7 @@ create table films (idFilm int not null, Titre varchar (255) not null,Realisateu
 INSERT INTO films (Titre,Realisateur) VALUES ('Matrix','Realisateur de_Matrix');
 DELETE FROM films where idFilm=2;
 UPDATE films SET Realisateur='John_Woo' where id=1;
+UPDATE films SET Realisateur='John_Woo', Titre=2 where id=1;
+-- Commentaire 1
+// Commentaire 2
+/* Commentaire 3 (ne fontionne pas avec les retours a la ligne ???) */

@@ -4,14 +4,38 @@ import java.util.ArrayList;
 
 import Instruction.DataType;
 import Instruction.Node;
+import Instruction.NodeBlock;
+import Instruction.NodeBoolean;
+import Instruction.NodeColumn;
 import Instruction.NodeConcat;
 import Instruction.NodeCreate;
 import Instruction.NodeData;
 import Instruction.NodeDelete;
 import Instruction.NodeDiv;
+import Instruction.NodeDouble;
 import Instruction.NodeDrop;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
+import Instruction.NodeInteger;
+import Instruction.NodeMinus;
+import Instruction.NodeMult;
+import Instruction.NodeNot;
+import Instruction.NodeNull;
+import Instruction.NodeNumeric;
+import Instruction.NodeOperator;
+import Instruction.NodeOrder;
+import Instruction.NodeOrderBy;
+import Instruction.NodeOrderExpression;
+import Instruction.NodePlus;
+import Instruction.NodePrimaryKey;
+import Instruction.NodeSelect;
+import Instruction.NodeSet;
+import Instruction.NodeTable;
+import Instruction.NodeText;
+import Instruction.NodeType;
+import Instruction.NodeUminus;
+import Instruction.NodeUpdate;
+import Instruction.NodeWhere;
 import Instruction.Operator;
 import Instruction.Order;
 import ui.SQLVisitor;
@@ -27,27 +51,19 @@ public class SQLFactory {
 	}
 
 	public Node createNodeBoolean(boolean b) {
-		return null;
+		return new NodeBoolean(b);
 	}
 
 	public Node createNodeNull() {
-		return null;
-	}
-
-	public Node createNodeNumeric(Node n) {
-		return null;
+		return new NodeNull();
 	}
 
 	public Node createNodeText(String str) {
-		return null;
+		return new NodeText(str);
 	}
 
 	public Node createNodeBlock() {
-		return null;
-	}
-
-	public Node createNodeColumn(String s) {
-		return null;
+		return new NodeBlock();
 	}
 
 	public Node createNodeConcat(Node n1, Node n2) {
@@ -107,88 +123,119 @@ public class SQLFactory {
 	}
 
 	public Node createNodeMinus(Node s, Node f) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeMinus();
+		n.getChildren().add(s);
+		n.getChildren().add(f);
+		return n;
 	}
 
 	public Node createNodeMult(Node f, Node t) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeMult();
+		n.getChildren().add(f);
+		n.getChildren().add(t);
+		return n;
 	}
 
 	public Node createNodeNot() {
-		// TODO Auto-generated method stub
-		return null;
+		return new NodeNot();
 	}
 
-	public Node createNodeNumber(int i) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeOperator(Operator operator) {
+		return new NodeOperator(operator);
 	}
 
-	public Node createNodeOperator(Operator greater) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeOrder(Order order) {
+		return new NodeOrder(order);
 	}
 
-	public Node createNodeOrder(Order desc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Node createNodeOrderBy(Node c, Node o) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeOrderBy(Node orders) {
+		Node n = new NodeOrderBy();
+		n.getChildren().add(orders);
+		return n;
 	}
 
 	public Node createNodePlus(Node s, Node f) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodePlus();
+		n.getChildren().add(s);
+		n.getChildren().add(f);
+		return n;
 	}
 
-	public Node createNodeSelect(Node cols, Node t, Node w, Node g, Node o) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeSelect(Node selectExpression, Node table, Node where, Node group, Node order) {
+		Node n = new NodeSelect();
+		n.getChildren().add(selectExpression);
+		n.getChildren().add(table);
+		n.getChildren().add(where);
+		n.getChildren().add(group);
+		n.getChildren().add(order);
+		return n;
 	}
 
 	public Node createNodeSet(Node c, Node v) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeSet();
+		n.getChildren().add(c);
+		n.getChildren().add(v);
+		return n;
 	}
 
 	public Node createNodeTable(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeTable();
+		n.getChildren().add(new NodeText(name));
+		return n;
 	}
 
-	public Node createNodeType(DataType i) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeType(DataType type) {
+		return new NodeType(type);
 	}
 
-	public Node createNodeType(DataType varchar, Integer n) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeType(DataType type, Long size) {
+		return new NodeType(type, size);
 	}
 
 	public Node createNodeUminus() {
-		// TODO Auto-generated method stub
-		return null;
+		return new NodeUminus();
 	}
 
-	public Node createNodeUpdate(Node t, Node w) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeUpdate(Node table, Node sets, Node where) {
+		Node n = new NodeUpdate();
+		n.getChildren().add(table);
+		n.getChildren().add(sets);
+		n.getChildren().add(where);
+		return n;
 	}
 
-	public Node createNodeWhere(Node c) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeWhere(Node expression) {
+		Node n = new NodeWhere();
+		n.getChildren().add(expression);
+		return n;
 	}
 
-	public Node createNodePrimaryKey(Node n) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodePrimaryKey(Node primaryKey) {
+		Node n = new NodePrimaryKey();
+		n.getChildren().add(primaryKey);
+		return n;
+	}
+
+	public Node createNodeColumn(String name) {
+		Node n = new NodeColumn();
+		n.getChildren().add(new NodeText(name));
+		return n;
+	}
+
+	public Node createNodeOrderExpression(Node expression, Node order, Node nulls) {
+		Node n = new NodeOrderExpression();
+		n.getChildren().add(expression);
+		n.getChildren().add(order);
+		n.getChildren().add(nulls);
+		return n;
+	}
+
+	public Node createNodeDouble(Double n) {
+		return new NodeDouble(n);
+	}
+
+	public Node createNodeInteger(Long n) {
+		return new NodeInteger(n);
 	}
 
 }
