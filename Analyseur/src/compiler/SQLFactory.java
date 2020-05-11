@@ -2,6 +2,7 @@ package compiler;
 
 import java.util.ArrayList;
 
+import Instruction.Create;
 import Instruction.DataType;
 import Instruction.Node;
 import Instruction.Operator;
@@ -44,42 +45,57 @@ public class SQLFactory {
 	}
 	
 	public Node createNodeConcat(Node n1, Node n2) {
-		return null;
+		Node n = new NodeConcat();
+		n.getChildren().add(n1);
+		n.getChildren().add(n2);
+		return n;
 	}
 
-	public Node createNodeCreate(Node t, Node d, Node p) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeCreate(Node table, Node datas, Node primaryKey) {
+		Node n = new NodeCreate();
+		n.getChildren().add(table);
+		n.getChildren().add(datas);
+		n.getChildren().add(primaryKey);
+		return n;
 	}
 
-	public Node createNodeData(Node c, Node t, Node e) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeData(Node column, Node type, Node nullable) {
+		Node n = new NodeData();
+		n.getChildren().add(column);
+		n.getChildren().add(type);
+		n.getChildren().add(nullable);
+		return n;
 	}
 
-	public Node createNodeDelete(Node t, Node w) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeDelete(Node table, Node where) {
+		Node n = new NodeDelete();
+		n.getChildren().add(table);
+		n.getChildren().add(where);
+		return n;
 	}
 
 	public Node createNodeDiv(Node f, Node t) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeDiv();
+		n.getChildren().add(f);
+		n.getChildren().add(t);
+		return n;
 	}
 
-	public Node createNodeDrop(Node t) {
-		// TODO Auto-generated method stub
-		return null;
+	public Node createNodeDrop(Node table) {
+		Node n = new NodeDrop();
+		n.getChildren().add(table);
+		return n;
 	}
 
 	public Node createNodeGroupBy(Node c) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeGroupBy();
+		n.getChildren().add(c);
+		return n;
 	}
 
 	public Node createNodeInsert(Node cols, Node vs) {
-		// TODO Auto-generated method stub
-		return null;
+		Node n = new NodeInsert();
+		
 	}
 
 	public Node createNodeMinus(Node s, Node f) {
