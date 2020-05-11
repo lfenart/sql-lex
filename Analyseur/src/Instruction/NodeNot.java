@@ -1,5 +1,5 @@
 package Instruction;
 
-public class NodeNot {
+public class NodeNot extends Node {
 
 }

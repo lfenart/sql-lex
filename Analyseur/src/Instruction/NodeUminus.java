@@ -1,5 +1,5 @@
 package Instruction;
 
-public class NodeUminus {
+public class NodeUminus extends Node {
 
 }
