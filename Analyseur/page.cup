@@ -95,8 +95,8 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 				:}
 			;
 
-Columns	::= Column:n				{: RESULT = getFactory().createNodeColumns(); RESULT.addChild(n); :}
-     	|	Columns:ns SEP Column:n	{: RESULT = ns; ns.addChild(n); :}
+Columns	::= Column:n				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(n); :}
+     	|	Columns:ns SEP Column:n	{: RESULT = ns; ns.getChildren().add(n); :}
      	;
 
 Column	::=	ID:name	{: RESULT = getFactory().createNodeColumn(name); :}
@@ -146,8 +146,8 @@ Expression	::=	AndCondition:c					{: RESULT = c; :}
 			|	Expression:e OR AndCondition:c
 				{:
 					RESULT = getFactory().createNodeOperator(Operator.OR);
-					RESULT.addChild(e);
-					RESULT.addChild(c);
+					RESULT.getChildren().add(e);
+					RESULT.getChildren().add(c);
 				:}
          	;
          	
@@ -155,8 +155,8 @@ AndCondition	::=	Condition:c						{: RESULT = c; :}
 				|	AndCondition:e AND Condition:c
 					{:
 						RESULT = getFactory().createNodeOperator(Operator.AND);
-						RESULT.addChild(e);
-						RESULT.addChild(c);
+						RESULT.getChildren().add(e);
+						RESULT.getChildren().add(c);
 					:}
          		;
          		
@@ -164,10 +164,10 @@ Condition	::=	Operand:o	{: RESULT = o; :}
 			|	Operand:o1 Compare:cmp Operand:o2
 				{:
 					RESULT = cmp;
-					cmp.addChild(o1);
-					cmp.addChild(o2);
+					cmp.getChildren().add(o1);
+					cmp.getChildren().add(o2);
 				:}
-			|	NOT Expression:e	{: RESULT = getFactory().createNodeNot(); RESULT.addChild(e); :}
+			|	NOT Expression:e	{: RESULT = getFactory().createNodeNot(); RESULT.getChildren().add(e); :}
 			|	OPEN_PARENTHESIS Expression:e CLOSE_PARENTHESIS	{: RESULT = e; :}
 			;
 			
