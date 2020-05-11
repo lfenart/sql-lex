@@ -95,6 +95,7 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 				:}
 			;
 
+
 Columns	::= Column:n				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(n); :}
      	|	Columns:ns SEP Column:n	{: RESULT = ns; ns.getChildren().add(n); :}
      	;
@@ -228,7 +229,6 @@ NullOpt	::=
 NotOpt	::=
 		|	NOT	{: RESULT = getFactory().createNodeNot(); :}
 		;
-
 
 Values	::= Value:v		{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(v); :}
 		|	Values:vs SEP Value:v	{: RESULT = vs; vs.getChildren().add(v); :}

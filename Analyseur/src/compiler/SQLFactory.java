@@ -28,5 +28,21 @@ public class SQLFactory {
     	else return retour;
 	}
 	
+	public Node createNodeBoolean(boolean b) {
+		return null;
+	}
+	
+	public Node createNodeNull() {
+		return null;
+	}
+	
+	public Node createNodeNumeric(Node n) {
+		return null;
+	}
+	
+	public Node createNodeText(String str) {
+		return null;
+	}
+	
 
 }
