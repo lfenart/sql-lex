@@ -64,8 +64,7 @@ nonterminal Node	Set, Sets;
 nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
 nonterminal Node	Values, Value, Numeric;
 nonterminal Node	PrimaryKeyOpt, PrimaryKey;
-nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term;
-nonterminal Node	UminusOpt;
+nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term, Terms;
 nonterminal Node	SelectExpression, SelectExpressions;
 nonterminal Node	Number;
 
@@ -87,9 +86,9 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 				:}
 			|	DELETE FROM Table:t WhereOpt:w	{: RESULT = getFactory().createNodeDelete(t, w); :}
 			|	UPDATE Table:t SET Sets:s WhereOpt:w	{: RESULT = getFactory().createNodeUpdate(t, s, w); :}
-			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Values:vs CLOSE_PARENTHESIS
+			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Terms:ts CLOSE_PARENTHESIS
 				{:
-					RESULT = getFactory().createNodeInsert(cols, vs);
+					RESULT = getFactory().createNodeInsert(t, cols, ts);
 				:}
 			|	SELECT SelectExpressions:e FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o
 				{:
@@ -225,6 +224,10 @@ Factor	::=	Term:t					{: RESULT = t; :}
 		|	Factor:f MULT Term:t	{: RESULT = getFactory().createNodeMult(f, t); :}
 		|	Factor:f DIV Term:t		{: RESULT = getFactory().createNodeDiv(f, t); :}
 		;
+		
+Terms	::=	Term:t	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(t); :}
+		|	Terms:ts SEP Term:t	{: RESULT = ts; ts.getChildren().add(t); :}
+		;
 
 Term	::= Value:v		{: RESULT = v; :}
 		|	Column:c	{: RESULT = c; :}
@@ -276,19 +279,9 @@ Value	::= TEXT:t		{: RESULT = getFactory().createNodeText(t); :}
 		|	NULL		{: RESULT = getFactory().createNodeNull(); :}
 		;
 
-Numeric	::=	UminusOpt:m Number:n
-			{:
-				if (m == null) {
-					RESULT = n;
-				} else {
-					RESULT = m; m.getChildren().add(n);
-				}
-			:}
+Numeric	::=	Number:n		{: RESULT = n; :}
+		|	MINUS Number:n	{: RESULT = getFactory().createNodeUminus(); RESULT.getChildren().add(n); :}
 		;
-
-UminusOpt	::=
-			|	MINUS	{: RESULT = getFactory().createNodeUminus(); :}
-			;
 
 PrimaryKeyOpt	::=
 				|	PrimaryKey:k	{: RESULT = k; :}

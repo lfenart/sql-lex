@@ -115,10 +115,11 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeInsert(Node cols, Node vs) {
+	public Node createNodeInsert(Node table, Node cols, Node terms) {
 		Node n = new NodeInsert();
+		n.getChildren().add(table);
 		n.getChildren().add(cols);
-		n.getChildren().add(vs);
+		n.getChildren().add(terms);
 		return n;
 	}
 
