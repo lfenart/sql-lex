@@ -59,7 +59,7 @@
 ";"				{ return getSymbolFactory().newSymbol("TERM", Sym.TERM); }
 "("				{ return getSymbolFactory().newSymbol("OPEN_PARENTHESIS", Sym.OPEN_PARENTHESIS); }
 ")"				{ return getSymbolFactory().newSymbol("CLOSE_PARENTHESIS", Sym.CLOSE_PARENTHESIS); }
-"."				{ return getSymbolFactory().newSymbol("TERM", Sym.TERM); }
+"."				{ return getSymbolFactory().newSymbol("POINT", Sym.POINT); }
 
 [0-9]*"."[0-9]+	{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
 [0-9]+"."			{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }

@@ -34,7 +34,7 @@ parser code {:
 
 :}
 
-terminal TERM, SEP;
+terminal TERM, SEP, POINT;
 terminal SELECT, SELECT_ALL, FROM, WHERE, CREATE, TABLE, DELETE, UPDATE, SET, PRIMARY, KEY, INSERT, INTO, VALUES;
 terminal Long INTEGER;
 terminal Double DOUBLE;
@@ -122,9 +122,9 @@ SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBloc
 			
 SelectExpression	::=	Term:t	{: RESULT = t; :}
 					;
-					
+											
 JoinOpt		::=
-			| Join:j JOIN Table:t1 ON Table:t2 TERM Column:c1 EQUAL Table TERM Column {: RESULT = getFactory().createNodeJoin(j); 
+			| Join:j JOIN Table:t1 ON Table:t2 POINT Column:c1 EQUAL Table POINT Column {: RESULT = getFactory().createNodeJoin(j); 
 																								RESULT.getChildren().add(t1);
 																								RESULT.getChildren().add(t2);
 																								RESULT.getChildren().add(c1); :}
