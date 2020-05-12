@@ -12,9 +12,11 @@ import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
 import Instruction.NodeExpression;
+import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
@@ -109,5 +111,8 @@ public abstract class Visitor {
 	public abstract void visitUpdate(NodeUpdate nodeUpdate);
 
 	public abstract void visitWhere(NodeWhere nodeWhere);
+	
+	public abstract void visitFunction(NodeFunction nodeFunction);
 
+	public abstract void visitJoin(NodeJoin nodeJoin);
 }

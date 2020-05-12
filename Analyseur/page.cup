@@ -51,6 +51,9 @@ terminal CONCAT;
 terminal PLUS, MINUS, MULT, DIV;
 terminal TRUE, FALSE;
 terminal NULLS, FIRST, LAST;
+terminal String INNER, CROSS, LEFT, RIGHT, FULL, SELF, NATURAL;
+terminal String JOIN;
+terminal ON;
 
 nonterminal Node	Commandes, Instruction, Instructions;
 nonterminal Node 	Expression, Expressions;
@@ -67,6 +70,9 @@ nonterminal Node	PrimaryKeyOpt, PrimaryKey;
 nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term, Terms;
 nonterminal Node	SelectExpression, SelectExpressions;
 nonterminal Node	Number;
+nonterminal Node	Function;
+nonterminal Node	JoinOpt;
+nonterminal String	Join;
 
 precedence left PLUS, MINUS;
 precedence left MULT, DIV;
@@ -90,13 +96,13 @@ Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CL
 				{:
 					RESULT = getFactory().createNodeInsert(t, cols, ts);
 				:}
-			|	SELECT SelectExpressions:e FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o
+			|	SELECT SelectExpressions:e FROM Table:t JoinOpt:j WhereOpt:w GroupByOpt:g OrderByOpt:o
 				{:
-					RESULT = getFactory().createNodeSelect(e,  t, w, g, o);
+					RESULT = getFactory().createNodeSelect(e, j, t, w, g, o);
 				:}
-			|	SELECT_ALL FROM Table:t WhereOpt:w GroupByOpt:g OrderByOpt:o
+			|	SELECT_ALL FROM Table:t JoinOpt:j WhereOpt:w GroupByOpt:g OrderByOpt:o
 				{:
-					RESULT = getFactory().createNodeSelect(null /* fix? */, t, w, g, o);
+					RESULT = getFactory().createNodeSelect(null /* fix? */, j, t, w, g, o);
 				:}
 			|	DROP TABLE Table:t
 				{:
@@ -110,12 +116,31 @@ SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBloc
 							RESULT = es;
 							es.getChildren().add(e);
 						:}
+					| Function:f	{: RESULT = f; :}
 					;
+					
 			
 SelectExpression	::=	Term:t	{: RESULT = t; :}
 					;
+					
+JoinOpt		::=
+			| Join:j JOIN Table:t1 ON Table:t2 TERM Column:c1 EQUAL Table TERM Column {: RESULT = getFactory().createNodeJoin(j); 
+																								RESULT.getChildren().add(t1);
+																								RESULT.getChildren().add(t2);
+																								RESULT.getChildren().add(c1); :}
+			;
+			
+Join		::= INNER {: RESULT = "inner"; :}
+			| CROSS {: RESULT = "cross"; :}
+			| LEFT {: RESULT = "left"; :}
+			| RIGHT {: RESULT = "right"; :}
+			| FULL {: RESULT = "full"; :}
+			| SELF {: RESULT = "self"; :}
+			;
 
-
+Function	::= ID:name OPEN_PARENTHESIS Column:c CLOSE_PARENTHESIS {: RESULT = getFactory().createNodeFunction(name); RESULT.getChildren().add(c); :}
+			;
+			
 Columns	::= Column:n				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(n); :}
      	|	Columns:ns SEP Column:n	{: RESULT = ns; ns.getChildren().add(n); :}
      	;

@@ -15,9 +15,11 @@ import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
 import Instruction.NodeExpression;
+import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
@@ -311,6 +313,22 @@ public class XmlVisitor extends Visitor {
 		this.out.print("<where>");
 		this.visitNode(nodeWhere);
 		this.out.print("</where>");
+	}
+
+	@Override
+	public void visitFunction(NodeFunction nodeFunction) {
+		// TODO Auto-generated method stub
+		this.out.print("<" + nodeFunction.getName().toLowerCase() + ">");
+		this.visitNode(nodeFunction);
+		this.out.print("</" + nodeFunction.getName().toLowerCase() + ">");
+	}
+
+	@Override
+	public void visitJoin(NodeJoin nodeJoin) {
+		// TODO Auto-generated method stub
+		this.out.print("<" + nodeJoin.getName().toLowerCase() + ">");
+		this.visitNode(nodeJoin);
+		this.out.print("</" + nodeJoin.getName().toLowerCase() + ">");
 	}
 
 	

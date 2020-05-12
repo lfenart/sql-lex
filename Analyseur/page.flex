@@ -40,6 +40,10 @@
 "nulls"|"NULLS"					{ return getSymbolFactory().newSymbol("NULLS", Sym.NULLS); }
 "first"|"FIRST"					{ return getSymbolFactory().newSymbol("FIRST", Sym.FIRST); }
 "last"|"LAST"					{ return getSymbolFactory().newSymbol("LAST", Sym.LAST); }
+"on"|"ON"						{ return getSymbolFactory().newSymbol("ON", Sym.ON); }
+"inner"|"INNER"					{ return getSymbolFactory().newSymbol("INNER", Sym.INNER); }
+
+"join"|"JOIN"					{ return getSymbolFactory().newSymbol("JOIN", Sym.JOIN); }
 
 "="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "<>"|"!="		{ return getSymbolFactory().newSymbol("NOT_EQ", Sym.NOT_EQ); }
@@ -55,6 +59,7 @@
 ";"				{ return getSymbolFactory().newSymbol("TERM", Sym.TERM); }
 "("				{ return getSymbolFactory().newSymbol("OPEN_PARENTHESIS", Sym.OPEN_PARENTHESIS); }
 ")"				{ return getSymbolFactory().newSymbol("CLOSE_PARENTHESIS", Sym.CLOSE_PARENTHESIS); }
+"."				{ return getSymbolFactory().newSymbol("TERM", Sym.TERM); }
 
 [0-9]*"."[0-9]+	{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
 [0-9]+"."			{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }

@@ -11,9 +11,11 @@ import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
 import Instruction.NodeExpression;
+import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
@@ -230,6 +232,18 @@ public class SQLVisitor extends Visitor {
 
 	@Override
 	public void visitWhere(NodeWhere nodeWhere) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitFunction(NodeFunction nodeFunction) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitJoin(NodeJoin nodeJoin) {
 		// TODO Auto-generated method stub
 		
 	}

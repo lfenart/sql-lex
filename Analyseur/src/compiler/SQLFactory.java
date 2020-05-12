@@ -14,9 +14,11 @@ import Instruction.NodeDelete;
 import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
+import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
@@ -162,10 +164,11 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeSelect(Node selectExpression, Node table, Node where, Node group, Node order) {
+	public Node createNodeSelect(Node selectExpression, Node table, Node join, Node where, Node group, Node order) {
 		Node n = new NodeSelect();
 		n.getChildren().add(selectExpression);
 		n.getChildren().add(table);
+		n.getChildren().add(join);
 		n.getChildren().add(where);
 		n.getChildren().add(group);
 		n.getChildren().add(order);
@@ -238,5 +241,16 @@ public class SQLFactory {
 	public Node createNodeInteger(Long n) {
 		return new NodeInteger(n);
 	}
+	
+	public Node createNodeFunction(String name) {
+		Node n = new NodeFunction(name);
+		return n;
+	}
+	
+	public Node createNodeJoin(String name) {
+		Node n = new NodeJoin(name);
+		return n;
+	}
+
 
 }
