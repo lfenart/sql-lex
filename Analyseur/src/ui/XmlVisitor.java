@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import Instruction.Node;
@@ -38,8 +39,11 @@ import Instruction.NodeUpdate;
 import Instruction.NodeWhere;
 
 public class XmlVisitor extends Visitor {
+	PrintWriter out;
 	
-	PrintWriter out = new PrintWriter(System.out);
+	public XmlVisitor() throws FileNotFoundException {
+		 out = new PrintWriter("testXML.xml");
+	}
 
 	@Override
 	public void visitBlock(NodeBlock nodeBlock) {
