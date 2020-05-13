@@ -1,5 +1,5 @@
 package Instruction;
 
 public enum DataType {
-	INT, VARCHAR
+	INT, VARCHAR, BIGINT, BIT, TINYINT, SMALLINT, NUMERIC, FLOAT, REAL, MONEY, DECIMAL, DATE, TIME, CHAR, TEXT;
 }

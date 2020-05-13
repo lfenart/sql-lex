@@ -43,7 +43,7 @@ terminal String ID;
 terminal String	TEXT;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS;
 terminal NOT, NULL;
-terminal INT, VARCHAR;
+terminal INT, VARCHAR, BIGINT, BIT, TINYINT, SMALLINT, NUMERIC, FLOAT, REAL, MONEY, DECIMAL, DATE, TIME, CHAR;
 terminal ORDER, GROUP, BY, ASC, DESC;
 terminal DROP;
 terminal OR, AND;
@@ -321,9 +321,19 @@ Data	::=	Column:c DataType:t NullOpt:e	{: RESULT = getFactory().createNodeData(c
     	;
 
 
-DataType 	::= INT	{: RESULT = getFactory().createNodeType(DataType.INT); :}
-			|	VARCHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
-			;
+Type 	::= INT			{: RESULT = getFactory().createNodeType(DataType.INT); :}
+		| 	SMALLINT	{: RESULT = getFactory().createNodeType(DataType.SMALLINT); :}
+		| 	TINYINT		{: RESULT = getFactory().createNodeType(DataType.TINYINT); :}
+		| 	BIGINT		{: RESULT = getFactory().createNodeType(DataType.BIGINT); :}
+		| 	FLOAT		{: RESULT = getFactory().createNodeType(DataType.FLOAT); :}
+		| 	REAL		{: RESULT = getFactory().createNodeType(DataType.REAL); :}
+		| 	MONEY		{: RESULT = getFactory().createNodeType(DataType.MONEY); :}
+		| 	DATE		{: RESULT = getFactory().createNodeType(DataType.DATE); :}
+		| 	TIME		{: RESULT = getFactory().createNodeType(DataType.TIME); :}
+		| 	BIT			{: RESULT = getFactory().createNodeType(DataType.BIT); :}
+		| 	CHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS		{: RESULT = getFactory().createNodeType(DataType.CHAR,n); :}
+		|	VARCHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
+		;
 
 NullOpt	::=
 		|	NotOpt:n NULL
