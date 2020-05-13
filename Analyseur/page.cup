@@ -321,7 +321,7 @@ Data	::=	Column:c DataType:t NullOpt:e	{: RESULT = getFactory().createNodeData(c
     	;
 
 
-Type 	::= INT			{: RESULT = getFactory().createNodeType(DataType.INT); :}
+DataType 	::= INT			{: RESULT = getFactory().createNodeType(DataType.INT); :}
 		| 	SMALLINT	{: RESULT = getFactory().createNodeType(DataType.SMALLINT); :}
 		| 	TINYINT		{: RESULT = getFactory().createNodeType(DataType.TINYINT); :}
 		| 	BIGINT		{: RESULT = getFactory().createNodeType(DataType.BIGINT); :}
