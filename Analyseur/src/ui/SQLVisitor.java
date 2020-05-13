@@ -1,8 +1,11 @@
 package ui;
 
+import Instruction.NodeAs;
 import Instruction.NodeBlock;
 import Instruction.NodeBoolean;
 import Instruction.NodeColumn;
+import Instruction.NodeColumnAlias;
+import Instruction.NodeColumnName;
 import Instruction.NodeConcat;
 import Instruction.NodeCreate;
 import Instruction.NodeData;
@@ -11,6 +14,7 @@ import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
 import Instruction.NodeExpression;
+import Instruction.NodeFrom;
 import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
@@ -28,8 +32,11 @@ import Instruction.NodeOrderExpression;
 import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
 import Instruction.NodeRoot;
+import Instruction.NodeSchemaName;
 import Instruction.NodeSelect;
+import Instruction.NodeSelectExpression;
 import Instruction.NodeSet;
+import Instruction.NodeTableAlias;
 import Instruction.NodeTableExpression;
 import Instruction.NodeText;
 import Instruction.NodeType;
@@ -37,6 +44,7 @@ import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
 import Instruction.NodeUsing;
 import Instruction.NodeWhere;
+import Instruction.NodeWildcard;
 
 public class SQLVisitor extends Visitor {
 
@@ -258,6 +266,54 @@ public class SQLVisitor extends Visitor {
 
 	@Override
 	public void visitUsing(NodeUsing nodeUsing) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitColumnName(NodeColumnName nodeColumnName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitSchemaName(NodeSchemaName nodeSchemaName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitTableAlias(NodeTableAlias nodeTableAlias) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitWildcard(NodeWildcard nodeWildcard) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitSelectExpression(NodeSelectExpression nodeSelectExpression) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitAs(NodeAs nodeAs) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitColumnAlias(NodeColumnAlias nodeColumnAlias) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visitFrom(NodeFrom nodeFrom) {
 		// TODO Auto-generated method stub
 		
 	}

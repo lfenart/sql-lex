@@ -14,7 +14,6 @@
 ^#.*			{ }
 
 "select"|"SELECT"				{ return getSymbolFactory().newSymbol("SELECT", Sym.SELECT); }
-"select"|"SELECT"[ \t\n\r]+\*	{ return getSymbolFactory().newSymbol("SELECT_ALL", Sym.SELECT_ALL); }
 "from"|"FROM"					{ return getSymbolFactory().newSymbol("FROM", Sym.FROM); }
 "where"|"WHERE"					{ return getSymbolFactory().newSymbol("WHERE", Sym.WHERE); }
 "create"|"CREATE"				{ return getSymbolFactory().newSymbol("CREATE", Sym.CREATE); }
