@@ -3,10 +3,14 @@ package compiler;
 import java.util.ArrayList;
 
 import Instruction.DataType;
+import Instruction.JoinType;
 import Instruction.Node;
+import Instruction.NodeAs;
 import Instruction.NodeBlock;
 import Instruction.NodeBoolean;
 import Instruction.NodeColumn;
+import Instruction.NodeColumnAlias;
+import Instruction.NodeColumnName;
 import Instruction.NodeConcat;
 import Instruction.NodeCreate;
 import Instruction.NodeData;
@@ -14,28 +18,37 @@ import Instruction.NodeDelete;
 import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
+import Instruction.NodeFrom;
+import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
 import Instruction.NodeNull;
 import Instruction.NodeNumeric;
+import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
 import Instruction.NodeOrderExpression;
 import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
+import Instruction.NodeSchemaName;
 import Instruction.NodeSelect;
+import Instruction.NodeSelectExpression;
 import Instruction.NodeSet;
-import Instruction.NodeTable;
+import Instruction.NodeTableAlias;
+import Instruction.NodeTableExpression;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUsing;
 import Instruction.NodeWhere;
+import Instruction.NodeWildcard;
 import Instruction.Operator;
 import Instruction.Order;
 import ui.SQLVisitor;
@@ -162,13 +175,20 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeSelect(Node selectExpression, Node table, Node where, Node group, Node order) {
+	public Node createNodeSelect(Node select, Node table, Node where, Node group, Node order) {
 		Node n = new NodeSelect();
-		n.getChildren().add(selectExpression);
+		n.getChildren().add(select);
 		n.getChildren().add(table);
 		n.getChildren().add(where);
 		n.getChildren().add(group);
 		n.getChildren().add(order);
+		return n;
+	}
+
+	public Node createNodeSelectExpression(Node expression, Node as) {
+		Node n = new NodeSelectExpression();
+		n.getChildren().add(expression);
+		n.getChildren().add(as);
 		return n;
 	}
 
@@ -179,9 +199,10 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeTable(String name) {
-		Node n = new NodeTable();
+	public Node createNodeTableExpression(String name, Node join) {
+		Node n = new NodeTableExpression();
 		n.getChildren().add(new NodeText(name));
+		n.getChildren().add(join);
 		return n;
 	}
 
@@ -217,9 +238,9 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeColumn(String name) {
+	public Node createNodeColumn(Node name) {
 		Node n = new NodeColumn();
-		n.getChildren().add(new NodeText(name));
+		n.getChildren().add(name);
 		return n;
 	}
 
@@ -238,5 +259,85 @@ public class SQLFactory {
 	public Node createNodeInteger(Long n) {
 		return new NodeInteger(n);
 	}
+	
+	public Node createNodeFunction(String name) {
+		Node n = new NodeFunction(name);
+		return n;
+	}
+	
+	public Node createNodeJoin(JoinType joinType, Node expression, Node specification) {
+		Node n = new NodeJoin(joinType);
+		n.getChildren().add(expression);
+		n.getChildren().add(specification);
+		return n;
+	}
+	
+	public Node createNodeOn(Node on) {
+		Node n = new NodeOn();
+		n.getChildren().add(on);
+		return n;
+	}
+	
+	public Node createNodeUsing(Node using) {
+		Node n = new NodeUsing();
+		n.getChildren().add(using);
+		return n;
+	}
+
+	public Node createNodeColumn(Node alias, Node name) {
+		Node n = new NodeColumn();
+		n.getChildren().add(alias);
+		n.getChildren().add(name);
+		return n;
+	}
+	
+	public Node createNodeColumn(Node schema, Node alias, Node name) {
+		Node n = new NodeColumn();
+		n.getChildren().add(schema);
+		n.getChildren().add(alias);
+		n.getChildren().add(name);
+		return n;
+	}
+
+	public Node createNodeColumnName(Node name) {
+		Node n = new NodeColumnName();
+		n.getChildren().add(name);
+		return n;
+	}
+
+	public Node createNodeSchemaName(Node name) {
+		Node n = new NodeSchemaName();
+		n.getChildren().add(name);
+		return n;
+	}
+
+	public Node createNodeTableAlias(Node alias) {
+		Node n = new NodeTableAlias();
+		n.getChildren().add(alias);
+		return n;
+	}
+
+	public Node createNodeWildcard() {
+		return new NodeWildcard();
+	}
+
+	public Node createNodeAs(Node alias) {
+		Node n = new NodeAs();
+		n.getChildren().add(alias);
+		return n;
+	}
+
+	public Node createNodeColumnAlias(Node name) {
+		Node n = new NodeColumnAlias();
+		n.getChildren().add(name);
+		return n;
+	}
+
+	public Node createNodeFrom(Node table) {
+		Node n = new NodeFrom();
+		n.getChildren().add(table);
+		return n;
+	}
+
 
 }
