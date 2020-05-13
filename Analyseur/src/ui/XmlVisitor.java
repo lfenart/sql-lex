@@ -250,7 +250,7 @@ public class XmlVisitor extends Visitor {
 		this.out.print("<" + nodeType.getType());
 		Long size = nodeType.getSize();
 		if (size != null) {
-			this.out.print("size=\"" + size + "\" ");
+			this.out.print(" size=\"" + size + "\" ");
 		}
 		this.out.print("/></type>");
 	}
