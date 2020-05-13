@@ -1,1 +1,16 @@
-A.col
+SELECT ville FROM client;
+SELECT prenom, nom FROM client;
+SELECT * FROM client;
+SELECT * FROM entity WHERE name = 'Big' ;
+SELECT * FROM my_table ORDER BY field1;
+SELECT col1,col2 FROM my_table WHERE name = 'name1' GROUP BY col2 ORDER BY col1 ASC;
+create table films (idFilm int not null, Titre varchar (255) not null,Realisateur varchar (255) not null , primary key (idFilm));
+INSERT INTO films (Titre,Realisateur) VALUES ('Matrix','Realisateur de_Matrix');
+DELETE FROM films where idFilm=2;
+UPDATE films SET Realisateur='John_Woo' where id=1;
+UPDATE films SET Realisateur='John_Woo', Titre=2 where id=1;
+SELECT COUNT(col) FROM client;
+SELECT * FROM A INNER JOIN B ON A.col = B.col;
+-- Commentaire 1
+// Commentaire 2
+/* Commentaire 3 (ne fontionne pas avec les retours a la ligne ???) */
