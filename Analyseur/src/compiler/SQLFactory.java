@@ -3,6 +3,7 @@ package compiler;
 import java.util.ArrayList;
 
 import Instruction.DataType;
+import Instruction.JoinType;
 import Instruction.Node;
 import Instruction.NodeBlock;
 import Instruction.NodeBoolean;
@@ -24,6 +25,7 @@ import Instruction.NodeMult;
 import Instruction.NodeNot;
 import Instruction.NodeNull;
 import Instruction.NodeNumeric;
+import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
@@ -32,11 +34,12 @@ import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
 import Instruction.NodeSelect;
 import Instruction.NodeSet;
-import Instruction.NodeTable;
+import Instruction.NodeTableExpression;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUsing;
 import Instruction.NodeWhere;
 import Instruction.Operator;
 import Instruction.Order;
@@ -164,11 +167,10 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeSelect(Node selectExpression, Node table, Node join, Node where, Node group, Node order) {
+	public Node createNodeSelect(Node selectExpression, Node table, Node where, Node group, Node order) {
 		Node n = new NodeSelect();
 		n.getChildren().add(selectExpression);
 		n.getChildren().add(table);
-		n.getChildren().add(join);
 		n.getChildren().add(where);
 		n.getChildren().add(group);
 		n.getChildren().add(order);
@@ -182,9 +184,10 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeTable(String name) {
-		Node n = new NodeTable();
+	public Node createNodeTableExpression(String name, Node join) {
+		Node n = new NodeTableExpression();
 		n.getChildren().add(new NodeText(name));
+		n.getChildren().add(join);
 		return n;
 	}
 
@@ -220,9 +223,9 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeColumn(String name) {
+	public Node createNodeColumn(Node name) {
 		Node n = new NodeColumn();
-		n.getChildren().add(new NodeText(name));
+		n.getChildren().add(name);
 		return n;
 	}
 
@@ -247,8 +250,37 @@ public class SQLFactory {
 		return n;
 	}
 	
-	public Node createNodeJoin(String name) {
-		Node n = new NodeJoin(name);
+	public Node createNodeJoin(JoinType joinType, Node expression, Node specification) {
+		Node n = new NodeJoin(joinType);
+		n.getChildren().add(expression);
+		n.getChildren().add(specification);
+		return n;
+	}
+	
+	public Node createNodeOn(Node on) {
+		Node n = new NodeOn();
+		n.getChildren().add(on);
+		return n;
+	}
+	
+	public Node createNodeUsing(Node using) {
+		Node n = new NodeUsing();
+		n.getChildren().add(using);
+		return n;
+	}
+
+	public Node createNodeColumn(Node alias, Node name) {
+		Node n = new NodeColumn();
+		n.getChildren().add(alias);
+		n.getChildren().add(name);
+		return n;
+	}
+	
+	public Node createNodeColumn(Node schema, Node alias, Node name) {
+		Node n = new NodeColumn();
+		n.getChildren().add(schema);
+		n.getChildren().add(alias);
+		n.getChildren().add(name);
 		return n;
 	}
 

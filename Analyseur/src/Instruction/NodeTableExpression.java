@@ -2,7 +2,7 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeTable extends Node {
+public class NodeTableExpression extends Node {
 
 	@Override
 	public void accept(Visitor visitor) {

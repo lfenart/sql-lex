@@ -41,6 +41,7 @@
 "first"|"FIRST"					{ return getSymbolFactory().newSymbol("FIRST", Sym.FIRST); }
 "last"|"LAST"					{ return getSymbolFactory().newSymbol("LAST", Sym.LAST); }
 "on"|"ON"						{ return getSymbolFactory().newSymbol("ON", Sym.ON); }
+"using"|"USING"					{ return getSymbolFactory().newSymbol("USING", Sym.USING); }
 "inner"|"INNER"					{ return getSymbolFactory().newSymbol("INNER", Sym.INNER); }
 
 "join"|"JOIN"					{ return getSymbolFactory().newSymbol("JOIN", Sym.JOIN); }

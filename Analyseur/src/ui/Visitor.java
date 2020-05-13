@@ -21,6 +21,7 @@ import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
 import Instruction.NodeNull;
+import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
@@ -30,11 +31,12 @@ import Instruction.NodePrimaryKey;
 import Instruction.NodeRoot;
 import Instruction.NodeSelect;
 import Instruction.NodeSet;
-import Instruction.NodeTable;
+import Instruction.NodeTableExpression;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUsing;
 import Instruction.NodeWhere;
 
 public abstract class Visitor {
@@ -100,7 +102,7 @@ public abstract class Visitor {
 
 	public abstract void visitSet(NodeSet nodeSet);
 
-	public abstract void visitTable(NodeTable nodeTable);
+	public abstract void visitTable(NodeTableExpression nodeTable);
 
 	public abstract void visitText(NodeText nodeText);
 
@@ -115,4 +117,8 @@ public abstract class Visitor {
 	public abstract void visitFunction(NodeFunction nodeFunction);
 
 	public abstract void visitJoin(NodeJoin nodeJoin);
+
+	public abstract void visitOn(NodeOn nodeOn);
+
+	public abstract void visitUsing(NodeUsing nodeUsing);
 }
