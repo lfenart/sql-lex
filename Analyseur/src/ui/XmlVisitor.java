@@ -168,49 +168,16 @@ public class XmlVisitor extends Visitor {
 
 	@Override
 	public void visitOperator(NodeOperator nodeOperator) {
-		String operator = null;;
-		switch (nodeOperator.getOperator()) {
-		case AND:
-			operator = "and";
-			break;
-		case EQUAL:
-			operator = "equal";
-			break;
-		case GREATER:
-			operator = "greater";
-			break;
-		case GREATER_OR_EQ:
-			operator = "greaterOrEq";
-			break;
-		case LESS:
-			operator = "less";
-			break;
-		case LESS_OR_EQ:
-			operator = "lessOrEq";
-			break;
-		case NOT_EQ:
-			operator = "notEq";
-			break;
-		case OR:
-			operator = "or";
-			break;
-		}
-		this.out.print("<" + operator + ">");
+		
+		this.out.print("<" + nodeOperator.getOperator() + ">");
 		this.visitNode(nodeOperator);
-		this.out.print("</" + operator + ">");
+		this.out.print("</" + nodeOperator.getOperator() + ">");
 	}
 
 	@Override
 	public void visitOrder(NodeOrder nodeOrder) {
 		this.out.print("<order>");
-		switch (nodeOrder.getOrder()) {
-		case ASC:
-			this.out.print("<asc />");
-			break;
-		case DESC:
-			this.out.print("<desc />");
-			break;
-		}
+		this.out.print("<" + nodeOrder.getOrder() + "/>");
 		this.out.print("</order>");
 	}
 
