@@ -4,6 +4,7 @@ import Instruction.Node;
 import Instruction.Order;
 import Instruction.DataType;
 import Instruction.Operator;
+import Instruction.JoinType;
 
 parser code {:
 
@@ -35,14 +36,14 @@ parser code {:
 :}
 
 terminal TERM, SEP, POINT;
-terminal SELECT, SELECT_ALL, FROM, WHERE, CREATE, TABLE, DELETE, UPDATE, SET, PRIMARY, KEY, INSERT, INTO, VALUES;
+terminal SELECT, FROM, WHERE, CREATE, TABLE, DELETE, UPDATE, SET, PRIMARY, KEY, INSERT, INTO, VALUES;
 terminal Long INTEGER;
 terminal Double DOUBLE;
 terminal String ID;
 terminal String	TEXT;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS;
 terminal NOT, NULL;
-terminal INT, VARCHAR, BIGINT, BIT, TINYINT, SMALLINT, NUMERIC, FLOAT, REAL, MONEY, DECIMAL, DATE, TIME, CHAR;
+terminal INT, VARCHAR;
 terminal ORDER, GROUP, BY, ASC, DESC;
 terminal DROP;
 terminal OR, AND;
@@ -51,20 +52,22 @@ terminal CONCAT;
 terminal PLUS, MINUS, MULT, DIV;
 terminal TRUE, FALSE;
 terminal NULLS, FIRST, LAST;
-terminal String INNER, CROSS, LEFT, RIGHT, FULL, SELF, NATURAL;
-terminal String JOIN;
+terminal INNER, CROSS, LEFT, RIGHT, FULL, SELF, NATURAL, UNION;
+terminal JOIN;
 terminal ON;
+terminal USING;
+terminal AS;
 
 nonterminal Node	Commandes, Instruction, Instructions;
 nonterminal Node 	Expression, Expressions;
 nonterminal Node	Columns, Column;
-nonterminal Node	Table;
+nonterminal Node	TableExpression;
 nonterminal Node	WhereOpt, Where;
 nonterminal Node	GroupByOpt, GroupBy;
-nonterminal Node	OrderByOpt, OrderBy, Order, Orders, OrderExpression, OrderOpt;
+nonterminal Node	OrderByOpt, OrderBy, Order, OrderExpressions, OrderExpression, OrderOpt;
 nonterminal Node	NullsOpt, Nulls;
 nonterminal Node	Set, Sets;
-nonterminal Node	Datas, Data, Type, NotOpt, NullOpt;
+nonterminal Node	Datas, Data, DataType, NotOpt, NullOpt;
 nonterminal Node	Value, Numeric;
 nonterminal Node	PrimaryKeyOpt, PrimaryKey;
 nonterminal Node	AndCondition, Condition, Operand, Summand, Compare, Factor, Term, Terms;
@@ -72,7 +75,15 @@ nonterminal Node	SelectExpression, SelectExpressions;
 nonterminal Node	Number;
 nonterminal Node	Function;
 nonterminal Node	JoinOpt;
-nonterminal String	Join;
+nonterminal Node	Join;
+nonterminal Node	JoinSpecification;
+nonterminal Node	ColumnName, TableAlias, SchemaName;
+nonterminal Node	As, AsOpt;
+nonterminal Node	ColumnAlias;
+nonterminal Node	SelectInstruction, Select;
+nonterminal Node	From;
+
+nonterminal JoinType	JoinType;
 
 precedence left PLUS, MINUS;
 precedence left MULT, DIV;
@@ -80,35 +91,42 @@ precedence left AND, OR;
 precedence right NOT;
 
 Commandes	::= Instructions
+			|	Expression
          	;
 
 Instructions	::=
             	|	Instructions Instruction:i TERM	{: getContext().addInstruction(i); :}
             	;
 
-Instruction ::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CLOSE_PARENTHESIS
+Instruction ::=	CREATE TABLE TableExpression:t OPEN_PARENTHESIS Datas:d PrimaryKeyOpt:p CLOSE_PARENTHESIS
 				{:
 					RESULT = getFactory().createNodeCreate(t, d, p);
 				:}
-			|	DELETE FROM Table:t WhereOpt:w	{: RESULT = getFactory().createNodeDelete(t, w); :}
-			|	UPDATE Table:t SET Sets:s WhereOpt:w	{: RESULT = getFactory().createNodeUpdate(t, s, w); :}
-			|	INSERT INTO Table:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Terms:ts CLOSE_PARENTHESIS
+			|	DELETE FROM TableExpression:t WhereOpt:w	{: RESULT = getFactory().createNodeDelete(t, w); :}
+			|	UPDATE TableExpression:t SET Sets:s WhereOpt:w	{: RESULT = getFactory().createNodeUpdate(t, s, w); :}
+			|	INSERT INTO TableExpression:t OPEN_PARENTHESIS Columns:cols CLOSE_PARENTHESIS VALUES OPEN_PARENTHESIS Terms:ts CLOSE_PARENTHESIS
 				{:
 					RESULT = getFactory().createNodeInsert(t, cols, ts);
 				:}
-			|	SELECT SelectExpressions:e FROM Table:t JoinOpt:j WhereOpt:w GroupByOpt:g OrderByOpt:o
-				{:
-					RESULT = getFactory().createNodeSelect(e, j, t, w, g, o);
-				:}
-			|	SELECT_ALL FROM Table:t JoinOpt:j WhereOpt:w GroupByOpt:g OrderByOpt:o
-				{:
-					RESULT = getFactory().createNodeSelect(null /* fix? */, j, t, w, g, o);
-				:}
-			|	DROP TABLE Table:t
+			|	DROP TABLE TableExpression:t
 				{:
 					RESULT = getFactory().createNodeDrop(t);
 				:}
+			|	SelectInstruction:s	{: RESULT = s; :}
 			;
+
+SelectInstruction	::=	SELECT Select:s FROM From:f WhereOpt:w GroupByOpt:g OrderByOpt:o
+						{:
+							RESULT = getFactory().createNodeSelect(s, f, w, g, o);
+						:}
+					;
+					
+Select	::=	MULT /* hack: wildcard */	{: RESULT = getFactory().createNodeSelectExpression(getFactory().createNodeWildcard(), null); :}
+		|	SelectExpressions:es		{: RESULT = es; :}
+		;
+		
+From	::=	TableExpression:t	{: RESULT = getFactory().createNodeFrom(t); :}
+		;
 			
 SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(e); :}
 					|	SelectExpressions:es SEP SelectExpression:e
@@ -117,25 +135,19 @@ SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBloc
 							es.getChildren().add(e);
 						:}
 					;
-					
 			
-SelectExpression	::=	Term:t	{: RESULT = t; :}
-					| Function:f	{: RESULT = f; :}
+SelectExpression	::=	Expression:e AsOpt:a	{: RESULT = getFactory().createNodeSelectExpression(e, a); :}
+					|	Function:f	{: RESULT = f; :}
 					;
-											
-JoinOpt		::=
-			| Join:j JOIN Table:t1 ON Table:t2 POINT Column:c1 EQUAL Table POINT Column {: RESULT = getFactory().createNodeJoin(j); 
-																								RESULT.getChildren().add(t1);
-																								RESULT.getChildren().add(t2);
-																								RESULT.getChildren().add(c1); :}
-			;
-			
-Join		::= INNER {: RESULT = "inner"; :}
-			| CROSS {: RESULT = "cross"; :}
-			| LEFT {: RESULT = "left"; :}
-			| RIGHT {: RESULT = "right"; :}
-			| FULL {: RESULT = "full"; :}
-			| SELF {: RESULT = "self"; :}
+					
+AsOpt	::=	
+		|	As:a	{: RESULT = a; :}
+		;
+		
+As	::=	AS ColumnAlias:alias	{: RESULT = getFactory().createNodeAs(alias); :}
+	;
+	
+ColumnAlias	::=	ID:name	{: RESULT = getFactory().createNodeColumnAlias(getFactory().createNodeText(name)); :}
 			;
 
 Function	::= ID:name OPEN_PARENTHESIS Column:c CLOSE_PARENTHESIS {: RESULT = getFactory().createNodeFunction(name); RESULT.getChildren().add(c); :}
@@ -145,11 +157,47 @@ Columns	::= Column:n				{: RESULT = getFactory().createNodeBlock(); RESULT.getCh
      	|	Columns:ns SEP Column:n	{: RESULT = ns; ns.getChildren().add(n); :}
      	;
 
-Column	::=	ID:name	{: RESULT = getFactory().createNodeColumn(name); :}
+Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
+		|	TableAlias:alias POINT ColumnName:name	{: RESULT = getFactory().createNodeColumn(alias, name); :}
+// shift/reduce		|	SchemaName:schema POINT TableAlias:alias POINT ColumnName:name	{: RESULT = getFactory().createNodeColumn(schema, alias, name); :}
     	;
+    	
+ColumnName	::=	ID:name	{: RESULT = getFactory().createNodeColumnName(getFactory().createNodeText(name)); :}
+			;
+			
 
-Table	::=	ID:name	{: RESULT = getFactory().createNodeTable(name); :}
-     	;
+TableAlias	::=	ID:alias	{: RESULT = getFactory().createNodeTableAlias(getFactory().createNodeText(alias)); :}
+			;
+
+/*			
+SchemaName	::=	ID:name	{: RESULT = getFactory().createNodeSchemaName(getFactory().createNodeText(name)); :}
+			;
+*/
+
+TableExpression	::=	ID:name JoinOpt:j  {: RESULT = getFactory().createNodeTableExpression(name, j); :}
+     			;
+     			
+JoinOpt		::=	
+			|	Join:j	{: RESULT = j; :}
+			;
+			
+Join		::= JoinType:t JOIN TableExpression:e JoinSpecification:s	{: RESULT = getFactory().createNodeJoin(t, e, s); :}
+			;
+
+JoinType	::=	
+			|	INNER	{: RESULT = JoinType.INNER; :}
+			|	CROSS	{: RESULT = JoinType.CROSS; :}
+			|	LEFT	{: RESULT = JoinType.LEFT; :}
+			|	RIGHT	{: RESULT = JoinType.RIGHT; :}
+			|	FULL	{: RESULT = JoinType.FULL; :}
+			|	SELF	{: RESULT = JoinType.SELF; :}
+			|	NATURAL	{: RESULT = JoinType.NATURAL; :}
+			|	UNION	{: RESULT = JoinType.UNION; :}
+			;
+			
+JoinSpecification	::=	ON Expression:e	{: RESULT = getFactory().createNodeOn(e); :}
+					|	USING OPEN_PARENTHESIS Columns:cs CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeUsing(cs); :}
+					;
 
 WhereOpt	::=
         	|	Where:w	{: RESULT = w; :}
@@ -169,12 +217,12 @@ OrderByOpt	::=
 			| OrderBy:o	{: RESULT = o; :}
 			;
 
-OrderBy ::= ORDER BY Orders:os	{: RESULT = os; :}
+OrderBy ::= ORDER BY OrderExpressions:os	{: RESULT = os; :}
 		;
 
-Orders	::=	OrderExpression:o	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(o); :}
-		|	Orders:os SEP OrderExpression:o	{: RESULT = os; os.getChildren().add(o); :}
-		;
+OrderExpressions	::=	OrderExpression:o	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(o); :}
+					|	OrderExpressions:os SEP OrderExpression:o	{: RESULT = os; os.getChildren().add(o); :}
+					;
 		
 OrderExpression	::=	Expression:e OrderOpt:o NullsOpt:n	{: RESULT = getFactory().createNodeOrderExpression(e, o, n); :}
 				;
@@ -269,23 +317,13 @@ Datas	::= Data:d				{: RESULT = getFactory().createNodeBlock(); RESULT.getChildr
      	|	Datas:ds SEP Data:d	{: RESULT = ds; ds.getChildren().add(d); :}
      	;
 
-Data	::=	Column:c Type:t NullOpt:e	{: RESULT = getFactory().createNodeData(c, t, e); :}
+Data	::=	Column:c DataType:t NullOpt:e	{: RESULT = getFactory().createNodeData(c, t, e); :}
     	;
 
 
-Type 	::= INT			{: RESULT = getFactory().createNodeType(DataType.INT); :}
-		| 	SMALLINT	{: RESULT = getFactory().createNodeType(DataType.SMALLINT); :}
-		| 	TINYINT		{: RESULT = getFactory().createNodeType(DataType.TINYINT); :}
-		| 	BIGINT		{: RESULT = getFactory().createNodeType(DataType.BIGINT); :}
-		| 	FLOAT		{: RESULT = getFactory().createNodeType(DataType.FLOAT); :}
-		| 	REAL		{: RESULT = getFactory().createNodeType(DataType.REAL); :}
-		| 	MONEY		{: RESULT = getFactory().createNodeType(DataType.MONEY); :}
-		| 	DATE		{: RESULT = getFactory().createNodeType(DataType.DATE); :}
-		| 	TIME		{: RESULT = getFactory().createNodeType(DataType.TIME); :}
-		| 	BIT			{: RESULT = getFactory().createNodeType(DataType.BIT); :}
-		| 	CHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS		{: RESULT = getFactory().createNodeType(DataType.CHAR,n); :}
-		|	VARCHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
-		;
+DataType 	::= INT	{: RESULT = getFactory().createNodeType(DataType.INT); :}
+			|	VARCHAR OPEN_PARENTHESIS INTEGER:n CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeType(DataType.VARCHAR, n); :}
+			;
 
 NullOpt	::=
 		|	NotOpt:n NULL

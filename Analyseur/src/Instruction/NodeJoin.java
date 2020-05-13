@@ -2,26 +2,21 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeJoin extends Node{
-
-	private String name;
-
-	public NodeJoin(String name) {
-		this.name = name;
+public class NodeJoin extends Node {
+	
+	private JoinType type;
+	
+	public NodeJoin(JoinType type) {
+		this.type = type;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	
+	public JoinType getType() {
+		return this.type;
 	}
 
 	@Override
 	public void accept(Visitor visitor) {
-		// TODO Auto-generated method stub
 		visitor.visitJoin(this);
 	}
-	
+
 }

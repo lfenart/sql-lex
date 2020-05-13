@@ -4,9 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import Instruction.Node;
+import Instruction.NodeAs;
 import Instruction.NodeBlock;
 import Instruction.NodeBoolean;
 import Instruction.NodeColumn;
+import Instruction.NodeColumnAlias;
+import Instruction.NodeColumnName;
 import Instruction.NodeConcat;
 import Instruction.NodeCreate;
 import Instruction.NodeData;
@@ -15,6 +18,7 @@ import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
 import Instruction.NodeExpression;
+import Instruction.NodeFrom;
 import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
@@ -24,6 +28,7 @@ import Instruction.NodeMinus;
 import Instruction.NodeMult;
 import Instruction.NodeNot;
 import Instruction.NodeNull;
+import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
@@ -31,20 +36,25 @@ import Instruction.NodeOrderExpression;
 import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
 import Instruction.NodeRoot;
+import Instruction.NodeSchemaName;
 import Instruction.NodeSelect;
+import Instruction.NodeSelectExpression;
 import Instruction.NodeSet;
-import Instruction.NodeTable;
+import Instruction.NodeTableAlias;
+import Instruction.NodeTableExpression;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUsing;
 import Instruction.NodeWhere;
+import Instruction.NodeWildcard;
 
 public class XmlVisitor extends Visitor {
 	PrintWriter out;
-	
+
 	public XmlVisitor() throws FileNotFoundException {
-		 out = new PrintWriter("testXML.xml");
+		out = new PrintWriter("testXML.xml");
 	}
 
 	@Override
@@ -168,16 +178,49 @@ public class XmlVisitor extends Visitor {
 
 	@Override
 	public void visitOperator(NodeOperator nodeOperator) {
-		
-		this.out.print("<" + nodeOperator.getOperator() + ">");
+		String operator = null;
+		switch (nodeOperator.getOperator()) {
+		case AND:
+			operator = "and";
+			break;
+		case EQUAL:
+			operator = "equal";
+			break;
+		case GREATER:
+			operator = "greater";
+			break;
+		case GREATER_OR_EQ:
+			operator = "greaterOrEq";
+			break;
+		case LESS:
+			operator = "less";
+			break;
+		case LESS_OR_EQ:
+			operator = "lessOrEq";
+			break;
+		case NOT_EQ:
+			operator = "notEq";
+			break;
+		case OR:
+			operator = "or";
+			break;
+		}
+		this.out.print("<" + operator + ">");
 		this.visitNode(nodeOperator);
-		this.out.print("</" + nodeOperator.getOperator() + ">");
+		this.out.print("</" + operator + ">");
 	}
 
 	@Override
 	public void visitOrder(NodeOrder nodeOrder) {
 		this.out.print("<order>");
-		this.out.print("<" + nodeOrder.getOrder() + "/>");
+		switch (nodeOrder.getOrder()) {
+		case ASC:
+			this.out.print("<asc />");
+			break;
+		case DESC:
+			this.out.print("<desc />");
+			break;
+		}
 		this.out.print("</order>");
 	}
 
@@ -233,7 +276,7 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
-	public void visitTable(NodeTable nodeTable) {
+	public void visitTable(NodeTableExpression nodeTable) {
 		this.out.print("<table>");
 		this.visitNode(nodeTable);
 		this.out.print("</table>");
@@ -246,13 +289,19 @@ public class XmlVisitor extends Visitor {
 
 	@Override
 	public void visitType(NodeType nodeType) {
-		this.out.print("<type>");
-		this.out.print("<" + nodeType.getType());
+		this.out.print("<type value=\"");
+		switch (nodeType.getType()) {
+		case INT:
+			this.out.print("int\"");
+			break;
+		case VARCHAR:
+			this.out.print("varchar\"");
+		}
 		Long size = nodeType.getSize();
 		if (size != null) {
 			this.out.print(" size=\"" + size + "\" ");
 		}
-		this.out.print("/></type>");
+		this.out.print(" />");
 	}
 
 	@Override
@@ -278,7 +327,6 @@ public class XmlVisitor extends Visitor {
 
 	@Override
 	public void visitFunction(NodeFunction nodeFunction) {
-		// TODO Auto-generated method stub
 		this.out.print("<" + nodeFunction.getName().toLowerCase() + ">");
 		this.visitNode(nodeFunction);
 		this.out.print("</" + nodeFunction.getName().toLowerCase() + ">");
@@ -286,12 +334,106 @@ public class XmlVisitor extends Visitor {
 
 	@Override
 	public void visitJoin(NodeJoin nodeJoin) {
-		// TODO Auto-generated method stub
-		this.out.print("<" + nodeJoin.getName().toLowerCase() + ">");
+		this.out.print("<join");
+		switch (nodeJoin.getType()) {
+		case CROSS:
+			this.out.print(" value=\"cross\"");
+			break;
+		case FULL:
+			this.out.print(" value=\"full\"");
+			break;
+		case INNER:
+			this.out.print(" value=\"inner\"");
+			break;
+		case LEFT:
+			this.out.print(" value=\"left\"");
+			break;
+		case NATURAL:
+			this.out.print(" value=\"natural\"");
+			break;
+		case RIGHT:
+			this.out.print(" value=\"right\"");
+			break;
+		case SELF:
+			this.out.print(" value=\"self\"");
+			break;
+		case UNION:
+			this.out.print(" value=\"union\"");
+			break;
+		default:
+			break;
+		}
+		this.out.print(">");
 		this.visitNode(nodeJoin);
-		this.out.print("</" + nodeJoin.getName().toLowerCase() + ">");
+		this.out.print("</join>");
 	}
 
-	
-	
+	@Override
+	public void visitOn(NodeOn nodeOn) {
+		this.out.print("<on>");
+		this.visitNode(nodeOn);
+		this.out.print("</on>");
+	}
+
+	@Override
+	public void visitUsing(NodeUsing nodeUsing) {
+		this.out.print("<using>");
+		this.visitNode(nodeUsing);
+		this.out.print("</using>");
+	}
+
+	@Override
+	public void visitColumnName(NodeColumnName nodeColumnName) {
+		this.out.print("<columnName>");
+		this.visitNode(nodeColumnName);
+		this.out.print("</columnName>");
+	}
+
+	@Override
+	public void visitSchemaName(NodeSchemaName nodeSchemaName) {
+		this.out.print("<schemaName>");
+		this.visitNode(nodeSchemaName);
+		this.out.print("</schemaName>");
+	}
+
+	@Override
+	public void visitTableAlias(NodeTableAlias nodeTableAlias) {
+		this.out.print("<tableAlias>");
+		this.visitNode(nodeTableAlias);
+		this.out.print("</tableAlias>");
+	}
+
+	@Override
+	public void visitWildcard(NodeWildcard nodeWildcard) {
+		this.out.print("<wildcard />");
+	}
+
+	@Override
+	public void visitSelectExpression(NodeSelectExpression nodeSelectExpression) {
+		this.out.print("<selectExpression>");
+		this.visitNode(nodeSelectExpression);
+		this.out.print("</selectExpression>");
+	}
+
+	@Override
+	public void visitAs(NodeAs nodeAs) {
+		this.out.print("<as>");
+		this.visitNode(nodeAs);
+		this.out.print("</as>");
+	}
+
+	@Override
+	public void visitColumnAlias(NodeColumnAlias nodeColumnAlias) {
+		this.out.print("<columnAlias>");
+		this.visitNode(nodeColumnAlias);
+		this.out.print("</columnAlias>");
+	}
+
+	@Override
+	public void visitFrom(NodeFrom nodeFrom) {
+		this.out.print("<from>");
+		this.visitNode(nodeFrom);
+		this.out.print("</from>");
+	}
+
 }

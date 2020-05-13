@@ -1,6 +1,6 @@
 
 %%
-%caseless
+
 %package compiler
 %class Lexer
 %public
@@ -8,51 +8,50 @@
 %column
 %cup
 
-
 %%
 
 [ \t\n\r]		{ }
 ^#.*			{ }
 
-"select"				{ return getSymbolFactory().newSymbol("SELECT", Sym.SELECT); }
-"select"[ \t\n\r]+\*	{ return getSymbolFactory().newSymbol("SELECT_ALL", Sym.SELECT_ALL); }
-"from"					{ return getSymbolFactory().newSymbol("FROM", Sym.FROM); }
-"where"					{ return getSymbolFactory().newSymbol("WHERE", Sym.WHERE); }
-"create"				{ return getSymbolFactory().newSymbol("CREATE", Sym.CREATE); }
-"table"					{ return getSymbolFactory().newSymbol("TABLE", Sym.TABLE); }
-"primary"				{ return getSymbolFactory().newSymbol("PRIMARY", Sym.PRIMARY); }
-"key"					{ return getSymbolFactory().newSymbol("KEY", Sym.KEY); }
-"delete"				{ return getSymbolFactory().newSymbol("DELETE", Sym.DELETE); }
-"update"				{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
-"insert"				{ return getSymbolFactory().newSymbol("INSERT", Sym.INSERT); }
-"into"					{ return getSymbolFactory().newSymbol("INTO", Sym.INTO); }
-"int"					{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
-"varchar"				{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
-"smallint"				{ return getSymbolFactory().newSymbol("SMALLINT", Sym.SMALLINT); }
-"tinyint"				{ return getSymbolFactory().newSymbol("TINYINT", Sym.TINYINT); }
-"bigint"				{ return getSymbolFactory().newSymbol("BIGINT", Sym.BIGINT); }
-"float"					{ return getSymbolFactory().newSymbol("FLOAT", Sym.FLOAT); }
-"real"					{ return getSymbolFactory().newSymbol("REAL", Sym.REAL); }
-"money"					{ return getSymbolFactory().newSymbol("MONEY", Sym.MONEY); }
-"time"					{ return getSymbolFactory().newSymbol("TIME", Sym.TIME); }
-"bit"					{ return getSymbolFactory().newSymbol("BIT", Sym.BIT); }
-"char"					{ return getSymbolFactory().newSymbol("CHAR", Sym.CHAR); }
-"not"					{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
-"null"					{ return getSymbolFactory().newSymbol("NULL", Sym.NULL); }
-"set"					{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
-"values"				{ return getSymbolFactory().newSymbol("VALUES", Sym.VALUES); }
-"drop"					{ return getSymbolFactory().newSymbol("DROP", Sym.DROP); }
-"group"					{ return getSymbolFactory().newSymbol("GROUP", Sym.GROUP); }
-"order"					{ return getSymbolFactory().newSymbol("ORDER", Sym.ORDER); }
-"by"					{ return getSymbolFactory().newSymbol("BY", Sym.BY); }
-"desc"					{ return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
-"asc"					{ return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
-"nulls"					{ return getSymbolFactory().newSymbol("NULLS", Sym.NULLS); }
-"first"					{ return getSymbolFactory().newSymbol("FIRST", Sym.FIRST); }
-"last"					{ return getSymbolFactory().newSymbol("LAST", Sym.LAST); }
-"on"					{ return getSymbolFactory().newSymbol("ON", Sym.ON); }
-"inner"					{ return getSymbolFactory().newSymbol("INNER", Sym.INNER); }
-"join"					{ return getSymbolFactory().newSymbol("JOIN", Sym.JOIN); }
+"select"|"SELECT"				{ return getSymbolFactory().newSymbol("SELECT", Sym.SELECT); }
+"from"|"FROM"					{ return getSymbolFactory().newSymbol("FROM", Sym.FROM); }
+"where"|"WHERE"					{ return getSymbolFactory().newSymbol("WHERE", Sym.WHERE); }
+"create"|"CREATE"				{ return getSymbolFactory().newSymbol("CREATE", Sym.CREATE); }
+"table"|"TABLE"					{ return getSymbolFactory().newSymbol("TABLE", Sym.TABLE); }
+"primary"|"PRIMARY"				{ return getSymbolFactory().newSymbol("PRIMARY", Sym.PRIMARY); }
+"key"|"KEY"						{ return getSymbolFactory().newSymbol("KEY", Sym.KEY); }
+"delete"|"DELETE"				{ return getSymbolFactory().newSymbol("DELETE", Sym.DELETE); }
+"update"|"UPDATE"				{ return getSymbolFactory().newSymbol("UPDATE", Sym.UPDATE); }
+"insert"|"INSERT"				{ return getSymbolFactory().newSymbol("INSERT", Sym.INSERT); }
+"into"|"INTO"					{ return getSymbolFactory().newSymbol("INTO", Sym.INTO); }
+"int"|"INT"						{ return getSymbolFactory().newSymbol("INT", Sym.INT); }
+"varchar"|"VARCHAR"				{ return getSymbolFactory().newSymbol("VARCHAR", Sym.VARCHAR); }
+"not"|"NOT"						{ return getSymbolFactory().newSymbol("NOT", Sym.NOT); }
+"null"|"NULL"					{ return getSymbolFactory().newSymbol("NULL", Sym.NULL); }
+"set"|"SET"						{ return getSymbolFactory().newSymbol("SET", Sym.SET); }
+"values"|"VALUES"				{ return getSymbolFactory().newSymbol("VALUES", Sym.VALUES); }
+"drop"|"DROP"					{ return getSymbolFactory().newSymbol("DROP", Sym.DROP); }
+"group"|"GROUP"					{ return getSymbolFactory().newSymbol("GROUP", Sym.GROUP); }
+"order"|"ORDER"					{ return getSymbolFactory().newSymbol("ORDER", Sym.ORDER); }
+"by"|"BY"						{ return getSymbolFactory().newSymbol("BY", Sym.BY); }
+"desc"|"DESC"					{ return getSymbolFactory().newSymbol("DESC", Sym.DESC); }
+"asc"|"ASC"						{ return getSymbolFactory().newSymbol("ASC", Sym.ASC); }
+"nulls"|"NULLS"					{ return getSymbolFactory().newSymbol("NULLS", Sym.NULLS); }
+"first"|"FIRST"					{ return getSymbolFactory().newSymbol("FIRST", Sym.FIRST); }
+"last"|"LAST"					{ return getSymbolFactory().newSymbol("LAST", Sym.LAST); }
+"on"|"ON"						{ return getSymbolFactory().newSymbol("ON", Sym.ON); }
+"as"|"AS"						{ return getSymbolFactory().newSymbol("AS", Sym.AS); }
+"using"|"USING"					{ return getSymbolFactory().newSymbol("USING", Sym.USING); }
+"inner"|"INNER"					{ return getSymbolFactory().newSymbol("INNER", Sym.INNER); }
+"cross"|"CROSS"					{ return getSymbolFactory().newSymbol("CROSS", Sym.CROSS); }
+"left"|"LEFT"					{ return getSymbolFactory().newSymbol("LEFT", Sym.LEFT); }
+"right"|"RIGHT"					{ return getSymbolFactory().newSymbol("RIGHT", Sym.RIGHT); }
+"full"|"FULL"					{ return getSymbolFactory().newSymbol("FULL", Sym.FULL); }
+"self"|"SELF"					{ return getSymbolFactory().newSymbol("SELF", Sym.SELF); }
+"natural"|"NATURAL"					{ return getSymbolFactory().newSymbol("NATURAL", Sym.NATURAL); }
+"union"|"UNION"					{ return getSymbolFactory().newSymbol("UNION", Sym.UNION); }
+
+"join"|"JOIN"					{ return getSymbolFactory().newSymbol("JOIN", Sym.JOIN); }
 
 "="				{ return getSymbolFactory().newSymbol("EQUAL", Sym.EQUAL); }
 "<>"|"!="		{ return getSymbolFactory().newSymbol("NOT_EQ", Sym.NOT_EQ); }
@@ -75,7 +74,7 @@
 [0-9]+			{ return getSymbolFactory().newSymbol("INTEGER", Sym.INTEGER, Long.parseLong(yytext())); }
 
 [a-zA-Z][a-zA-Z_0-9]*	{ return getSymbolFactory().newSymbol("ID", Sym.ID, yytext()); }
-\'.*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
+\'[^']*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
 
 "--".*\n	{}
 "//".*\n	{}
