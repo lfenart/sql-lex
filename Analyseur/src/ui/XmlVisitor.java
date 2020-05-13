@@ -280,13 +280,7 @@ public class XmlVisitor extends Visitor {
 	@Override
 	public void visitType(NodeType nodeType) {
 		this.out.print("<type>");
-		switch (nodeType.getType()) {
-		case INT:
-			this.out.print("<int ");
-			break;
-		case VARCHAR:
-			this.out.print("<varchar ");
-		}
+		this.out.print("<" + nodeType.getType());
 		Long size = nodeType.getSize();
 		if (size != null) {
 			this.out.print("size=\"" + size + "\" ");
