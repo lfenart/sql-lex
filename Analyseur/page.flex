@@ -43,6 +43,13 @@
 "on"|"ON"						{ return getSymbolFactory().newSymbol("ON", Sym.ON); }
 "using"|"USING"					{ return getSymbolFactory().newSymbol("USING", Sym.USING); }
 "inner"|"INNER"					{ return getSymbolFactory().newSymbol("INNER", Sym.INNER); }
+"cross"|"CROSS"					{ return getSymbolFactory().newSymbol("CROSS", Sym.CROSS); }
+"left"|"LEFT"					{ return getSymbolFactory().newSymbol("LEFT", Sym.LEFT); }
+"right"|"RIGHT"					{ return getSymbolFactory().newSymbol("RIGHT", Sym.RIGHT); }
+"full"|"FULL"					{ return getSymbolFactory().newSymbol("FULL", Sym.FULL); }
+"self"|"SELF"					{ return getSymbolFactory().newSymbol("SELF", Sym.SELF); }
+"natural"|"NATURAL"					{ return getSymbolFactory().newSymbol("NATURAL", Sym.NATURAL); }
+"union"|"UNION"					{ return getSymbolFactory().newSymbol("UNION", Sym.UNION); }
 
 "join"|"JOIN"					{ return getSymbolFactory().newSymbol("JOIN", Sym.JOIN); }
 
