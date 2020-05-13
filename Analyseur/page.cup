@@ -91,6 +91,7 @@ precedence left AND, OR;
 precedence right NOT;
 
 Commandes	::= Instructions
+			|	Expression
          	;
 
 Instructions	::=
@@ -133,10 +134,10 @@ SelectExpressions	::=	SelectExpression:e	{: RESULT = getFactory().createNodeBloc
 							RESULT = es;
 							es.getChildren().add(e);
 						:}
-					|	Function:f	{: RESULT = f; :}
 					;
 			
 SelectExpression	::=	Expression:e AsOpt:a	{: RESULT = getFactory().createNodeSelectExpression(e, a); :}
+					|	Function:f	{: RESULT = f; :}
 					;
 					
 AsOpt	::=	
@@ -164,18 +165,19 @@ Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
 ColumnName	::=	ID:name	{: RESULT = getFactory().createNodeColumnName(getFactory().createNodeText(name)); :}
 			;
 			
-/*
+
 TableAlias	::=	ID:alias	{: RESULT = getFactory().createNodeTableAlias(getFactory().createNodeText(alias)); :}
 			;
-*/
-			
+
+/*			
 SchemaName	::=	ID:name	{: RESULT = getFactory().createNodeSchemaName(getFactory().createNodeText(name)); :}
 			;
+*/
 
-TableExpression	::=	ID:name	JoinOpt:j {: RESULT = getFactory().createNodeTableExpression(name, j); :}
+TableExpression	::=	ID:name JoinOpt:j  {: RESULT = getFactory().createNodeTableExpression(name, j); :}
      			;
      			
-JoinOpt		::=
+JoinOpt		::=	
 			|	Join:j	{: RESULT = j; :}
 			;
 			
