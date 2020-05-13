@@ -261,7 +261,7 @@ public class XmlVisitor extends Visitor {
 		if (size != null) {
 			this.out.print(" size=\"" + size + "\" ");
 		}
-		this.out.print(" />");
+		this.out.print(" /></type>");
 	}
 
 	@Override
