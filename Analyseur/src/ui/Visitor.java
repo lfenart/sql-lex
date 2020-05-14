@@ -14,12 +14,12 @@ import Instruction.NodeDelete;
 import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
-import Instruction.NodeExpression;
 import Instruction.NodeFrom;
 import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeInto;
 import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
@@ -29,21 +29,22 @@ import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
-import Instruction.NodeOrderExpression;
 import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
 import Instruction.NodeRoot;
-import Instruction.NodeSchemaName;
 import Instruction.NodeSelect;
 import Instruction.NodeSelectExpression;
 import Instruction.NodeSet;
 import Instruction.NodeTableAlias;
 import Instruction.NodeTableExpression;
+import Instruction.NodeTable;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUplus;
 import Instruction.NodeUsing;
+import Instruction.NodeValues;
 import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
 
@@ -51,16 +52,23 @@ public abstract class Visitor {
 
 	public void visitNode(Node node) {
 		for (Node n : node.getChildren()) {
-			if (n != null)
+			if (n != null) {
 				n.accept(this);
+			}
 		}
 	}
+
+	public abstract void visitAs(NodeAs nodeAs);
 
 	public abstract void visitBlock(NodeBlock nodeBlock);
 
 	public abstract void visitBoolean(NodeBoolean nodeBoolean);
 
 	public abstract void visitColumn(NodeColumn nodeColumn);
+
+	public abstract void visitColumnAlias(NodeColumnAlias nodeColumnAlias);
+
+	public abstract void visitColumnName(NodeColumnName nodeColumnName);
 
 	public abstract void visitConcat(NodeConcat nodeConcat);
 
@@ -76,7 +84,9 @@ public abstract class Visitor {
 
 	public abstract void visitDrop(NodeDrop nodeDrop);
 
-	public abstract void visitExpression(NodeExpression nodeExpression);
+	public abstract void visitFrom(NodeFrom nodeFrom);
+
+	public abstract void visitFunction(NodeFunction nodeFunction);
 
 	public abstract void visitGroup(NodeGroup nodeGroup);
 
@@ -84,21 +94,29 @@ public abstract class Visitor {
 
 	public abstract void visitInteger(NodeInteger nodeInteger);
 
+	public abstract void visitInto(NodeInto nodeInto);
+
+	public abstract void visitJoin(NodeJoin nodeJoin);
+
 	public abstract void visitMinus(NodeMinus nodeMinus);
 
 	public abstract void visitMult(NodeMult nodeMult);
 
+	public abstract void visitNodeUplus(NodeUplus nodeUplus);
+
+	public abstract void visitNodeValues(NodeValues nodeValues);
+
 	public abstract void visitNot(NodeNot nodeNot);
 
 	public abstract void visitNull(NodeNull nodeNull);
+
+	public abstract void visitOn(NodeOn nodeOn);
 
 	public abstract void visitOperator(NodeOperator nodeOperator);
 
 	public abstract void visitOrder(NodeOrder nodeOrder);
 
 	public abstract void visitOrderBy(NodeOrderBy nodeOrderBy);
-
-	public abstract void visitOrderExpression(NodeOrderExpression nodeOrderExpression);
 
 	public abstract void visitPlus(NodePlus nodePlus);
 
@@ -108,9 +126,15 @@ public abstract class Visitor {
 
 	public abstract void visitSelect(NodeSelect nodeSelect);
 
+	public abstract void visitSelectExpression(NodeSelectExpression nodeSelectExpression);
+
 	public abstract void visitSet(NodeSet nodeSet);
 
+	public abstract void visitTable(NodeTable nodeTableName);
+
 	public abstract void visitTable(NodeTableExpression nodeTable);
+
+	public abstract void visitTableAlias(NodeTableAlias nodeTableAlias);
 
 	public abstract void visitText(NodeText nodeText);
 
@@ -120,29 +144,9 @@ public abstract class Visitor {
 
 	public abstract void visitUpdate(NodeUpdate nodeUpdate);
 
-	public abstract void visitWhere(NodeWhere nodeWhere);
-	
-	public abstract void visitFunction(NodeFunction nodeFunction);
-
-	public abstract void visitJoin(NodeJoin nodeJoin);
-
-	public abstract void visitOn(NodeOn nodeOn);
-
 	public abstract void visitUsing(NodeUsing nodeUsing);
 
-	public abstract void visitColumnName(NodeColumnName nodeColumnName);
-
-	public abstract void visitSchemaName(NodeSchemaName nodeSchemaName);
-
-	public abstract void visitTableAlias(NodeTableAlias nodeTableAlias);
+	public abstract void visitWhere(NodeWhere nodeWhere);
 
 	public abstract void visitWildcard(NodeWildcard nodeWildcard);
-
-	public abstract void visitSelectExpression(NodeSelectExpression nodeSelectExpression);
-
-	public abstract void visitAs(NodeAs nodeAs);
-
-	public abstract void visitColumnAlias(NodeColumnAlias nodeColumnAlias);
-
-	public abstract void visitFrom(NodeFrom nodeFrom);
 }

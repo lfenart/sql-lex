@@ -2,11 +2,11 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeExpression extends Node {
+public class NodeValues extends Node {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitExpression(this);
+		visitor.visitNodeValues(this);
 	}
 
 }

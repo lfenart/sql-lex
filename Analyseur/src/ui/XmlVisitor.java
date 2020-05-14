@@ -17,12 +17,12 @@ import Instruction.NodeDelete;
 import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
-import Instruction.NodeExpression;
 import Instruction.NodeFrom;
 import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeInto;
 import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
@@ -32,21 +32,22 @@ import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
-import Instruction.NodeOrderExpression;
 import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
 import Instruction.NodeRoot;
-import Instruction.NodeSchemaName;
 import Instruction.NodeSelect;
 import Instruction.NodeSelectExpression;
 import Instruction.NodeSet;
 import Instruction.NodeTableAlias;
 import Instruction.NodeTableExpression;
+import Instruction.NodeTable;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUplus;
 import Instruction.NodeUsing;
+import Instruction.NodeValues;
 import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
 
@@ -55,6 +56,13 @@ public class XmlVisitor extends Visitor {
 
 	public XmlVisitor() throws FileNotFoundException {
 		out = new PrintWriter("testXML.xml");
+	}
+
+	@Override
+	public void visitAs(NodeAs nodeAs) {
+		this.out.print("<as>");
+		this.visitNode(nodeAs);
+		this.out.print("</as>");
 	}
 
 	@Override
@@ -74,6 +82,20 @@ public class XmlVisitor extends Visitor {
 		this.out.print("<column>");
 		this.visitNode(nodeColumn);
 		this.out.print("</column>");
+	}
+
+	@Override
+	public void visitColumnAlias(NodeColumnAlias nodeColumnAlias) {
+		this.out.print("<columnAlias>");
+		this.visitNode(nodeColumnAlias);
+		this.out.print("</columnAlias>");
+	}
+
+	@Override
+	public void visitColumnName(NodeColumnName nodeColumnName) {
+		this.out.print("<columnName>");
+		this.visitNode(nodeColumnName);
+		this.out.print("</columnName>");
 	}
 
 	@Override
@@ -124,11 +146,17 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
-	public void visitExpression(NodeExpression nodeExpression) {
-		// TODO
-		this.out.print("<expression>");
-		this.visitNode(nodeExpression);
-		this.out.print("</expression>");
+	public void visitFrom(NodeFrom nodeFrom) {
+		this.out.print("<from>");
+		this.visitNode(nodeFrom);
+		this.out.print("</from>");
+	}
+
+	@Override
+	public void visitFunction(NodeFunction nodeFunction) {
+		this.out.print("<" + nodeFunction.getName().toLowerCase() + ">");
+		this.visitNode(nodeFunction);
+		this.out.print("</" + nodeFunction.getName().toLowerCase() + ">");
 	}
 
 	@Override
@@ -151,145 +179,10 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
-	public void visitMinus(NodeMinus nodeMinus) {
-		this.out.print("<inus>");
-		this.visitNode(nodeMinus);
-		this.out.print("</minus>");
-	}
-
-	@Override
-	public void visitMult(NodeMult nodeMult) {
-		this.out.print("<mult>");
-		this.visitNode(nodeMult);
-		this.out.print("</mult>");
-	}
-
-	@Override
-	public void visitNot(NodeNot nodeNot) {
-		this.out.print("<not>");
-		this.visitNode(nodeNot);
-		this.out.print("</not>");
-	}
-
-	@Override
-	public void visitNull(NodeNull nodeNull) {
-		this.out.print("<null />");
-	}
-
-	@Override
-	public void visitOperator(NodeOperator nodeOperator) {
-		this.out.print("<" + nodeOperator.getOperator() + ">");
-		this.visitNode(nodeOperator);
-		this.out.print("</" + nodeOperator.getOperator() + ">");
-	}
-
-	@Override
-	public void visitOrder(NodeOrder nodeOrder) {
-		this.out.print("<order>");
-		this.out.print("<" + nodeOrder.getOrder() + "/>");
-		this.out.print("</order>");
-	}
-
-	@Override
-	public void visitOrderBy(NodeOrderBy nodeOrderBy) {
-		this.out.print("<orderBy>");
-		this.visitNode(nodeOrderBy);
-		this.out.print("</orderBy>");
-	}
-
-	@Override
-	public void visitOrderExpression(NodeOrderExpression nodeOrderExpression) {
-		this.out.print("<orderExpression>");
-		this.visitNode(nodeOrderExpression);
-		this.out.print("</orderExpression>");
-	}
-
-	@Override
-	public void visitPlus(NodePlus nodePlus) {
-		this.out.print("<plus>");
-		this.visitNode(nodePlus);
-		this.out.print("</plus>");
-	}
-
-	@Override
-	public void visitPrimary(NodePrimaryKey nodePrimaryKey) {
-		this.out.print("<primaryKey>");
-		this.visitNode(nodePrimaryKey);
-		this.out.print("</primaryKey>");
-	}
-
-	@Override
-	public void visitRoot(NodeRoot nodeRoot) {
-		this.out.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		this.out.print("<root>");
-		this.visitNode(nodeRoot);
-		this.out.print("</root>");
-		this.out.flush();
-	}
-
-	@Override
-	public void visitSelect(NodeSelect nodeSelect) {
-		this.out.print("<select>");
-		this.visitNode(nodeSelect);
-		this.out.print("</select>");
-	}
-
-	@Override
-	public void visitSet(NodeSet nodeSet) {
-		this.out.print("<set>");
-		this.visitNode(nodeSet);
-		this.out.print("</set>");
-	}
-
-	@Override
-	public void visitTable(NodeTableExpression nodeTable) {
-		this.out.print("<table>");
-		this.visitNode(nodeTable);
-		this.out.print("</table>");
-	}
-
-	@Override
-	public void visitText(NodeText nodeText) {
-		this.out.print("<text value=\"" + nodeText.getValue() + "\" />");
-	}
-
-	@Override
-	public void visitType(NodeType nodeType) {
-		this.out.print("<type>");
-		this.out.print("<" + nodeType.getType());
-		Long size = nodeType.getSize();
-		if (size != null) {
-			this.out.print(" size=\"" + size + "\" ");
-		}
-		this.out.print(" /></type>");
-	}
-
-	@Override
-	public void visitUminus(NodeUminus nodeUminus) {
-		this.out.print("<uminus>");
-		this.visitNode(nodeUminus);
-		this.out.print("</uminus>");
-	}
-
-	@Override
-	public void visitUpdate(NodeUpdate nodeUpdate) {
-		this.out.print("<update>");
-		this.visitNode(nodeUpdate);
-		this.out.print("</update>");
-	}
-
-	@Override
-	public void visitWhere(NodeWhere nodeWhere) {
-		this.out.print("<where>");
-		this.visitNode(nodeWhere);
-		this.out.print("</where>");
-	}
-
-	@Override
-	public void visitFunction(NodeFunction nodeFunction) {
-		this.out.print("<" + nodeFunction.getName().toLowerCase() + ">");
-		this.visitNode(nodeFunction);
-		this.out.print("</" + nodeFunction.getName().toLowerCase() + ">");
+	public void visitInto(NodeInto nodeInto) {
+		this.out.print("<into>");
+		this.visitNode(nodeInto);
+		this.out.print("</into>");
 	}
 
 	@Override
@@ -329,6 +222,46 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
+	public void visitMinus(NodeMinus nodeMinus) {
+		this.out.print("<inus>");
+		this.visitNode(nodeMinus);
+		this.out.print("</minus>");
+	}
+
+	@Override
+	public void visitMult(NodeMult nodeMult) {
+		this.out.print("<mult>");
+		this.visitNode(nodeMult);
+		this.out.print("</mult>");
+	}
+
+	@Override
+	public void visitNodeUplus(NodeUplus nodeUplus) {
+		this.out.print("<unaryPlus>");
+		this.visitNode(nodeUplus);
+		this.out.print("</unaryPlus>");
+	}
+
+	@Override
+	public void visitNodeValues(NodeValues nodeValues) {
+		this.out.print("<values>");
+		this.visitNode(nodeValues);
+		this.out.print("</values>");
+	}
+
+	@Override
+	public void visitNot(NodeNot nodeNot) {
+		this.out.print("<not>");
+		this.visitNode(nodeNot);
+		this.out.print("</not>");
+	}
+
+	@Override
+	public void visitNull(NodeNull nodeNull) {
+		this.out.print("<null />");
+	}
+
+	@Override
 	public void visitOn(NodeOn nodeOn) {
 		this.out.print("<on>");
 		this.visitNode(nodeOn);
@@ -336,36 +269,54 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
-	public void visitUsing(NodeUsing nodeUsing) {
-		this.out.print("<using>");
-		this.visitNode(nodeUsing);
-		this.out.print("</using>");
+	public void visitOperator(NodeOperator nodeOperator) {
+		this.out.print("<" + nodeOperator.getOperator() + ">");
+		this.visitNode(nodeOperator);
+		this.out.print("</" + nodeOperator.getOperator() + ">");
 	}
 
 	@Override
-	public void visitColumnName(NodeColumnName nodeColumnName) {
-		this.out.print("<columnName>");
-		this.visitNode(nodeColumnName);
-		this.out.print("</columnName>");
+	public void visitOrder(NodeOrder nodeOrder) {
+		this.out.print("<order>");
+		this.out.print("<" + nodeOrder.getOrder() + "/>");
+		this.out.print("</order>");
 	}
 
 	@Override
-	public void visitSchemaName(NodeSchemaName nodeSchemaName) {
-		this.out.print("<schemaName>");
-		this.visitNode(nodeSchemaName);
-		this.out.print("</schemaName>");
+	public void visitOrderBy(NodeOrderBy nodeOrderBy) {
+		this.out.print("<orderBy>");
+		this.visitNode(nodeOrderBy);
+		this.out.print("</orderBy>");
 	}
 
 	@Override
-	public void visitTableAlias(NodeTableAlias nodeTableAlias) {
-		this.out.print("<tableAlias>");
-		this.visitNode(nodeTableAlias);
-		this.out.print("</tableAlias>");
+	public void visitPlus(NodePlus nodePlus) {
+		this.out.print("<plus>");
+		this.visitNode(nodePlus);
+		this.out.print("</plus>");
 	}
 
 	@Override
-	public void visitWildcard(NodeWildcard nodeWildcard) {
-		this.out.print("<wildcard />");
+	public void visitPrimary(NodePrimaryKey nodePrimaryKey) {
+		this.out.print("<primaryKey>");
+		this.visitNode(nodePrimaryKey);
+		this.out.print("</primaryKey>");
+	}
+
+	@Override
+	public void visitRoot(NodeRoot nodeRoot) {
+		this.out.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		this.out.print("<root>");
+		this.visitNode(nodeRoot);
+		this.out.print("</root>");
+		this.out.flush();
+	}
+
+	@Override
+	public void visitSelect(NodeSelect nodeSelect) {
+		this.out.print("<select>");
+		this.visitNode(nodeSelect);
+		this.out.print("</select>");
 	}
 
 	@Override
@@ -376,24 +327,80 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
-	public void visitAs(NodeAs nodeAs) {
-		this.out.print("<as>");
-		this.visitNode(nodeAs);
-		this.out.print("</as>");
+	public void visitSet(NodeSet nodeSet) {
+		this.out.print("<set>");
+		this.visitNode(nodeSet);
+		this.out.print("</set>");
 	}
 
 	@Override
-	public void visitColumnAlias(NodeColumnAlias nodeColumnAlias) {
-		this.out.print("<columnAlias>");
-		this.visitNode(nodeColumnAlias);
-		this.out.print("</columnAlias>");
+	public void visitTable(NodeTable nodeTableName) {
+		this.out.print("<table>");
+		this.visitNode(nodeTableName);
+		this.out.print("</table>");
 	}
 
 	@Override
-	public void visitFrom(NodeFrom nodeFrom) {
-		this.out.print("<from>");
-		this.visitNode(nodeFrom);
-		this.out.print("</from>");
+	public void visitTable(NodeTableExpression nodeTable) {
+		this.out.print("<table>");
+		this.visitNode(nodeTable);
+		this.out.print("</table>");
+	}
+
+	@Override
+	public void visitTableAlias(NodeTableAlias nodeTableAlias) {
+		this.out.print("<tableAlias>");
+		this.visitNode(nodeTableAlias);
+		this.out.print("</tableAlias>");
+	}
+
+	@Override
+	public void visitText(NodeText nodeText) {
+		this.out.print("<text value=\"" + nodeText.getValue() + "\" />");
+	}
+
+	@Override
+	public void visitType(NodeType nodeType) {
+		this.out.print("<type>");
+		this.out.print("<" + nodeType.getType());
+		Long size = nodeType.getSize();
+		if (size != null) {
+			this.out.print(" size=\"" + size + "\" ");
+		}
+		this.out.print(" /></type>");
+	}
+
+	@Override
+	public void visitUminus(NodeUminus nodeUminus) {
+		this.out.print("<uminus>");
+		this.visitNode(nodeUminus);
+		this.out.print("</uminus>");
+	}
+
+	@Override
+	public void visitUpdate(NodeUpdate nodeUpdate) {
+		this.out.print("<update>");
+		this.visitNode(nodeUpdate);
+		this.out.print("</update>");
+	}
+
+	@Override
+	public void visitUsing(NodeUsing nodeUsing) {
+		this.out.print("<using>");
+		this.visitNode(nodeUsing);
+		this.out.print("</using>");
+	}
+
+	@Override
+	public void visitWhere(NodeWhere nodeWhere) {
+		this.out.print("<where>");
+		this.visitNode(nodeWhere);
+		this.out.print("</where>");
+	}
+
+	@Override
+	public void visitWildcard(NodeWildcard nodeWildcard) {
+		this.out.print("<wildcard />");
 	}
 
 }
