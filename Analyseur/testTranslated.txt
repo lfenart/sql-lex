@@ -11,7 +11,4 @@ UPDATE films SET Realisateur='John_Woo' where id=1;
 UPDATE films SET Realisateur='John_Woo', Titre=2 where id=1;
 SELECT COUNT(col) FROM client;
 SELECT * FROM A INNER JOIN B ON A.col = B.col;
-SELECT * FROM A WHERE (- id * 2) = -1;
--- Commentaire 1
-// Commentaire 2
-/* Commentaire 3 (ne fontionne pas avec les retours a la ligne ???) */
+SELECT * FROM A WHERE - id * 2 = (-1 + x) * 3 / -4;
