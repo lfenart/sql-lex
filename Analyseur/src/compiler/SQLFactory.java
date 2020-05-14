@@ -51,15 +51,12 @@ import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
 import Instruction.Operator;
 import Instruction.Order;
-import ui.SQLVisitor;
 
 public class SQLFactory {
 
-	public SQLVisitor visitor;
 	public ArrayList<Node> variables;
 
 	public SQLFactory() {
-		visitor = new SQLVisitor();
 		variables = new ArrayList<Node>();
 	}
 

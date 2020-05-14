@@ -43,7 +43,7 @@ terminal String ID;
 terminal String	TEXT;
 terminal OPEN_PARENTHESIS, CLOSE_PARENTHESIS;
 terminal NOT, NULL;
-terminal INT, VARCHAR, BIGINT, BIT, TINYINT, SMALLINT, NUMERIC, FLOAT, REAL, MONEY, DECIMAL, DATE, TIME, CHAR;
+terminal INT, VARCHAR, BIGINT, BIT, TINYINT, SMALLINT, FLOAT, REAL, MONEY, DATE, TIME, CHAR;
 terminal ORDER, GROUP, BY, ASC, DESC;
 terminal DROP;
 terminal OR, AND;
@@ -77,7 +77,7 @@ nonterminal Node	Function;
 nonterminal Node	JoinOpt;
 nonterminal Node	Join;
 nonterminal Node	JoinSpecification;
-nonterminal Node	ColumnName, TableAlias, SchemaName;
+nonterminal Node	ColumnName, TableAlias;
 nonterminal Node	As, AsOpt;
 nonterminal Node	ColumnAlias;
 nonterminal Node	SelectInstruction, Select;
@@ -121,7 +121,7 @@ SelectInstruction	::=	SELECT Select:s FROM From:f WhereOpt:w GroupByOpt:g OrderB
 						:}
 					;
 					
-Select	::=	MULT /* hack: wildcard */	{: RESULT = getFactory().createNodeSelectExpression(getFactory().createNodeWildcard(), null); :}
+Select	::=	MULT	{: RESULT = getFactory().createNodeSelectExpression(getFactory().createNodeWildcard(), null); :}
 		|	SelectExpressions:es		{: RESULT = es; :}
 		;
 		
@@ -159,7 +159,6 @@ Columns	::= Column:n				{: RESULT = getFactory().createNodeBlock(); RESULT.getCh
 
 Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
 		|	TableAlias:alias POINT ColumnName:name	{: RESULT = getFactory().createNodeColumn(alias, name); :}
-// shift/reduce		|	SchemaName:schema POINT TableAlias:alias POINT ColumnName:name	{: RESULT = getFactory().createNodeColumn(schema, alias, name); :}
     	;
     	
 ColumnName	::=	ID:name	{: RESULT = getFactory().createNodeColumnName(getFactory().createNodeText(name)); :}
@@ -169,10 +168,6 @@ ColumnName	::=	ID:name	{: RESULT = getFactory().createNodeColumnName(getFactory(
 TableAlias	::=	ID:alias	{: RESULT = getFactory().createNodeTableAlias(getFactory().createNodeText(alias)); :}
 			;
 
-/*			
-SchemaName	::=	ID:name	{: RESULT = getFactory().createNodeSchemaName(getFactory().createNodeText(name)); :}
-			;
-*/
 
 TableExpression	::=	ID:name JoinOpt:j  {: RESULT = getFactory().createNodeTableExpression(name, j); :}
      			;
