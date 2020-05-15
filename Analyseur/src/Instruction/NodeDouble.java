@@ -2,7 +2,7 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeDouble extends NodeNumeric {
+public class NodeDouble extends Node {
 
 	private Double value;
 

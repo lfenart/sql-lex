@@ -2,11 +2,11 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeSchemaName extends Node {
+public class NodeTable extends Node {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitSchemaName(this);
+		visitor.visitTable(this);
 	}
 
 }
