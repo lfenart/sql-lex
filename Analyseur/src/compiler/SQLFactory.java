@@ -54,12 +54,6 @@ import Instruction.Order;
 
 public class SQLFactory {
 
-	public ArrayList<Node> variables;
-
-	public SQLFactory() {
-		variables = new ArrayList<Node>();
-	}
-
 	public Node createNodeBoolean(boolean b) {
 		return new NodeBoolean(b);
 	}
