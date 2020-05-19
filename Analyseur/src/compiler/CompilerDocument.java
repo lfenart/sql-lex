@@ -33,6 +33,7 @@ public class CompilerDocument {
 			p.parse();
 			Visitor visitor = new SemanticVisitor();
 			context.getRoot().accept(visitor);
+			context.getRoot().accept(new SemanticVisitor());
 		} catch (Exception e) {
 			e.printStackTrace();
 			context.addError("FileNotFoundException");
