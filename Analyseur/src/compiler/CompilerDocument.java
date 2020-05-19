@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import java_cup.runtime.SimpleSymbolFactory;
 import java_cup.runtime.SymbolFactory;
+import ui.SemanticVisitor;
 import ui.Visitor;
 import ui.XmlVisitor;
 
@@ -32,6 +33,7 @@ public class CompilerDocument {
 			p.parse();
 			Visitor visitor = new XmlVisitor();
 			context.getRoot().accept(visitor);
+			context.getRoot().accept(new SemanticVisitor());
 		} catch (Exception e) {
 			e.printStackTrace();
 			context.addError("FileNotFoundException");
