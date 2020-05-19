@@ -17,12 +17,12 @@ import Instruction.NodeDelete;
 import Instruction.NodeDiv;
 import Instruction.NodeDouble;
 import Instruction.NodeDrop;
-import Instruction.NodeExpression;
 import Instruction.NodeFrom;
 import Instruction.NodeFunction;
 import Instruction.NodeGroup;
 import Instruction.NodeInsert;
 import Instruction.NodeInteger;
+import Instruction.NodeInto;
 import Instruction.NodeJoin;
 import Instruction.NodeMinus;
 import Instruction.NodeMult;
@@ -32,21 +32,22 @@ import Instruction.NodeOn;
 import Instruction.NodeOperator;
 import Instruction.NodeOrder;
 import Instruction.NodeOrderBy;
-import Instruction.NodeOrderExpression;
 import Instruction.NodePlus;
 import Instruction.NodePrimaryKey;
 import Instruction.NodeRoot;
-import Instruction.NodeSchemaName;
 import Instruction.NodeSelect;
 import Instruction.NodeSelectExpression;
 import Instruction.NodeSet;
 import Instruction.NodeTableAlias;
 import Instruction.NodeTableExpression;
+import Instruction.NodeTable;
 import Instruction.NodeText;
 import Instruction.NodeType;
 import Instruction.NodeUminus;
 import Instruction.NodeUpdate;
+import Instruction.NodeUplus;
 import Instruction.NodeUsing;
+import Instruction.NodeValues;
 import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
 
@@ -55,6 +56,13 @@ public class XmlVisitor extends Visitor {
 
 	public XmlVisitor() throws FileNotFoundException {
 		out = new PrintWriter("testXML.xml");
+	}
+
+	@Override
+	public void visitAs(NodeAs nodeAs) {
+		this.out.println("<as>");
+		this.visitNode(nodeAs);
+		this.out.println("</as>");
 	}
 
 	@Override
@@ -74,6 +82,23 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<column>");
 		this.visitNode(nodeColumn);
 		this.out.println("</column>");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitColumnAlias(NodeColumnAlias nodeColumnAlias) {
+		this.out.println("<columnAlias>");
+		this.visitNode(nodeColumnAlias);
+		this.out.println("</columnAlias>");
+	}
+
+	@Override
+	public void visitColumnName(NodeColumnName nodeColumnName) {
+		this.out.println("<columnName>");
+		this.visitNode(nodeColumnName);
+		this.out.println("</columnName>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -124,11 +149,25 @@ public class XmlVisitor extends Visitor {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void visitExpression(NodeExpression nodeExpression) {
 		// TODO
 		this.out.println("<expression>");
 		this.visitNode(nodeExpression);
 		this.out.println("</expression>");
+=======
+	public void visitFrom(NodeFrom nodeFrom) {
+		this.out.println("<from>");
+		this.visitNode(nodeFrom);
+		this.out.println("</from>");
+	}
+
+	@Override
+	public void visitFunction(NodeFunction nodeFunction) {
+		this.out.println("<" + nodeFunction.getName() + ">");
+		this.visitNode(nodeFunction);
+		this.out.println("</" + nodeFunction.getName() + ">");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -148,6 +187,23 @@ public class XmlVisitor extends Visitor {
 	@Override
 	public void visitInteger(NodeInteger nodeInteger) {
 		this.out.println("<integer value=\"" + nodeInteger.getValue() + "\" />");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitInto(NodeInto nodeInto) {
+		this.out.println("<into>");
+		this.visitNode(nodeInto);
+		this.out.println("</into>");
+	}
+
+	@Override
+	public void visitJoin(NodeJoin nodeJoin) {
+		this.out.println("<join value=\"" + nodeJoin.getType() + "\">");
+		this.visitNode(nodeJoin);
+		this.out.println("</join>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -162,6 +218,23 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<mult>");
 		this.visitNode(nodeMult);
 		this.out.println("</mult>");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitNodeUplus(NodeUplus nodeUplus) {
+		this.out.println("<unaryPlus>");
+		this.visitNode(nodeUplus);
+		this.out.println("</unaryPlus>");
+	}
+
+	@Override
+	public void visitNodeValues(NodeValues nodeValues) {
+		this.out.println("<values>");
+		this.visitNode(nodeValues);
+		this.out.println("</values>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -174,6 +247,16 @@ public class XmlVisitor extends Visitor {
 	@Override
 	public void visitNull(NodeNull nodeNull) {
 		this.out.println("<null />");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitOn(NodeOn nodeOn) {
+		this.out.println("<on>");
+		this.visitNode(nodeOn);
+		this.out.println("</on>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -195,6 +278,7 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<orderBy>");
 		this.visitNode(nodeOrderBy);
 		this.out.println("</orderBy>");
+<<<<<<< HEAD
 	}
 
 	@Override
@@ -202,6 +286,8 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<orderExpression>");
 		this.visitNode(nodeOrderExpression);
 		this.out.println("</orderExpression>");
+=======
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -232,6 +318,16 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<select>");
 		this.visitNode(nodeSelect);
 		this.out.println("</select>");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitSelectExpression(NodeSelectExpression nodeSelectExpression) {
+		this.out.println("<selectExpression>");
+		this.visitNode(nodeSelectExpression);
+		this.out.println("</selectExpression>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -239,6 +335,16 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<set>");
 		this.visitNode(nodeSet);
 		this.out.println("</set>");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitTable(NodeTable nodeTableName) {
+		this.out.println("<table>");
+		this.visitNode(nodeTableName);
+		this.out.println("</table>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -246,6 +352,16 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<table>");
 		this.visitNode(nodeTable);
 		this.out.println("</table>");
+<<<<<<< HEAD
+=======
+	}
+
+	@Override
+	public void visitTableAlias(NodeTableAlias nodeTableAlias) {
+		this.out.println("<tableAlias>");
+		this.visitNode(nodeTableAlias);
+		this.out.println("</tableAlias>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -276,6 +392,7 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<update>");
 		this.visitNode(nodeUpdate);
 		this.out.println("</update>");
+<<<<<<< HEAD
 	}
 
 	@Override
@@ -304,6 +421,8 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<on>");
 		this.visitNode(nodeOn);
 		this.out.println("</on>");
+=======
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
@@ -311,6 +430,7 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<using>");
 		this.visitNode(nodeUsing);
 		this.out.println("</using>");
+<<<<<<< HEAD
 	}
 
 	@Override
@@ -332,11 +452,21 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<tableAlias>");
 		this.visitNode(nodeTableAlias);
 		this.out.println("</tableAlias>");
+=======
+	}
+
+	@Override
+	public void visitWhere(NodeWhere nodeWhere) {
+		this.out.println("<where>");
+		this.visitNode(nodeWhere);
+		this.out.println("</where>");
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 	@Override
 	public void visitWildcard(NodeWildcard nodeWildcard) {
 		this.out.println("<wildcard />");
+<<<<<<< HEAD
 	}
 
 	@Override
@@ -365,6 +495,8 @@ public class XmlVisitor extends Visitor {
 		this.out.println("<from>");
 		this.visitNode(nodeFrom);
 		this.out.println("</from>");
+=======
+>>>>>>> 9691cf14c44af4e8f447acd9866d40a65d42c309
 	}
 
 }

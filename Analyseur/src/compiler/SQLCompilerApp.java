@@ -17,8 +17,8 @@ public class SQLCompilerApp {
 
 	private CompilerDocument document;
 
-	public SQLCompilerApp () {
-		document = new CompilerDocument ();
+	public SQLCompilerApp() {
+		document = new CompilerDocument();
 		document.onOpenDocument();
 		this.DataBaseBuilder();
 	}
@@ -55,9 +55,9 @@ public class SQLCompilerApp {
 		  e.printStackTrace();
 		}
 	}
-	
-	public static void main (String argv []) {
-		SQLCompilerApp app = new SQLCompilerApp ();
+
+	public static void main(String argv[]) {
+		SQLCompilerApp app = new SQLCompilerApp();
 	}
 
 }

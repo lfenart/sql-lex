@@ -78,9 +78,9 @@
 ")"				{ return getSymbolFactory().newSymbol("CLOSE_PARENTHESIS", Sym.CLOSE_PARENTHESIS); }
 "."				{ return getSymbolFactory().newSymbol("POINT", Sym.POINT); }
 
-[0-9]*"."[0-9]+	{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
-[0-9]+"."			{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
-[0-9]+			{ return getSymbolFactory().newSymbol("INTEGER", Sym.INTEGER, Long.parseLong(yytext())); }
+-?[0-9]*"."[0-9]+	{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
+-?[0-9]+"."			{ return getSymbolFactory().newSymbol("DOUBLE", Sym.DOUBLE, Double.parseDouble(yytext())); }
+-?[0-9]+			{ return getSymbolFactory().newSymbol("INTEGER", Sym.INTEGER, Long.parseLong(yytext())); }
 
 [a-zA-Z][a-zA-Z_0-9]*	{ return getSymbolFactory().newSymbol("ID", Sym.ID, yytext()); }
 \'[^']*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
