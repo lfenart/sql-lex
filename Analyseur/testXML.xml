@@ -36,6 +36,31 @@
 </column>
 </primaryKey>
 </create>
+<insert>
+<into>
+<table>
+<text value="client" />
+</table>
+</into>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+</column>
+<values>
+<integer value="1" />
+<column>
+<columnName>
+<text value="Quentin" />
+</columnName>
+</column>
+</values>
+</insert>
 <select>
 <selectExpression>
 <column>

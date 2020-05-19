@@ -52,6 +52,7 @@ import Instruction.NodeUsing;
 import Instruction.NodeValues;
 import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
+import Instruction.Operator;
 import Objects.Column;
 import Objects.Table;
 
@@ -194,7 +195,16 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
 		// TODO Auto-generated method stub
-
+		Table table = new Table();
+		table = this.tables.get(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+		List<String> list = new ArrayList<String>();
+		list.add("1");
+		list.add("2");
+		table.getColumns().get(0).setDatas(list);
+		list = new ArrayList<String>();
+		list.add("Quentin");
+		list.add("Lucas");
+		table.getColumns().get(1).setDatas(list);
 	}
 
 	@Override
@@ -305,17 +315,38 @@ public class SemanticVisitor extends Visitor {
 			System.out.println("Table Error");
 		}
 		
-		int inColumn = 0;
 		int nbSelectedColumn = nodeSelect.getChildren().get(0).getChildren().size();
-		for(Column c : table.getColumns())
-			if(c.getName().equalsIgnoreCase(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-				inColumn++;
-				selectedColumns.add(c);
-				continue;
+		for(Node n : nodeSelect.getChildren().get(0).getChildren()) {
+			for(Column c : table.getColumns()) {
+				if(c.getName().equalsIgnoreCase(((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+					selectedColumns.add(c);	
 			}
-		if(inColumn==nbSelectedColumn) System.out.println("Column OK");
+		}
+
+		if(selectedColumns.size()==nbSelectedColumn) System.out.println("Column OK");
 		else System.out.println("Column Error");
-	}
+		
+		Operator op = (Operator) ((NodeOperator) nodeSelect.getChildren().get(2).getChildren().get(0)).getOperator();
+		Column column = new Column();
+		String value="";
+		for(Column c : table.getColumns()) {
+			if(c.getName().equalsIgnoreCase(((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+			{
+				column=c;
+				break;
+			}
+		}
+		value+=((NodeInteger) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(1)).getValue();
+		int index=0;
+		for(int i=0;i<column.getDatas().size();i++)
+			if(column.getDatas().get(i).equalsIgnoreCase(value)) {
+				index=i;
+				break;
+			}
+		System.out.println("Result : ");
+		for(int i=0;i<selectedColumns.size();i++)
+			System.out.print(" "+selectedColumns.get(i).getName()+" : "+selectedColumns.get(i).getDatas().get(index) +" \n");
+}
 
 	@Override
 	public void visitSelectExpression(NodeSelectExpression nodeSelectExpression) {
