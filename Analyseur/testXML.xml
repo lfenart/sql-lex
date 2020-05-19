@@ -36,6 +36,64 @@
 </column>
 </primaryKey>
 </create>
+<create>
+<table>
+<text value="Student" />
+</table>
+<data>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<type>
+<INT
+ /></type>
+</data>
+<data>
+<column>
+<columnName>
+<text value="prenom" />
+</columnName>
+</column>
+<type>
+<VARCHAR
+ size="32" 
+ /></type>
+</data>
+<primaryKey>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</primaryKey>
+</create>
+<insert>
+<into>
+<table>
+<text value="Etudiant" />
+</table>
+</into>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+</column>
+<values>
+<integer value="2" />
+<column>
+<columnName>
+<text value="Quentin" />
+</columnName>
+</column>
+</values>
+</insert>
 <insert>
 <into>
 <table>
@@ -56,7 +114,7 @@
 <integer value="1" />
 <column>
 <columnName>
-<text value="Quentin" />
+<text value="Lucas" />
 </columnName>
 </column>
 </values>
@@ -69,13 +127,6 @@
 </columnName>
 </column>
 </selectExpression>
-<selectExpression>
-<column>
-<columnName>
-<text value="nom" />
-</columnName>
-</column>
-</selectExpression>
 <from>
 <table>
 <text value="Etudiant" />
@@ -85,10 +136,10 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="numero" />
+<text value="nom" />
 </columnName>
 </column>
-<integer value="1" />
+<text value="Quentin" />
 </EQUAL>
 </where>
 </select>

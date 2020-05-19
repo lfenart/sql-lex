@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Instruction.DataType;
 import Instruction.Node;
 import Instruction.NodeAs;
 import Instruction.NodeBlock;
@@ -131,10 +132,6 @@ public class SemanticVisitor extends Visitor {
 			}
 			columns.add(c);
 		}
-		//PrimaryKey
-		if(nodeCreate.getChildren().size()>2) {
-			table.setPrimaryKey(((NodeText) nodeCreate.getChildren().get(2).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		}
 		//Table
 		table.setName(((NodeText) nodeCreate.getChildren().get(0).getChildren().get(0)).getValue());
 		table.setColumns(columns);
@@ -197,21 +194,18 @@ public class SemanticVisitor extends Visitor {
 		// TODO Auto-generated method stub
 		System.out.println("Insert");
 		Table table = new Table();
-		table = this.tables.get(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		List<String> list = new ArrayList<String>();
+		if(this.tables.containsKey(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
+			System.out.println("Table OK");
+			table = this.tables.get(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+		}
+		else System.out.println("Table erreur");
 		for(int i=0;i<nodeInsert.getChildren().get(1).getChildren().size();i++) {
 			for(int j=0;j<table.getColumns().size();j++) {
 				if(table.getColumns().get(j).getName().equalsIgnoreCase(((NodeText) nodeInsert.getChildren().get(1).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue())) {
-					if(nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getClass()==NodeColumn.class)
-						table.getColumns().get(j).addData(((NodeText) nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue());
-					else if(nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getClass()==NodeInteger.class) 
-						table.getColumns().get(j).addData(""+((NodeInteger) nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i)).getValue());
 				}
 				//else erreur
 			}
-		}
-		list = new ArrayList<String>();
-	
+		}	
 	}
 
 	@Override
@@ -332,30 +326,35 @@ public class SemanticVisitor extends Visitor {
 
 		if(selectedColumns.size()==nbSelectedColumn) System.out.println("Column OK");
 		else System.out.println("Column Error");
-		
-		//Operator op = (Operator) ((NodeOperator) nodeSelect.getChildren().get(2).getChildren().get(0)).getOperator();
-		Column column = new Column();
-		String value="";
+		boolean datatype=false;
 		for(Column c : table.getColumns()) {
 			if(c.getName().equalsIgnoreCase(((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
 			{
-				column=c;
+				if(nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(1).getClass()==NodeInteger.class
+						&& c.getType().contains("INT")) {
+					datatype=true;
+				}
+				if(nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(1).getClass()==NodeText.class
+						&& c.getType().contains("CHAR")) {
+					datatype=true;
+				}
 				break;
 			}
 		}
-		value+=((NodeInteger) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(1)).getValue();
-		int index=-1;
-		for(int i=0;i<column.getDatas().size();i++)
-			if(column.getDatas().get(i).equalsIgnoreCase(value)) {
-				index=i;
-				break;
+		if(!datatype) System.out.println("Type erreur");
+		else System.out.println("Type OK");
+		
+		int nbIteration=0;
+		for(Map.Entry<String, Table> t : this.tables.entrySet()) {
+			for(int j=0;j<selectedColumns.size();j++) {
+				for(int k=0;k<t.getValue().getColumns().size();k++) {
+					if(t.getValue().getColumns().get(k).getName().equalsIgnoreCase(selectedColumns.get(j).getName()))
+						nbIteration++;
+				}
 			}
-		System.out.println("Result : ");
-		if(index>-1) {
-			for(int i=0;i<selectedColumns.size();i++)
-				System.out.print(" "+selectedColumns.get(i).getName()+" : "+selectedColumns.get(i).getDatas().get(index) +" \n");
 		}
-		else System.out.println(" Error");
+		if(nbIteration>1) System.out.println("Select Columns Iteration erreur");
+		else System.out.println("Select columns iteration OK");
 }
 
 	@Override
