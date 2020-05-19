@@ -31,15 +31,23 @@ public class SQLCompilerApp {
 		  final Document document= builder.parse(new File("testXML.xml"));
 		  final Element racine = document.getDocumentElement();
 		  final NodeList racineNoeuds = racine.getChildNodes();
-		  final int nbRacineNoeuds = racineNoeuds.getLength();
-		  for (int i = 0; i<nbRacineNoeuds; i++) 
-		  {
-		    if(racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) 
-		    {
-		      final Element create = (Element) racineNoeuds.item(i);
-		      System.out.println(create.getNodeName());
-		      System.out.println(create.getAttribute("text"));
-		    }				
+		  final Element create = (Element) racineNoeuds.item(1);
+		  final NodeList createNoeuds = create.getChildNodes();
+		  final int nbCreateNoeuds = createNoeuds.getLength();
+		  for(int i=0;i<nbCreateNoeuds;i++) {
+			  if(createNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				  switch(createNoeuds.item(i).getNodeName()) {
+				  case "data" :  final Element column = (Element) createNoeuds.item(i).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(1);
+				  				 System.out.println("nom de la colonne : " + column.getAttribute("value"));
+				  				 break;
+				  case "table" : final Element table = (Element) createNoeuds.item(i).getChildNodes().item(1);
+				  				 System.out.println("nom de la table : " + table.getAttribute("value"));
+				  				 break;
+				  case "primaryKey" : final Element primaryKey = (Element) createNoeuds.item(i).getChildNodes().item(1).getChildNodes().item(1).getChildNodes().item(1);
+						  			  System.out.println("nom de la clef primaire : " + primaryKey.getAttribute("value"));
+						  			  break;
+				  }
+			  }
 		  }
 		}
 		catch (final ParserConfigurationException e) 
