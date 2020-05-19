@@ -50,12 +50,17 @@ import Instruction.NodeUsing;
 import Instruction.NodeValues;
 import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
-import symbol.Table;
+import Objects.Table;
 
 public class SemanticVisitor extends Visitor {
 
-	private Map<String, Table> tables = new HashMap<>();
+	private Map<String, Table> tables;
 	private Table table;
+	
+	public SemanticVisitor() {
+		this.tables = new HashMap<>();
+		this.table = new Table();
+	}
 
 	@Override
 	public void visitAs(NodeAs nodeAs) {
@@ -78,7 +83,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitColumn(NodeColumn nodeColumn) {
 		// TODO Auto-generated method stub
-
+		nodeColumn.getChildren().get(0).accept(this);
 	}
 
 	@Override
@@ -90,7 +95,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitColumnName(NodeColumnName nodeColumnName) {
 		// TODO Auto-generated method stub
-
+		System.out.println("Column name : " + ((NodeText) nodeColumnName.getChildren().get(0)).getValue());
 	}
 
 	@Override
@@ -101,15 +106,18 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitCreate(NodeCreate nodeCreate) {
-		Node table = nodeCreate.getChildren().get(0);
-		Node datas = nodeCreate.getChildren().get(1);
-		Node primaryKey = nodeCreate.getChildren().get(2);
-		this.tables.put(((NodeText) table.getChildren().get(0)).getValue(), new Table());
+		System.out.println("Creation");
+		for(Node n : nodeCreate.getChildren())
+			if(n!=null)
+				n.accept(this);
+		this.tables.put(this.table.getName(), table);
 	}
 
 	@Override
 	public void visitData(NodeData nodeData) {
 		// TODO Auto-generated method stub
+		for(Node d : nodeData.getChildren())
+			d.accept(this);
 
 	}
 
@@ -258,12 +266,10 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
-		Node select = nodeSelect.getChildren().get(0);
-		Node from = nodeSelect.getChildren().get(1);
-		Node where = nodeSelect.getChildren().get(2);
-		Node group = nodeSelect.getChildren().get(3);
-		Node order = nodeSelect.getChildren().get(4);
-		from.accept(this);
+		System.out.println("Select");
+		for(Node n : nodeSelect.getChildren())
+			if(n!=null)
+				n.accept(this);
 		if (this.table == null) {
 			System.out.println("Select Error");
 		} else {
@@ -286,7 +292,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitTable(NodeTable nodeTableName) {
 		// TODO Auto-generated method stub
-
+		this.table.setName(((NodeText) nodeTableName.getChildren().get(0)).getValue());
 	}
 
 	@Override

@@ -12,6 +12,10 @@ public class Table {
 		this.columns = columns;
 		this.primaryKey = primaryKey;
 	}
+	
+	public Table() {
+		
+	}
 
 	public String getName() {
 		return name;
