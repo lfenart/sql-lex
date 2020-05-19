@@ -202,12 +202,12 @@ public class SemanticVisitor extends Visitor {
 		for(int i=0;i<nodeInsert.getChildren().get(1).getChildren().size();i++) {
 			for(int j=0;j<table.getColumns().size();j++) {
 				if(table.getColumns().get(j).getName().equalsIgnoreCase(((NodeText) nodeInsert.getChildren().get(1).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue())) {
-					
 					if(nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getClass()==NodeColumn.class)
 						table.getColumns().get(j).addData(((NodeText) nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue());
 					else if(nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getClass()==NodeInteger.class) 
 						table.getColumns().get(j).addData(""+((NodeInteger) nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i)).getValue());
 				}
+				//else erreur
 			}
 		}
 		list = new ArrayList<String>();
@@ -333,7 +333,7 @@ public class SemanticVisitor extends Visitor {
 		if(selectedColumns.size()==nbSelectedColumn) System.out.println("Column OK");
 		else System.out.println("Column Error");
 		
-		Operator op = (Operator) ((NodeOperator) nodeSelect.getChildren().get(2).getChildren().get(0)).getOperator();
+		//Operator op = (Operator) ((NodeOperator) nodeSelect.getChildren().get(2).getChildren().get(0)).getOperator();
 		Column column = new Column();
 		String value="";
 		for(Column c : table.getColumns()) {
