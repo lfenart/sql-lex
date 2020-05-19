@@ -39,7 +39,7 @@
 <insert>
 <into>
 <table>
-<text value="client" />
+<text value="Etudiant" />
 </table>
 </into>
 <column>
@@ -65,6 +65,13 @@
 <selectExpression>
 <column>
 <columnName>
+<text value="numero" />
+</columnName>
+</column>
+</selectExpression>
+<selectExpression>
+<column>
+<columnName>
 <text value="nom" />
 </columnName>
 </column>
@@ -81,7 +88,7 @@
 <text value="numero" />
 </columnName>
 </column>
-<integer value="4" />
+<integer value="1" />
 </EQUAL>
 </where>
 </select>

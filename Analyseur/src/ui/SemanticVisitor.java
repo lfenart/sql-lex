@@ -195,16 +195,23 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
 		// TODO Auto-generated method stub
+		System.out.println("Insert");
 		Table table = new Table();
 		table = this.tables.get(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 		List<String> list = new ArrayList<String>();
-		list.add("1");
-		list.add("2");
-		table.getColumns().get(0).setDatas(list);
+		for(int i=0;i<nodeInsert.getChildren().get(1).getChildren().size();i++) {
+			for(int j=0;j<table.getColumns().size();j++) {
+				if(table.getColumns().get(j).getName().equalsIgnoreCase(((NodeText) nodeInsert.getChildren().get(1).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue())) {
+					
+					if(nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getClass()==NodeColumn.class)
+						table.getColumns().get(j).addData(((NodeText) nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue());
+					else if(nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i).getClass()==NodeInteger.class) 
+						table.getColumns().get(j).addData(""+((NodeInteger) nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(i)).getValue());
+				}
+			}
+		}
 		list = new ArrayList<String>();
-		list.add("Quentin");
-		list.add("Lucas");
-		table.getColumns().get(1).setDatas(list);
+	
 	}
 
 	@Override
@@ -337,15 +344,18 @@ public class SemanticVisitor extends Visitor {
 			}
 		}
 		value+=((NodeInteger) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(1)).getValue();
-		int index=0;
+		int index=-1;
 		for(int i=0;i<column.getDatas().size();i++)
 			if(column.getDatas().get(i).equalsIgnoreCase(value)) {
 				index=i;
 				break;
 			}
 		System.out.println("Result : ");
-		for(int i=0;i<selectedColumns.size();i++)
-			System.out.print(" "+selectedColumns.get(i).getName()+" : "+selectedColumns.get(i).getDatas().get(index) +" \n");
+		if(index>-1) {
+			for(int i=0;i<selectedColumns.size();i++)
+				System.out.print(" "+selectedColumns.get(i).getName()+" : "+selectedColumns.get(i).getDatas().get(index) +" \n");
+		}
+		else System.out.println(" Error");
 }
 
 	@Override
