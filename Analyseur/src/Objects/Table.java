@@ -49,4 +49,8 @@ public class Table {
 		this.columns.remove(column);
 	}
 
+	public boolean containsColumn(String columnName) {
+		return this.getColumns().contains(new Column(columnName));
+	}
+
 }

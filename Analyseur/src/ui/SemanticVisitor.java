@@ -303,28 +303,36 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
 		System.out.println("Select");
-		Table table = new Table();
-		List<Column> selectedColumns = new ArrayList<Column>();
 		String tableName = ((NodeText) nodeSelect.getChildren().get(1).getChildren().get(0).getChildren().get(0))
 				.getValue();
-		table = this.tables.get(tableName);
+		Table table = this.tables.get(tableName);
 		if (table == null) {
 			throw new SemanticError("Error: table not found: " + tableName);
 		}
-		int inColumn = 0;
-		int nbSelectedColumn = nodeSelect.getChildren().get(0).getChildren().size();
-		for (Column c : table.getColumns())
-			if (c.getName().equalsIgnoreCase(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-				inColumn++;
-				selectedColumns.add(c);
-				continue;
+		List<Node> columns = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren();
+		for (Node column : columns) {
+			if (column == null)
+				break;
+			String columnName = ((NodeText) column.getChildren().get(0).getChildren().get(0)).getValue();
+			if (!table.containsColumn(columnName)) {
+				throw new SemanticError("Error: no such column: " + columnName);
 			}
-		if (inColumn == nbSelectedColumn) {
-			System.out.println("Column OK");
-		} else {
-			System.out.println("Column Error");
 		}
+//		List<Column> selectedColumns = new ArrayList<Column>();
+//		int inColumn = 0;
+//		int nbSelectedColumn = nodeSelect.getChildren().get(0).getChildren().size();
+//		for (Column c : table.getColumns())
+//			if (c.getName().equalsIgnoreCase(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0)
+//					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
+//				inColumn++;
+//				selectedColumns.add(c);
+//				continue;
+//			}
+//		if (inColumn == nbSelectedColumn) {
+//			System.out.println("Column OK");
+//		} else {
+//			System.out.println("Column Error");
+//		}
 	}
 
 	@Override
