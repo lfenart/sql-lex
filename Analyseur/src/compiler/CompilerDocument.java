@@ -31,8 +31,10 @@ public class CompilerDocument {
 			context = new SQLContext();
 			p.setContext(context);
 			p.parse();
-			Visitor visitor = new SemanticVisitor();
-			context.getRoot().accept(visitor);
+			Visitor xmlVisitor = new XmlVisitor();
+			Visitor semanticVisitor = new SemanticVisitor();
+			context.getRoot().accept(xmlVisitor);
+			context.getRoot().accept(semanticVisitor);
 		} catch (Exception e) {
 			e.printStackTrace();
 			context.addError("FileNotFoundException");

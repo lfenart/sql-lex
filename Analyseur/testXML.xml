@@ -60,4 +60,22 @@
 </EQUAL>
 </where>
 </select>
+<insert>
+<into>
+<table>
+<text value="Etudiant" />
+</table>
+</into>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+</column>
+<values>
+<text value="quentin" />
+</values>
+<values>
+<text value="lucas" />
+</values>
+</insert>
 </root>

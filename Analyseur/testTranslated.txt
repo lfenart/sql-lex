@@ -1,3 +1,5 @@
-CREATE TABLE Etudiant (numero varchar(1), nom varchar (32) not null, primary key (numero));
+CREATE TABLE Etudiant (numero int, nom varchar (32) not null, primary key (numero));
 
 Select nom from Etudiant where numero = 4; 
+
+INSERT INTO Etudiant (nom) VALUES ('quentin'), ('lucas');

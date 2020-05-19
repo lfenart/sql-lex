@@ -273,11 +273,11 @@ GroupByOpt	::=
 			| GroupBy:g	{: RESULT = g; :}
 			;
 
-InsertValue	::=	VALUES OPEN_PARENTHESIS Expressions:es CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeValues(es); :}
+InsertValue	::=	OPEN_PARENTHESIS Expressions:es CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeValues(es); :}
 			;
 			
-InsertValues	::=	InsertValue:v	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(v); :}
-				|	InsertValues:vs InsertValue:v	{: RESULT = vs; vs.getChildren().add(v); :}
+InsertValues	::=	VALUES InsertValue:v	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(v); :}
+				|	InsertValues:vs SEP InsertValue:v	{: RESULT = vs; vs.getChildren().add(v); :}
 				;
 
 Join		::= JoinType:t JOIN TableExpression:e JoinSpecification:s
