@@ -112,7 +112,8 @@ public class SQLFactory {
 		Node n = new NodeData();
 		n.getChildren().add(column);
 		n.getChildren().add(type);
-		n.getChildren().add(nullable);
+		if(nullable!=null)
+			n.getChildren().add(nullable);
 		return n;
 	}
 

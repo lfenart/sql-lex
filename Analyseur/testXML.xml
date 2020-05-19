@@ -24,6 +24,9 @@
 <VARCHAR
  size="32" 
  /></type>
+<not>
+<null />
+</not>
 </data>
 <primaryKey>
 <column>
