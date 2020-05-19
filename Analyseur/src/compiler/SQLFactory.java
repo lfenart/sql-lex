@@ -1,6 +1,5 @@
 package compiler;
 
-import java.util.ArrayList;
 
 import Instruction.DataType;
 import Instruction.JoinType;
