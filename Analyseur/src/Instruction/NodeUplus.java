@@ -2,11 +2,11 @@ package Instruction;
 
 import ui.Visitor;
 
-public class NodeOrderExpression extends Node {
+public class NodeUplus extends Node {
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visitOrderExpression(this);
+		visitor.visitNodeUplus(this);
 	}
 
 }
