@@ -172,33 +172,6 @@
 </delete>
 <select>
 <selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-<where>
-<EQUAL>
-<integer value="1" />
-<column>
-<tableAlias>
-<text value="Etudiant" />
-</tableAlias>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</EQUAL>
-</where>
-</select>
-<select>
-<selectExpression>
 <wildcard />
 </selectExpression>
 <from>
