@@ -39,21 +39,6 @@
 </column>
 </primaryKey>
 </create>
-<create>
-<table>
-<text value="Etudiant2" />
-</table>
-<data>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<type>
-<INT
- /></type>
-</data>
-</create>
 <insert>
 <into>
 <table>
@@ -220,29 +205,18 @@
 </select>
 <select>
 <selectExpression>
+<COUNT>
 <column>
-<tableAlias>
-<text value="x" />
-</tableAlias>
 <columnName>
 <text value="numero" />
 </columnName>
 </column>
-<as>
-<columnAlias>
-<text value="xnum" />
-</columnAlias>
-</as>
+</COUNT>
 </selectExpression>
 <from>
 <table>
 <text value="Etudiant" />
 </table>
-<as>
-<tableAlias>
-<text value="x" />
-</tableAlias>
-</as>
 </from>
 </select>
 </root>

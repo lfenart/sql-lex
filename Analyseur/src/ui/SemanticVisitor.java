@@ -371,7 +371,6 @@ public class SemanticVisitor extends Visitor {
 			}
 			tables.add(table);
 		}
-
 		if(nodeSelect.getChildren().get(0).getChildren().get(0).getClass()==NodeWildcard.class) {
 			NodeBlock block = new NodeBlock();
 			List<NodeSelectExpression> columns = new ArrayList<NodeSelectExpression>();
@@ -389,10 +388,26 @@ public class SemanticVisitor extends Visitor {
 			nodeSelect.getChildren().set(0, block);
 			this.visitSelect(nodeSelect);
 		}
+		else if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0).getClass()==NodeFunction.class) {
+			int occurences=0;
+			String columnName = ((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0)
+											.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue();
+			for(Table t : tables) {
+				if(t.containsColumn(columnName)) {
+					occurences++;
+				}
+			}
+			if (occurences == 0) {
+				throw new SemanticError("Error: no such column: " + columnName);
+			}
+			if (occurences > 1) {
+				throw new SemanticError("Error: ambiguous column name: " + columnName);
+			}
+		}
 		else {
 			List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
 			for (Node expression : selectExpressions) {
-				int occurences = 0;
+				int occurences=0;
 				String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren().get(0))
 						.getValue();
 				for (Table t : tables) {
