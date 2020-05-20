@@ -1,4 +1,18 @@
 CREATE TABLE Etudiant (numero INT, nom VARCHAR(32) NOT NULL, PRIMARY KEY (numero));
+CREATE TABLE Etudiant2 (numero INT);
 INSERT INTO Etudiant (numero,nom) VALUES(2, 'Quentin');
 INSERT INTO Etudiant (numero,nom) VALUES(1, 'Lucas');
-SELECT numero FROM Etudiant where nom = 'Quentin'; 
+SELECT numero FROM Etudiant where nom = 'Quentin';
+
+
+
+
+// Erreurs
+// SELECT numero FROM e;
+// SELECT numero FROM Etudiant INNER JOIN x ON 1;
+// SELECT numero FROM Etudiant INNER JOIN Etudiant2 ON 1;
+// SELECT n FROM Etudiant;
+// CREATE TABLE Etudiant3 (numero INT, numero VARCHAR(16));
+
+// A faire
+// SELECT numero FROM Etudiant where 1 = 'test';

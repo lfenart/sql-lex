@@ -312,19 +312,42 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
 		System.out.println("Select");
-		String tableName = ((NodeText) nodeSelect.getChildren().get(1).getChildren().get(0).getChildren().get(0))
-				.getValue();
+		Node nodeFrom = nodeSelect.getChildren().get(1);
+		Node nodeTable = nodeFrom.getChildren().get(0);
+		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
+		String tableName = nodeTableName.getValue();
 		Table table = this.tables.get(tableName);
 		if (table == null) {
 			throw new SemanticError("Error: table not found: " + tableName);
 		}
-		List<Node> columns = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren();
-		for (Node column : columns) {
-			if (column == null)
-				break;
-			String columnName = ((NodeText) column.getChildren().get(0).getChildren().get(0)).getValue();
-			if (!table.containsColumn(columnName)) {
+		List<Table> tables = new ArrayList<>();
+		tables.add(table);
+		Node nodeJoin = nodeTable.getChildren().get(1);
+		if (nodeJoin != null) {
+			nodeTable = nodeJoin.getChildren().get(0);
+			nodeTableName = (NodeText) nodeTable.getChildren().get(0);
+			tableName = nodeTableName.getValue();
+			table = this.tables.get(tableName);
+			if (table == null) {
+				throw new SemanticError("Error: table not found: " + tableName);
+			}
+			tables.add(table);
+		}
+		List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
+		for (Node expression : selectExpressions) {
+			int occurences = 0;
+			String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren().get(0))
+					.getValue();
+			for (Table t : tables) {
+				if (t.containsColumn(columnName)) {
+					occurences++;
+				}
+			}
+			if (occurences == 0) {
 				throw new SemanticError("Error: no such column: " + columnName);
+			}
+			if (occurences > 1) {
+				throw new SemanticError("Error: ambiguous column name: " + columnName);
 			}
 		}
 	}

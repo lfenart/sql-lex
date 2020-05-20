@@ -85,8 +85,8 @@
 [a-zA-Z][a-zA-Z_0-9]*	{ return getSymbolFactory().newSymbol("ID", Sym.ID, yytext()); }
 \'[^']*\'					{ return getSymbolFactory().newSymbol("TEXT", Sym.TEXT, yytext().substring(1, yylength()-1)); }
 
-"--".*\n	{}
-"//".*\n	{}
+"--".*	{}
+"//".*	{}
 "/*".*"*/"	{}
 
 [^]				{ throw new Error("Illegal character <"+yytext()+">"); }

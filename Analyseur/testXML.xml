@@ -36,6 +36,21 @@
 </column>
 </primaryKey>
 </create>
+<create>
+<table>
+<text value="Etudiant2" />
+</table>
+<data>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<type>
+<INT
+ /></type>
+</data>
+</create>
 <insert>
 <into>
 <table>
@@ -54,15 +69,7 @@
 </column>
 <values>
 <integer value="2" />
-<column>
-<columnName>
 <text value="Quentin" />
-</columnName>
-</column>
-</values>
-<values>
-<integer value="1" />
-<text value="Lucas" />
 </values>
 </insert>
 <insert>
@@ -83,11 +90,7 @@
 </column>
 <values>
 <integer value="1" />
-<column>
-<columnName>
 <text value="Lucas" />
-</columnName>
-</column>
 </values>
 </insert>
 <select>
@@ -111,6 +114,26 @@
 </columnName>
 </column>
 <text value="Quentin" />
+</EQUAL>
+</where>
+</select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+<where>
+<EQUAL>
+<integer value="1" />
+<text value="test" />
 </EQUAL>
 </where>
 </select>
