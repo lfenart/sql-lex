@@ -62,7 +62,8 @@ nonterminal Node	Commandes, Instruction, Instructions;
 nonterminal Node	CreateInstruction, DropInstruction;
 nonterminal Node	DeleteInstruction, InsertInstruction, SelectInstruction, UpdateInstruction;
 nonterminal Node	AndCondition, Condition, Operand, Summand, Factor, Term;
-nonterminal Node	As, AsOpt;
+nonterminal Node	AsColumn, AsColumnOpt;
+nonterminal Node	AsTable, AsTableOpt;
 nonterminal Node	Column, Columns;
 nonterminal Node	ColumnName, TableAlias, ColumnAlias;
 nonterminal Node	Data, Datas, DataType;
@@ -155,11 +156,11 @@ AndCondition	::=	Condition:c						{: RESULT = c; :}
 					:}
          		;
 
-As	::=	AS ColumnAlias:alias	{: RESULT = getFactory().createNodeAs(alias); :}
+AsColumn	::=	AS ColumnAlias:alias	{: RESULT = getFactory().createNodeAs(alias); :}
 	;
 
-AsOpt	::=
-		|	As:a	{: RESULT = a; :}
+AsColumnOpt	::=
+		|	AsColumn:a	{: RESULT = a; :}
 		;
 
 Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
@@ -250,8 +251,23 @@ Factor	::=	Term:t					{: RESULT = t; :}
 		|	Factor:f DIV Term:t		{: RESULT = getFactory().createNodeDiv(f, t); :}
 		;
 
-From	::=	FROM TableExpression:t	{: RESULT = getFactory().createNodeFrom(t); :}
+From	::=	FROM TableExpression:t	AsTableOpt:a {: RESULT = getFactory().createNodeFrom(t,a); :}
 		;
+		
+AsTable	::=	AS TableAlias:alias	{: RESULT = getFactory().createNodeAs(alias); :}
+	;
+
+AsTableOpt	::=
+		|	AsTable:a	{: RESULT = a; :}
+		;
+		
+TableAlias	::=	ID:name
+				{:
+					RESULT = getFactory().createNodeTableAlias(
+						getFactory().createNodeText(name)
+					);
+				:}
+			;
 
 Function	::= ID:name OPEN_PARENTHESIS Column:c CLOSE_PARENTHESIS
 				{:
@@ -378,7 +394,7 @@ Select	::=	SELECT MULT /* hack: wildcard */
 		|	SELECT SelectExpressions:es	{: RESULT = es; :}
 		;
 
-SelectExpression	::=	Expression:e AsOpt:a
+SelectExpression	::=	Expression:e AsColumnOpt:a
 						{:
 							RESULT = getFactory().createNodeSelectExpression(e, a);
 						:}

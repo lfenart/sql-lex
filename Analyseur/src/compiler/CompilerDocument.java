@@ -32,7 +32,7 @@ public class CompilerDocument {
 			p.setContext(context);
 			p.parse();
 			Visitor xmlVisitor = new XmlVisitor();
-			Visitor semanticVisitor = new SemanticVisitor();
+			Visitor semanticVisitor = new XmlVisitor();
 			context.getRoot().accept(xmlVisitor);
 			context.getRoot().accept(semanticVisitor);
 		} catch (Exception e) {
