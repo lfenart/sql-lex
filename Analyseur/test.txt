@@ -8,6 +8,7 @@ UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
 
 // Erreurs
+// CREATE TABLE Etudiant (numero INT);
 // SELECT numero FROM e;
 // SELECT numero FROM Etudiant INNER JOIN x ON 1;
 // SELECT numero FROM Etudiant INNER JOIN Etudiant2 ON 1;
@@ -16,3 +17,8 @@ DELETE FROM Etudiant WHERE numero = 1;
 
 // A faire
 // SELECT numero FROM Etudiant where 1 = 'test';
+
+
+// A corriger
+// [...] WHERE 1 = numero [...];
+// SELECT COUNT(numero) [...]

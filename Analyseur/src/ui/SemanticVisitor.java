@@ -158,27 +158,36 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitCreate(NodeCreate nodeCreate) {
 		System.out.println("Creation");
+		Node nodeTable = nodeCreate.getChildren().get(0);
+		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
+		String tableName = nodeTableName.getValue();
+		if (tables.containsKey(tableName)) {
+			throw new SemanticError("Error: table " + tableName + " already exists");
+		}
 		List<Column> columns = new ArrayList<Column>();
-		Table table = new Table();
-		for (Node n : nodeCreate.getChildren().get(1).getChildren()) {
-			Column c = new Column();
-			c.setName(((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-			c.setType(((NodeType) n.getChildren().get(1)).getType().name());
-			if (((NodeType) n.getChildren().get(1)).getSize() != null) {
-				c.setTypeSize(((NodeType) n.getChildren().get(1)).getSize());
+		List<Node> nodeColumns = nodeCreate.getChildren().get(1).getChildren();
+		for (Node n : nodeColumns) {
+			String columnName = ((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0))
+					.getValue();
+			Column c = new Column(columnName);
+			if (columns.contains(c)) {
+				throw new SemanticError("Error: duplicate column name: " + c.getName());
 			}
+			NodeType nodeType = (NodeType) n.getChildren().get(1);
+			c.setType(nodeType.getType().name());
+			if (nodeType.getSize() != null) {
+				c.setTypeSize(nodeType.getSize());
+			}
+
+			// probablement à modifier
 			if (n.getChildren().size() > 2) {
 				c.setNotNull(true);
 			}
-			if (columns.contains(c)) {
-				throw new SemanticError("Error: duplicate column name: " + c.getName());
-			} else {
-				columns.add(c);
-			}
+			columns.add(c);
 		}
-		table.setName(((NodeText) nodeCreate.getChildren().get(0).getChildren().get(0)).getValue());
-		table.setColumns(columns);
-		this.tables.put(table.getName(), table);
+		// primary key à ajouter
+		Table table = new Table(tableName, columns, null);
+		this.tables.put(tableName, table);
 	}
 
 	@Override

@@ -178,4 +178,20 @@
 </EQUAL>
 </where>
 </delete>
+<select>
+<selectExpression>
+<COUNT>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</COUNT>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
 </root>
