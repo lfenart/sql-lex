@@ -68,10 +68,8 @@ public class SemanticVisitor extends Visitor {
 		if (this.tables.containsKey(((NodeText) n.getChildren().get(0)).getValue())) {
 			table = this.tables.get(((NodeText) n.getChildren().get(0)).getValue());
 		}
-		if (table != null)
-			System.out.println("Table Ok");
-		else
-			System.out.println("Table Error");
+		if (table == null)
+			throw new SemanticError("Error: table not found: " + ((NodeText) n.getChildren().get(0)).getValue());
 		return table;
 	}
 
@@ -87,15 +85,9 @@ public class SemanticVisitor extends Visitor {
 	}
 
 	public void testColumnInTable(Table table, String column) {
-		boolean result = false;
-		for (int i = 0; i < table.getColumns().size(); i++) {
-			if (table.getColumns().get(i).getName().equalsIgnoreCase(column))
-				result = true;
+		if (!table.containsColumn(column)) {
+			throw new SemanticError("Error: no such column: " + column);
 		}
-		if (result)
-			System.out.println("Column Ok");
-		else
-			System.out.println("Column Error");
 	}
 
 	public String getColumnName(Node n) {
@@ -132,9 +124,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitColumn(NodeColumn nodeColumn) {
 		// TODO Auto-generated method stub
-		for (Node n : nodeColumn.getChildren())
-			if (n != null)
-				n.accept(this);
+
 	}
 
 	@Override
@@ -208,9 +198,8 @@ public class SemanticVisitor extends Visitor {
 			}
 		}
 		if (!datatype)
-			System.out.println("Type erreur");
-		else
-			System.out.println("Type OK");
+			throw new SemanticError("Type error : "+ ((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0) 
+										.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 
 	}
 
@@ -254,9 +243,6 @@ public class SemanticVisitor extends Visitor {
 		String tableName = ((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0))
 				.getValue();
 		Table table = this.tables.get(tableName);
-		if (table == null) {
-			throw new SemanticError("Error: table not found: " + tableName);
-		}
 		List<Node> columns = nodeInsert.getChildren().get(1).getChildren();
 		for (Node column : columns) {
 			String columnName = ((NodeText) column.getChildren().get(0).getChildren().get(0)).getValue();
@@ -466,10 +452,9 @@ public class SemanticVisitor extends Visitor {
 					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
 				column = true;
 		}
-		if (column)
-			System.out.println("Set Column Ok");
-		else
-			System.out.println("Set Column Error");
+		if (!column)
+			throw new SemanticError("Error: no such column: " + ((NodeText) nodeUpdate.getChildren().get(1)
+					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 		// ValueType
 		boolean datatype = false;
 		for (Column c : table.getColumns()) {
@@ -487,9 +472,8 @@ public class SemanticVisitor extends Visitor {
 			}
 		}
 		if (!datatype)
-			System.out.println("Set Type erreur");
-		else
-			System.out.println("Set Type OK");
+			throw new SemanticError("Type error : "+ ((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0) 
+										.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 
 		//// Where
 		// Column
@@ -499,10 +483,9 @@ public class SemanticVisitor extends Visitor {
 					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
 				column = true;
 		}
-		if (column)
-			System.out.println("Where Column Ok");
-		else
-			System.out.println("Where Column Error");
+		if (!column)
+			throw new SemanticError("Error: no such column: " + ((NodeText) nodeUpdate.getChildren().get(1)
+					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 
 		datatype = false;
 		for (Column c : table.getColumns()) {
@@ -520,9 +503,8 @@ public class SemanticVisitor extends Visitor {
 			}
 		}
 		if (!datatype)
-			System.out.println("Where Type erreur");
-		else
-			System.out.println("Where Type OK");
+			throw new SemanticError("Type error : "+ ((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0) 
+										.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 
 	}
 
