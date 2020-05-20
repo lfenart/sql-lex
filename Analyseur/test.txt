@@ -7,9 +7,9 @@ SELECT numero FROM Etudiant where 1 = numero;
 UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
 // Select numero from Etudiant where 1 = Etudiant.numero;
-// SELECT * from Etudiant;
+SELECT * from Etudiant;
 SELECT numero as num FROM Etudiant;
-//SELECT COUNT(numero) FROM Etudiant;
+SELECT COUNT(numero) FROM Etudiant;
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);

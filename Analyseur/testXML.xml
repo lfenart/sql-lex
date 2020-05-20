@@ -177,11 +177,64 @@
 <text value="numero" />
 </columnName>
 </column>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+<where>
+<EQUAL>
+<integer value="1" />
+<column>
+<tableAlias>
+<text value="Etudiant" />
+</tableAlias>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</EQUAL>
+</where>
+</select>
+<select>
+<selectExpression>
+<wildcard />
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
 <as>
 <columnAlias>
 <text value="num" />
 </columnAlias>
 </as>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
+<select>
+<selectExpression>
+<COUNT>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</COUNT>
 </selectExpression>
 <from>
 <table>

@@ -441,28 +441,61 @@ public class SemanticVisitor extends Visitor {
 				nodeOn.accept(this);
 			}
 		}
-		List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
-		for (Node expression : selectExpressions) {
-			boolean occurence = false;
-			String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren().get(0))
-					.getValue();
-			for (String k : this.currentTables.keySet()) {
-				Table t = this.currentTables.get(k);
+		if (nodeSelect.getChildren().get(0).getChildren().get(0).getClass() == NodeWildcard.class) {
+			NodeBlock block = new NodeBlock();
+			List<NodeSelectExpression> columns = new ArrayList<NodeSelectExpression>();
+			for (int i = 0; i < table.getColumns().size(); i++) {
+				NodeSelectExpression selectExpression = new NodeSelectExpression();
+				NodeColumn column = new NodeColumn();
+				NodeColumnName columnName = new NodeColumnName();
+				NodeText text = new NodeText(table.getColumns().get(i).getName());
+				columnName.getChildren().add(text);
+				column.getChildren().add(columnName);
+				selectExpression.getChildren().add(column);
+				columns.add(selectExpression);
+			}
+			block.getChildren().addAll(columns);
+			nodeSelect.getChildren().set(0, block);
+			this.visitSelect(nodeSelect);
+		} else if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0)
+				.getClass() == NodeFunction.class) {
+			int occurences = 0;
+			String columnName = ((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0)
+					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue();
+			for (Table t : this.currentTables.values()) {
 				if (t.containsColumn(columnName)) {
-					if (occurence) { // On a déjà trouvé la colonne dans une autre table
-						throw new SemanticError("Error: ambiguous column name: " + columnName);
-					}
-					occurence = true;
+					occurences++;
 				}
 			}
-			if (!occurence) { // La colonne n'existe dans aucune des tables
+			if (occurences == 0) {
 				throw new SemanticError("Error: no such column: " + columnName);
 			}
-		}
-		for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
-			Node n = nodeSelect.getChildren().get(i);
-			if (n != null) {
-				n.accept(this);
+			if (occurences > 1) {
+				throw new SemanticError("Error: ambiguous column name: " + columnName);
+			}
+		} else {
+			List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
+			for (Node expression : selectExpressions) {
+				boolean occurence = false;
+				String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren()
+						.get(0)).getValue();
+				for (Table t : this.currentTables.values()) {
+					if (t.containsColumn(columnName)) {
+						if (occurence) { // On a déjà trouvé la colonne dans une autre table
+							throw new SemanticError("Error: ambiguous column name: " + columnName);
+						}
+						occurence = true;
+					}
+				}
+				if (!occurence) { // La colonne n'existe dans aucune des tables
+					throw new SemanticError("Error: no such column: " + columnName);
+				}
+			}
+			for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
+				Node n = nodeSelect.getChildren().get(i);
+				if (n != null) {
+					n.accept(this);
+				}
 			}
 		}
 	}
