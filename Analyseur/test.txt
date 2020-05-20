@@ -1,11 +1,11 @@
-CREATE TABLE Etudiant (numero INT, nom VARCHAR(32) NOT NULL, PRIMARY KEY (numero));
+CREATE TABLE Etudiant (numero int, nom varchar (32) not null, primary key (numero));
 CREATE TABLE Etudiant2 (numero INT);
-INSERT INTO Etudiant (numero,nom) VALUES(2, 'Quentin');
-INSERT INTO Etudiant (numero,nom) VALUES(1, 'Lucas');
-SELECT numero FROM Etudiant where nom = 'Quentin';
-
-
-
+INSERT INTO Etudiant (numero,nom) VALUES(2,Quentin);
+INSERT INTO Etudiant (numero,nom) VALUES(1,Lucas);
+DROP TABLE Etudiant;
+Select numero from Etudiant where nom = 'Quentin';
+UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
+DELETE FROM Etudiant WHERE numero = 1;
 
 // Erreurs
 // SELECT numero FROM e;
