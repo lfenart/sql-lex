@@ -147,7 +147,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitCreate(NodeCreate nodeCreate) {
-		System.out.println("Creation");
 		List<Column> columns = new ArrayList<Column>();
 		Table table = new Table();
 		for (Node n : nodeCreate.getChildren().get(1).getChildren()) {
@@ -179,7 +178,6 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitDelete(NodeDelete nodeDelete) {
 		// TODO Auto-generated method stub
-		System.out.println("Delete");
 		Table table = this.testTable(this.getNodeTable(nodeDelete));
 		this.testColumnInTable(table, this.getColumnName(nodeDelete));
 		boolean datatype = false;
@@ -239,7 +237,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
-		System.out.println("Insert");
 		String tableName = ((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0))
 				.getValue();
 		Table table = this.tables.get(tableName);
@@ -353,7 +350,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
-		System.out.println("Select");
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
 		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
@@ -375,21 +371,41 @@ public class SemanticVisitor extends Visitor {
 			}
 			tables.add(table);
 		}
-		List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
-		for (Node expression : selectExpressions) {
-			int occurences = 0;
-			String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren().get(0))
-					.getValue();
-			for (Table t : tables) {
-				if (t.containsColumn(columnName)) {
-					occurences++;
+
+		if(nodeSelect.getChildren().get(0).getChildren().get(0).getClass()==NodeWildcard.class) {
+			NodeBlock block = new NodeBlock();
+			List<NodeSelectExpression> columns = new ArrayList<NodeSelectExpression>();
+			for(int i=0;i<table.getColumns().size();i++) {
+				NodeSelectExpression selectExpression = new NodeSelectExpression();
+				NodeColumn column = new NodeColumn();
+				NodeColumnName columnName = new NodeColumnName();
+				NodeText text = new NodeText(table.getColumns().get(i).getName()); 
+				columnName.getChildren().add(text);
+				column.getChildren().add(columnName);
+				selectExpression.getChildren().add(column);
+				columns.add(selectExpression);
+			}
+			block.getChildren().addAll(columns);
+			nodeSelect.getChildren().set(0, block);
+			this.visitSelect(nodeSelect);
+		}
+		else {
+			List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
+			for (Node expression : selectExpressions) {
+				int occurences = 0;
+				String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren().get(0))
+						.getValue();
+				for (Table t : tables) {
+					if (t.containsColumn(columnName)) {
+						occurences++;
+					}
 				}
-			}
-			if (occurences == 0) {
-				throw new SemanticError("Error: no such column: " + columnName);
-			}
-			if (occurences > 1) {
-				throw new SemanticError("Error: ambiguous column name: " + columnName);
+				if (occurences == 0) {
+					throw new SemanticError("Error: no such column: " + columnName);
+				}
+				if (occurences > 1) {
+					throw new SemanticError("Error: ambiguous column name: " + columnName);
+				}
 			}
 		}
 	}
@@ -441,11 +457,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitUpdate(NodeUpdate nodeUpdate) {
 		// TODO Auto-generated method stub
-		System.out.println("Update");
-		// Table
 		Table table = this.testTable(this.getNodeTable(nodeUpdate));
-		//// Set
-		// Column
 		boolean column = false;
 		for (int i = 0; i < table.getColumns().size(); i++) {
 			if (table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(1)
@@ -455,7 +467,6 @@ public class SemanticVisitor extends Visitor {
 		if (!column)
 			throw new SemanticError("Error: no such column: " + ((NodeText) nodeUpdate.getChildren().get(1)
 					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		// ValueType
 		boolean datatype = false;
 		for (Column c : table.getColumns()) {
 			if (c.getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0)
@@ -475,8 +486,6 @@ public class SemanticVisitor extends Visitor {
 			throw new SemanticError("Type error : "+ ((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0) 
 										.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
 
-		//// Where
-		// Column
 		column = false;
 		for (int i = 0; i < table.getColumns().size(); i++) {
 			if (table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(2)

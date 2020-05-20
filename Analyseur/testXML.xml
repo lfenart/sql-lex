@@ -13,6 +13,9 @@
 <type>
 <INT
  /></type>
+<not>
+<null />
+</not>
 </data>
 <data>
 <column>
@@ -106,30 +109,6 @@
 <text value="Etudiant" />
 </table>
 </drop>
-<select>
-<selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-<where>
-<EQUAL>
-<column>
-<columnName>
-<text value="nom" />
-</columnName>
-</column>
-<text value="Quentin" />
-</EQUAL>
-</where>
-</select>
 <update>
 <table>
 <text value="Etudiant" />
@@ -178,4 +157,38 @@
 </EQUAL>
 </where>
 </delete>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+<where>
+<EQUAL>
+<integer value="1" />
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</EQUAL>
+</where>
+</select>
+<select>
+<selectExpression>
+<wildcard />
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
 </root>
