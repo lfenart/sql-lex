@@ -150,7 +150,41 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitDelete(NodeDelete nodeDelete) {
 		// TODO Auto-generated method stub
-
+		System.out.println("Delete");
+		Table table = new Table();
+		boolean t=false;
+		if(this.tables.containsKey(((NodeText) nodeDelete.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
+			t=true;
+			table = this.tables.get(((NodeText) nodeDelete.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+		}
+		if(t)System.out.println("Table Ok");
+		else System.out.println("Table Error");
+		
+		boolean column=false;
+		for(int i=0;i<table.getColumns().size();i++) {
+			if(table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+				column=true;
+		}
+		if(column)System.out.println("Column Ok");
+		else System.out.println("Column Error");
+		//ValueType
+		boolean datatype=false;
+		for(Column c : table.getColumns()) {
+			if(c.getName().equalsIgnoreCase(((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+			{
+				if(nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeInteger.class
+						&& c.getType().contains("INT")) {
+					datatype=true;
+				}
+				if(nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeText.class
+						&& c.getType().contains("CHAR")) {
+					datatype=true;
+				}
+				break;
+			}
+		}
+		if(!datatype) System.out.println("Type erreur");
+		else System.out.println("Type OK");
 	}
 
 	@Override
@@ -168,7 +202,12 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitDrop(NodeDrop nodeDrop) {
 		// TODO Auto-generated method stub
-
+		System.out.println("Drop");
+		boolean drop=false;
+		if(this.tables.containsKey(((NodeText) nodeDrop.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+			drop=true;
+		if(drop)System.out.println("Table Ok");
+		else System.out.println("Table Error");
 	}
 
 	@Override
@@ -411,7 +450,70 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitUpdate(NodeUpdate nodeUpdate) {
 		// TODO Auto-generated method stub
-
+		System.out.println("Update");
+		//Table
+		Table table = new Table();
+		if(this.tables.containsKey(((NodeText) nodeUpdate.getChildren().get(0).getChildren().get(0)).getValue())) {
+			System.out.println("Table OK");
+			table = this.tables.get(((NodeText) nodeUpdate.getChildren().get(0).getChildren().get(0)).getValue());
+		}
+		else System.out.println("Table Error");
+		////Set
+		//Column
+		boolean column=false;
+		for(int i=0;i<table.getColumns().size();i++) {
+			if(table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+				column=true;
+		}
+		if(column)System.out.println("Set Column Ok");
+		else System.out.println("Set Column Error");
+		//ValueType
+		boolean datatype=false;
+		for(Column c : table.getColumns()) {
+			if(c.getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+			{
+				if(nodeUpdate.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeInteger.class
+						&& c.getType().contains("INT")) {
+					datatype=true;
+				}
+				if(nodeUpdate.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeText.class
+						&& c.getType().contains("CHAR")) {
+					datatype=true;
+				}
+				break;
+			}
+		}
+		if(!datatype) System.out.println("Set Type erreur");
+		else System.out.println("Set Type OK");
+		
+		////Where
+		//Column
+		column=false;
+		for(int i=0;i<table.getColumns().size();i++) {
+			if(table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(2).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+				column=true;
+		}
+		if(column)System.out.println("Where Column Ok");
+		else System.out.println("Where Column Error");
+		
+		datatype=false;
+		for(Column c : table.getColumns()) {
+			if(c.getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(2).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
+			{
+				if(nodeUpdate.getChildren().get(2).getChildren().get(0).getChildren().get(1).getClass()==NodeInteger.class
+						&& c.getType().contains("INT")) {
+					datatype=true;
+				}
+				if(nodeUpdate.getChildren().get(2).getChildren().get(0).getChildren().get(1).getClass()==NodeText.class
+						&& c.getType().contains("CHAR")) {
+					datatype=true;
+				}
+				break;
+			}
+		}
+		if(!datatype) System.out.println("Where Type erreur");
+		else System.out.println("Where Type OK");
+		
 	}
 
 	@Override

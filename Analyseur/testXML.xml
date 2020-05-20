@@ -36,39 +36,6 @@
 </column>
 </primaryKey>
 </create>
-<create>
-<table>
-<text value="Student" />
-</table>
-<data>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<type>
-<INT
- /></type>
-</data>
-<data>
-<column>
-<columnName>
-<text value="prenom" />
-</columnName>
-</column>
-<type>
-<VARCHAR
- size="32" 
- /></type>
-</data>
-<primaryKey>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</primaryKey>
-</create>
 <insert>
 <into>
 <table>
@@ -143,4 +110,57 @@
 </EQUAL>
 </where>
 </select>
+<update>
+<table>
+<text value="Etudiant" />
+</table>
+<set>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<integer value="1" />
+</set>
+<set>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+</column>
+<text value="Studer" />
+</set>
+<where>
+<EQUAL>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<integer value="1" />
+</EQUAL>
+</where>
+</update>
+<drop>
+<table>
+<text value="Etudiant" />
+</table>
+</drop>
+<delete>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+<where>
+<EQUAL>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<integer value="1" />
+</EQUAL>
+</where>
+</delete>
 </root>
