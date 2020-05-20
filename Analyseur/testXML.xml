@@ -215,4 +215,28 @@
 </table>
 </from>
 </select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<as>
+<columnAlias>
+<text value="num" />
+</columnAlias>
+</as>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+<as>
+<tableAlias>
+<text value="et" />
+</tableAlias>
+</as>
+</from>
+</select>
 </root>

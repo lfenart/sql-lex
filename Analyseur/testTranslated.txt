@@ -10,6 +10,7 @@ DELETE FROM Etudiant WHERE numero = 1;
 SELECT * from Etudiant;
 SELECT numero as num FROM Etudiant;
 SELECT COUNT(numero) FROM Etudiant;
+SELECT numero as num FROM Etudiant as et;
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);
@@ -23,5 +24,4 @@ SELECT COUNT(numero) FROM Etudiant;
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
 
 // A faire
-// SELECT COUNT(numero) from Etudiant;
 // SELECT Etudiant.numero from Etudiant where nom = 'Quentin';

@@ -140,10 +140,10 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeFrom(Node table) {
+	public Node createNodeFrom(Node table,Node as) {
 		Node n = new NodeFrom();
 		n.getChildren().add(table);
-//		n.getChildren().add(as);
+		n.getChildren().add(as);
 		return n;
 	}
 
@@ -280,6 +280,7 @@ public class SQLFactory {
 		Node n = new NodeTableExpression();
 		n.getChildren().add(new NodeText(name));
 		n.getChildren().add(join);
+		
 		return n;
 	}
 

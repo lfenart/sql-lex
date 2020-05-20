@@ -179,7 +179,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitCreate(NodeCreate nodeCreate) {
-		System.out.println("Creation");
 		Node nodeTable = nodeCreate.getChildren().get(0);
 		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
 		String tableName = nodeTableName.getValue();
@@ -277,7 +276,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
-		System.out.println("Insert");
 		this.currentTables = new HashMap<String, Table>();
 		String tableName = ((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0))
 				.getValue();
@@ -409,9 +407,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
-		// TODO ajouter * et COUNT
-
-		System.out.println("Select");
 		this.currentTables = new HashMap<String, Table>();
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
