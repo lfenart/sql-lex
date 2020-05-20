@@ -1,6 +1,5 @@
 package compiler;
 
-
 import Instruction.DataType;
 import Instruction.JoinType;
 import Instruction.Node;
@@ -112,7 +111,7 @@ public class SQLFactory {
 		Node n = new NodeData();
 		n.getChildren().add(column);
 		n.getChildren().add(type);
-		if(nullable!=null)
+		if (nullable != null)
 			n.getChildren().add(nullable);
 		return n;
 	}
@@ -144,6 +143,7 @@ public class SQLFactory {
 	public Node createNodeFrom(Node table) {
 		Node n = new NodeFrom();
 		n.getChildren().add(table);
+//		n.getChildren().add(as);
 		return n;
 	}
 

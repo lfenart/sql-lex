@@ -68,7 +68,7 @@
 </columnName>
 </column>
 <values>
-<text value="2" />
+<integer value="2" />
 <text value="Quentin" />
 </values>
 </insert>
@@ -170,4 +170,23 @@
 </EQUAL>
 </where>
 </delete>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<as>
+<columnAlias>
+<text value="num" />
+</columnAlias>
+</as>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
 </root>
