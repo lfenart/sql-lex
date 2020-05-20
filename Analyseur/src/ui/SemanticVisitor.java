@@ -70,7 +70,7 @@ public class SemanticVisitor extends Visitor {
 		String type1 = this.type;
 		n.getChildren().get(1).accept(this);
 		if (!type1.equals(this.type)) {
-			throw new SemanticError("Error: Wrong type");
+			throw new SemanticError("Error: wrong type");
 		}
 	}
 
@@ -161,7 +161,6 @@ public class SemanticVisitor extends Visitor {
 					default:
 						this.type = "Number";
 					}
-					System.out.println(type);
 				}
 			}
 
@@ -289,6 +288,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
 		System.out.println("Insert");
+		this.currentTables = new HashMap<String, Table>();
 		String tableName = ((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0))
 				.getValue();
 		Table table = this.tables.get(tableName);
@@ -296,10 +296,34 @@ public class SemanticVisitor extends Visitor {
 			throw new SemanticError("Error: table not found: " + tableName);
 		}
 		List<Node> columns = nodeInsert.getChildren().get(1).getChildren();
+		List<String> columnType = new ArrayList<>();
 		for (Node column : columns) {
-			String columnName = ((NodeText) column.getChildren().get(0).getChildren().get(0)).getValue();
+			System.out.println(column);
+			Node nodeColumnName = column.getChildren().get(0);
+			NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
+			String columnName = nodeText.getValue();
 			if (!table.containsColumn(columnName)) {
 				throw new SemanticError("Error: no such column: " + columnName);
+			}
+			Column c = table.getColumns().get(table.getColumns().indexOf(new Column(columnName)));
+			switch (c.getType()) {
+			case "VARCHAR":
+			case "CHAR":
+				columnType.add("Text");
+				break;
+			default:
+				columnType.add("Number");
+			}
+		}
+		List<Node> values = nodeInsert.getChildren().get(2).getChildren().get(0).getChildren().get(0).getChildren();
+		if (columns.size() != values.size()) {
+			throw new SemanticError("Error: " + values.size() + " values for " + columns.size() + " columns");
+		}
+		for (int i = 0; i < columns.size(); i++) {
+			Node val = values.get(i);
+			val.accept(this);
+			if (!columnType.get(i).equals(this.type)) {
+				throw new SemanticError("Error: wrong type");
 			}
 		}
 	}

@@ -68,12 +68,8 @@
 </columnName>
 </column>
 <values>
-<integer value="2" />
-<column>
-<columnName>
+<text value="2" />
 <text value="Quentin" />
-</columnName>
-</column>
 </values>
 </insert>
 <insert>
@@ -94,11 +90,7 @@
 </column>
 <values>
 <integer value="1" />
-<column>
-<columnName>
 <text value="Lucas" />
-</columnName>
-</column>
 </values>
 </insert>
 <drop>
@@ -178,20 +170,4 @@
 </EQUAL>
 </where>
 </delete>
-<select>
-<selectExpression>
-<COUNT>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</COUNT>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-</select>
 </root>
