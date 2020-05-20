@@ -136,7 +136,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitBoolean(NodeBoolean nodeBoolean) {
-		this.type = "Boolean";
+		this.type = "Number";
 	}
 
 	@Override
@@ -150,14 +150,16 @@ public class SemanticVisitor extends Visitor {
 				int index = t.getColumns().indexOf(new Column(columnName));
 				if (index != -1) {
 					if (this.type != null) {
-						throw new SemanticError("Duplicate");
+						throw new SemanticError("Error: ambiguous column name: " + columnName);
 					}
 					Column column = t.getColumns().get(index);
 					switch (column.getType()) {
-					case "INT":
-						this.type = "Number";
+					case "CHAR":
+					case "VARCHAR":
+						this.type = "Text";
+						break;
 					default:
-						System.out.println("Unexpected type: " + column.getType());
+						this.type = "Number";
 					}
 					System.out.println(type);
 				}
@@ -254,8 +256,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitDiv(NodeDiv nodeDiv) {
-		// TODO Auto-generated method stub
-
+		this.visitBinaryOperator(nodeDiv);
 	}
 
 	@Override
@@ -322,14 +323,12 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitMinus(NodeMinus nodeMinus) {
-		// TODO Auto-generated method stub
-
+		this.visitBinaryOperator(nodeMinus);
 	}
 
 	@Override
 	public void visitMult(NodeMult nodeMult) {
-		// TODO Auto-generated method stub
-
+		this.visitBinaryOperator(nodeMult);
 	}
 
 	@Override
@@ -358,8 +357,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitOn(NodeOn nodeOn) {
-		// TODO Auto-generated method stub
-
+		this.visitNode(nodeOn);
 	}
 
 	@Override
@@ -381,8 +379,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitPlus(NodePlus nodePlus) {
-		// TODO Auto-generated method stub
-
+		this.visitBinaryOperator(nodePlus);
 	}
 
 	@Override
@@ -427,6 +424,10 @@ public class SemanticVisitor extends Visitor {
 			// TODO: pas d'alias pour le moment
 			tableAlias = tableName;
 			this.currentTables.put(tableAlias, table);
+			Node nodeOn = nodeJoin.getChildren().get(1);
+			if (nodeOn != null) {
+				nodeOn.accept(this);
+			}
 		}
 		List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
 		for (Node expression : selectExpressions) {
@@ -446,9 +447,11 @@ public class SemanticVisitor extends Visitor {
 				throw new SemanticError("Error: no such column: " + columnName);
 			}
 		}
-		Node nodeWhere = nodeSelect.getChildren().get(2);
-		if (nodeWhere != null) {
-			nodeWhere.accept(this);
+		for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
+			Node n = nodeSelect.getChildren().get(i);
+			if (n != null) {
+				n.accept(this);
+			}
 		}
 	}
 
