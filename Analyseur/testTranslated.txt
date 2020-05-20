@@ -3,7 +3,8 @@ CREATE TABLE Etudiant2 (numero INT);
 INSERT INTO Etudiant (numero,nom) VALUES(2,Quentin);
 INSERT INTO Etudiant (numero,nom) VALUES(1,Lucas);
 DROP TABLE Etudiant;
-Select numero from Etudiant where nom = 'Quentin';
+SELECT numero FROM Etudiant where '1' = numero;
+// Select *, Etudiant.numero from Etudiant where nom = 'Quentin';
 UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
 
@@ -13,12 +14,10 @@ DELETE FROM Etudiant WHERE numero = 1;
 // SELECT numero FROM Etudiant INNER JOIN x ON 1;
 // SELECT numero FROM Etudiant INNER JOIN Etudiant2 ON 1;
 // SELECT n FROM Etudiant;
+// SELECT numero from Etudiant where 1 = 'Quentin';
 // CREATE TABLE Etudiant3 (numero INT, numero VARCHAR(16));
 
 // A faire
-// SELECT numero FROM Etudiant where 1 = 'test';
-
-
-// A corriger
-// DELETE FROM Etudiant WHERE 1 = numero;
- SELECT COUNT(numero) from Etudiant;
+// SELECT numero from Etudiant where nom = 'Quentin';
+// SELECT COUNT(numero) from Etudiant;
+// SELECT nom from Etudiant INNER JOIN Etudiant2 ON 1 = 'Quentin';

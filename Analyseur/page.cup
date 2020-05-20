@@ -165,7 +165,7 @@ AsOpt	::=
 Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
 		|	TableAlias:alias POINT ColumnName:name
 			{:
-				RESULT = getFactory().createNodeColumn(alias, name);
+				RESULT = getFactory().createNodeColumn(name, alias);
 			:}
 		;
 
@@ -369,16 +369,24 @@ PrimaryKeyOpt	::=
 				|	PrimaryKey:k	{: RESULT = k; :}
 				;
 
-Select	::=	SELECT MULT /* hack: wildcard */
-			{:
-				RESULT = getFactory().createNodeSelectExpression(
-					getFactory().createNodeWildcard(), null
-				);
-			:}
-		|	SELECT SelectExpressions:es	{: RESULT = es; :}
+Select	::=	SELECT SelectExpressions:es	{: RESULT = es; :}
 		;
 
-SelectExpression	::=	Expression:e AsOpt:a
+SelectExpression	::=	MULT /* hack: wildcard */
+						{:
+							RESULT = getFactory().createNodeSelectExpression(
+								getFactory().createNodeWildcard(),
+								null
+							);
+						:}
+					/*|	TableAlias:alias POINT MULT
+						{:
+							RESULT = getFactory().createNodeSelectExpression(
+								getFactory().createNodeWildcard(),
+								alias
+							);
+						:}*/
+					|	Expression:e AsOpt:a
 						{:
 							RESULT = getFactory().createNodeSelectExpression(e, a);
 						:}

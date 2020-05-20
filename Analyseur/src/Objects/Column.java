@@ -5,6 +5,7 @@ public class Column {
 	private String name, type;
 	private Long typeSize;
 	private boolean notNull;
+	private String table;
 
 	public Column(String name) {
 		this.name = name;

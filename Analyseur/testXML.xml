@@ -121,12 +121,12 @@
 </from>
 <where>
 <EQUAL>
+<text value="1" />
 <column>
 <columnName>
-<text value="nom" />
+<text value="numero" />
 </columnName>
 </column>
-<text value="Quentin" />
 </EQUAL>
 </where>
 </select>
@@ -178,20 +178,4 @@
 </EQUAL>
 </where>
 </delete>
-<select>
-<selectExpression>
-<COUNT>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</COUNT>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-</select>
 </root>
