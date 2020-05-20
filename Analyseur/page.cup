@@ -80,7 +80,7 @@ nonterminal Node	Select, SelectExpression, SelectExpressions;
 nonterminal Node	Set, Sets;
 nonterminal Node	Table, Tables, TableExpression;
 nonterminal Node	Value;
-nonterminal Node	InsertValue, InsertValues;
+nonterminal Node	Values;
 nonterminal Node	Where, WhereOpt;
 
 nonterminal JoinType	JoinType;
@@ -128,7 +128,7 @@ DropInstruction	::=	DROP TABLE Tables:ts
 					:}
 				;
 
-InsertInstruction	::=	INSERT Into:i OPEN_PARENTHESIS Columns:cs CLOSE_PARENTHESIS InsertValues:vs
+InsertInstruction	::=	INSERT Into:i OPEN_PARENTHESIS Columns:cs CLOSE_PARENTHESIS Values:vs
 						{:
 							RESULT = getFactory().createNodeInsert(i, cs, vs);
 						:}
@@ -165,7 +165,7 @@ AsOpt	::=
 Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
 		|	TableAlias:alias POINT ColumnName:name
 			{:
-				RESULT = getFactory().createNodeColumn(name, alias);
+				RESULT = getFactory().createNodeColumn(alias, name);
 			:}
 		;
 
@@ -273,13 +273,6 @@ GroupByOpt	::=
 			| GroupBy:g	{: RESULT = g; :}
 			;
 
-InsertValue	::=	OPEN_PARENTHESIS Expressions:es CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeValues(es); :}
-			;
-			
-InsertValues	::=	VALUES InsertValue:v	{: RESULT = getFactory().createNodeBlock(); RESULT.getChildren().add(v); :}
-				|	InsertValues:vs SEP InsertValue:v	{: RESULT = vs; vs.getChildren().add(v); :}
-				;
-
 Join		::= JoinType:t JOIN TableExpression:e JoinSpecification:s
 				{:
 					RESULT = getFactory().createNodeJoin(t, e, s);
@@ -369,24 +362,16 @@ PrimaryKeyOpt	::=
 				|	PrimaryKey:k	{: RESULT = k; :}
 				;
 
-Select	::=	SELECT SelectExpressions:es	{: RESULT = es; :}
+Select	::=	SELECT MULT /* hack: wildcard */
+			{:
+				RESULT = getFactory().createNodeSelectExpression(
+					getFactory().createNodeWildcard(), null
+				);
+			:}
+		|	SELECT SelectExpressions:es	{: RESULT = es; :}
 		;
 
-SelectExpression	::=	MULT /* hack: wildcard */
-						{:
-							RESULT = getFactory().createNodeSelectExpression(
-								getFactory().createNodeWildcard(),
-								null
-							);
-						:}
-					/*|	TableAlias:alias POINT MULT
-						{:
-							RESULT = getFactory().createNodeSelectExpression(
-								getFactory().createNodeWildcard(),
-								alias
-							);
-						:}*/
-					|	Expression:e AsOpt:a
+SelectExpression	::=	Expression:e AsOpt:a
 						{:
 							RESULT = getFactory().createNodeSelectExpression(e, a);
 						:}
@@ -443,6 +428,10 @@ Value	::= TEXT:t		{: RESULT = getFactory().createNodeText(t); :}
 		|	FALSE		{: RESULT = getFactory().createNodeBoolean(false); :}
 		|	NULL		{: RESULT = getFactory().createNodeNull(); :}
 		;
+
+Values	::=	VALUES OPEN_PARENTHESIS Expressions:es CLOSE_PARENTHESIS	{: RESULT = getFactory().createNodeValues(es); :}
+		;
+
 Where	::=	WHERE Expression:c	{: RESULT = getFactory().createNodeWhere(c); :}
      	;
 

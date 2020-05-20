@@ -69,11 +69,7 @@
 </column>
 <values>
 <integer value="2" />
-<column>
-<columnName>
 <text value="Quentin" />
-</columnName>
-</column>
 </values>
 </insert>
 <insert>
@@ -94,11 +90,7 @@
 </column>
 <values>
 <integer value="1" />
-<column>
-<columnName>
 <text value="Lucas" />
-</columnName>
-</column>
 </values>
 </insert>
 <drop>
@@ -121,7 +113,7 @@
 </from>
 <where>
 <EQUAL>
-<text value="1" />
+<integer value="1" />
 <column>
 <columnName>
 <text value="numero" />
@@ -178,4 +170,76 @@
 </EQUAL>
 </where>
 </delete>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+<where>
+<EQUAL>
+<integer value="1" />
+<column>
+<tableAlias>
+<text value="Etudiant" />
+</tableAlias>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</EQUAL>
+</where>
+</select>
+<select>
+<selectExpression>
+<wildcard />
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<as>
+<columnAlias>
+<text value="num" />
+</columnAlias>
+</as>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
+<select>
+<selectExpression>
+<COUNT>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</COUNT>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+</table>
+</from>
+</select>
 </root>
