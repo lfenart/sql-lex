@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Instruction.DataType;
 import Instruction.Node;
 import Instruction.NodeAs;
 import Instruction.NodeBlock;
@@ -53,7 +52,6 @@ import Instruction.NodeUsing;
 import Instruction.NodeValues;
 import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
-import Instruction.Operator;
 import Objects.Column;
 import Objects.Table;
 
@@ -64,6 +62,46 @@ public class SemanticVisitor extends Visitor {
 	public SemanticVisitor() {
 		this.tables = new HashMap<>();
 	}
+	
+	public Table testTable(Node n) {
+		Table table = null;
+		if(this.tables.containsKey(((NodeText) n.getChildren().get(0)).getValue())) {
+			table = this.tables.get(((NodeText) n.getChildren().get(0)).getValue());
+		}
+		if(table!=null)System.out.println("Table Ok");
+		else System.out.println("Table Error");
+		return table;
+	}
+	
+	public Node getNodeTable(Node n) {
+		Node result = null;
+		if(n.getClass()==NodeSelect.class)
+			result = this.getNodeTable(n.getChildren().get(1));
+		else if(n.getClass()!=NodeTable.class && n.getClass()!=NodeTableExpression.class)
+			result = this.getNodeTable(n.getChildren().get(0));
+		else result = n;
+		return result;
+	}
+	
+	public void testColumnInTable(Table table, String column) {
+		boolean result = false;
+		for(int i=0;i<table.getColumns().size();i++) {
+			if(table.getColumns().get(i).getName().equalsIgnoreCase(column))
+				result=true;
+		}
+		if(result)System.out.println("Column Ok");
+		else System.out.println("Column Error");
+	}
+	
+	public String getColumnName(Node n) {
+		String result = null;
+		if(n.getClass()==NodeDelete.class)
+			result = this.getColumnName(n.getChildren().get(1));
+		else if(n.getClass()==NodeText.class) result = ((NodeText) n).getValue();
+		else result = this.getColumnName(n.getChildren().get(0));
+		return result;
+	}
+	
 
 	@Override
 	public void visitAs(NodeAs nodeAs) {
@@ -102,7 +140,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitColumnName(NodeColumnName nodeColumnName) {
 		// TODO Auto-generated method stub
-		System.out.println("Column name : " + ((NodeText) nodeColumnName.getChildren().get(0)).getValue());
+		
 	}
 
 	@Override
@@ -116,23 +154,18 @@ public class SemanticVisitor extends Visitor {
 		System.out.println("Creation");
 		List<Column> columns = new ArrayList<Column>();
 		Table table = new Table();
-		//Columns
 		for(Node n : nodeCreate.getChildren().get(1).getChildren()) {
 			Column c = new Column();
-			//Noms
 			c.setName(((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-			//Type
 			c.setType(((NodeType) n.getChildren().get(1)).getType().name());
 			if(((NodeType) n.getChildren().get(1)).getSize()!=null) {
 				c.setTypeSize(((NodeType) n.getChildren().get(1)).getSize());
 			}
-			//NotNull
 			if(n.getChildren().size()>2) {
 				c.setNotNull(true);
 			}
 			columns.add(c);
 		}
-		//Table
 		table.setName(((NodeText) nodeCreate.getChildren().get(0).getChildren().get(0)).getValue());
 		table.setColumns(columns);
 		this.tables.put(table.getName(), table);
@@ -141,9 +174,6 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitData(NodeData nodeData) {
 		// TODO Auto-generated method stub
-		for(Node d : nodeData.getChildren())
-			if(d!=null)
-				d.accept(this);
 
 	}
 
@@ -151,33 +181,18 @@ public class SemanticVisitor extends Visitor {
 	public void visitDelete(NodeDelete nodeDelete) {
 		// TODO Auto-generated method stub
 		System.out.println("Delete");
-		Table table = new Table();
-		boolean t=false;
-		if(this.tables.containsKey(((NodeText) nodeDelete.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-			t=true;
-			table = this.tables.get(((NodeText) nodeDelete.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		}
-		if(t)System.out.println("Table Ok");
-		else System.out.println("Table Error");
-		
-		boolean column=false;
-		for(int i=0;i<table.getColumns().size();i++) {
-			if(table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
-				column=true;
-		}
-		if(column)System.out.println("Column Ok");
-		else System.out.println("Column Error");
-		//ValueType
+		Table table=this.testTable(this.getNodeTable(nodeDelete));
+		this.testColumnInTable(table, this.getColumnName(nodeDelete));
 		boolean datatype=false;
 		for(Column c : table.getColumns()) {
 			if(c.getName().equalsIgnoreCase(((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
 			{
-				if(nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeInteger.class
-						&& c.getType().contains("INT")) {
+				if(nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getClass()==NodeText.class
+						&& c.getType().contains("CHAR")) {
 					datatype=true;
 				}
-				if(nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeText.class
-						&& c.getType().contains("CHAR")) {
+				if(nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(1).getClass()==NodeInteger.class
+						&& c.getType().contains("INT")) {
 					datatype=true;
 				}
 				break;
@@ -185,6 +200,7 @@ public class SemanticVisitor extends Visitor {
 		}
 		if(!datatype) System.out.println("Type erreur");
 		else System.out.println("Type OK");
+		
 	}
 
 	@Override
@@ -202,18 +218,13 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitDrop(NodeDrop nodeDrop) {
 		// TODO Auto-generated method stub
-		System.out.println("Drop");
-		boolean drop=false;
-		if(this.tables.containsKey(((NodeText) nodeDrop.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
-			drop=true;
-		if(drop)System.out.println("Table Ok");
-		else System.out.println("Table Error");
+		
 	}
 
 	@Override
 	public void visitFrom(NodeFrom nodeFrom) {
-		String tableName = ((NodeText) nodeFrom.getChildren().get(0).getChildren().get(0)).getValue();
-		//this.table = this.tables.get(tableName);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -232,12 +243,7 @@ public class SemanticVisitor extends Visitor {
 	public void visitInsert(NodeInsert nodeInsert) {
 		// TODO Auto-generated method stub
 		System.out.println("Insert");
-		Table table = new Table();
-		if(this.tables.containsKey(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-			System.out.println("Table OK");
-			table = this.tables.get(((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		}
-		else System.out.println("Table erreur");
+		Table table=this.testTable(this.getNodeTable(nodeInsert));
 		for(int i=0;i<nodeInsert.getChildren().get(1).getChildren().size();i++) {
 			for(int j=0;j<table.getColumns().size();j++) {
 				if(table.getColumns().get(j).getName().equalsIgnoreCase(((NodeText) nodeInsert.getChildren().get(1).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue())) {
@@ -292,7 +298,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitNot(NodeNot nodeNot) {
 		// TODO Auto-generated method stub
-		System.out.println("not null");
+		
 	}
 
 	@Override
@@ -334,8 +340,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitPrimary(NodePrimaryKey nodePrimaryKey) {
 		// TODO Auto-generated method stub
-		System.out.println("Primary key : ");
-		nodePrimaryKey.getChildren().get(0).accept(this);
+		
 	}
 
 	@Override
@@ -346,14 +351,8 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
 		System.out.println("Select");
-		Table table = new Table();
+		Table table = this.testTable(this.getNodeTable(nodeSelect));
 		List<Column> selectedColumns = new ArrayList<Column>();
-		if (this.tables.containsKey(((NodeText) nodeSelect.getChildren().get(1).getChildren().get(0).getChildren().get(0)).getValue())) {
-			System.out.println("Table OK");
-			table=this.tables.get(((NodeText) nodeSelect.getChildren().get(1).getChildren().get(0).getChildren().get(0)).getValue());
-		} else {
-			System.out.println("Table Error");
-		}
 		
 		int nbSelectedColumn = nodeSelect.getChildren().get(0).getChildren().size();
 		for(Node n : nodeSelect.getChildren().get(0).getChildren()) {
@@ -362,7 +361,6 @@ public class SemanticVisitor extends Visitor {
 					selectedColumns.add(c);	
 			}
 		}
-
 		if(selectedColumns.size()==nbSelectedColumn) System.out.println("Column OK");
 		else System.out.println("Column Error");
 		boolean datatype=false;
@@ -411,8 +409,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitTable(NodeTable nodeTableName) {
 		// TODO Auto-generated method stub
-		System.out.println("nom de la table : " + ((NodeText) nodeTableName.getChildren().get(0)).getValue());
-		//this.table.setName(((NodeText) nodeTableName.getChildren().get(0)).getValue());
+		
 	}
 
 	@Override
@@ -436,9 +433,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitType(NodeType nodeType) {
 		// TODO Auto-generated method stub
-		System.out.println("Column Type : " + nodeType.getType());
-		if(nodeType.getSize()!=null)
-			System.out.println("Size : " + nodeType.getSize());
+		
 	}
 
 	@Override
@@ -452,12 +447,7 @@ public class SemanticVisitor extends Visitor {
 		// TODO Auto-generated method stub
 		System.out.println("Update");
 		//Table
-		Table table = new Table();
-		if(this.tables.containsKey(((NodeText) nodeUpdate.getChildren().get(0).getChildren().get(0)).getValue())) {
-			System.out.println("Table OK");
-			table = this.tables.get(((NodeText) nodeUpdate.getChildren().get(0).getChildren().get(0)).getValue());
-		}
-		else System.out.println("Table Error");
+		Table table = this.testTable(this.getNodeTable(nodeUpdate));
 		////Set
 		//Column
 		boolean column=false;
