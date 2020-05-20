@@ -8,6 +8,7 @@ DELETE FROM Etudiant WHERE numero = 1;
 Select numero from Etudiant where 1 = Etudiant.numero;
 SELECT * from Etudiant;
 SELECT numero as num FROM Etudiant as et;
+SELECT x.numero as xnum FROM Etudiant as x;
 
 // Erreurs
 // SELECT numero FROM e;
