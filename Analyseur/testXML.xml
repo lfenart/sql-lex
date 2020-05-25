@@ -121,6 +121,20 @@
 </column>
 </EQUAL>
 </where>
+<groupBy>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</groupBy>
+<orderBy>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</orderBy>
 </select>
 <update>
 <table>
@@ -170,73 +184,4 @@
 </EQUAL>
 </where>
 </delete>
-<select>
-<selectExpression>
-<wildcard />
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-</select>
-<select>
-<selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<as>
-<columnAlias>
-<text value="num" />
-</columnAlias>
-</as>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-</select>
-<select>
-<selectExpression>
-<COUNT>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</COUNT>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-</select>
-<select>
-<selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<as>
-<columnAlias>
-<text value="num" />
-</columnAlias>
-</as>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-<as>
-<tableAlias>
-<text value="et" />
-</tableAlias>
-</as>
-</from>
-</select>
 </root>

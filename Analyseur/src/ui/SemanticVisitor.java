@@ -140,10 +140,7 @@ public class SemanticVisitor extends Visitor {
 		if (nodeColumn.getChildren().size() == 1) { // pas d'alias
 			for (Table t : this.currentTables.values()) {
 				int index = t.getColumns().indexOf(new Column(columnName));
-				if (index != -1) {
-					if (this.type != null) {
-						throw new SemanticError("Error: ambiguous column name: " + columnName);
-					}
+				if (index != -1) {					
 					Column column = t.getColumns().get(index);
 					switch (column.getType()) {
 					case "CHAR":
@@ -154,6 +151,7 @@ public class SemanticVisitor extends Visitor {
 						this.type = "Number";
 					}
 				}
+				else 	throw new SemanticError("Error: ambiguous column name: " + columnName);
 			}
 
 		} else {
@@ -271,7 +269,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitGroup(NodeGroup nodeGroup) {
 		// TODO Auto-generated method stub
-
+		this.visitNode(nodeGroup);
 	}
 
 	@Override
@@ -376,13 +374,13 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitOrder(NodeOrder nodeOrder) {
 		// TODO Auto-generated method stub
-
+		this.visitNode(nodeOrder);
 	}
 
 	@Override
 	public void visitOrderBy(NodeOrderBy nodeOrderBy) {
 		// TODO Auto-generated method stub
-
+		this.visitNode(nodeOrderBy);
 	}
 
 	@Override
@@ -486,6 +484,7 @@ public class SemanticVisitor extends Visitor {
 					throw new SemanticError("Error: no such column: " + columnName);
 				}
 			}
+			
 			for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
 				Node n = nodeSelect.getChildren().get(i);
 				if (n != null) {

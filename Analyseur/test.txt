@@ -3,14 +3,14 @@ CREATE TABLE Etudiant2 (numero INT);
 INSERT INTO Etudiant (numero,nom) VALUES(2, 'Quentin');
 INSERT INTO Etudiant (numero,nom) VALUES(1, 'Lucas');
 DROP TABLE Etudiant;
-SELECT numero FROM Etudiant where 1 = numero;
+SELECT numero FROM Etudiant where 1 = numero group by numero order by numero ;
 UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
-// Select numero from Etudiant where 1 = Etudiant.numero;
-SELECT * from Etudiant;
-SELECT numero as num FROM Etudiant;
-SELECT COUNT(numero) FROM Etudiant;
-SELECT numero as num FROM Etudiant as et;
+//Select numero from Etudiant where 1 = Etudiant.numero;
+//SELECT * from Etudiant;
+//SELECT numero as num FROM Etudiant;
+//SELECT COUNT(numero) FROM Etudiant;
+//SELECT numero as num FROM Etudiant as et;
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);
@@ -24,4 +24,4 @@ SELECT numero as num FROM Etudiant as et;
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
 
 // A faire
-// SELECT Etudiant.numero from Etudiant where nom = 'Quentin';
+//SELECT Etudiant.numero from Etudiant where nom = 'Quentin';
