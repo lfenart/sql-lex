@@ -141,7 +141,7 @@ SelectInstruction	::=	Select:s From:f WhereOpt:w GroupByOpt:g OrderBysOpt:o
 						:}
 					;
 
-UpdateInstruction	::=	UPDATE Table:t SET Sets:s WhereOpt:w
+UpdateInstruction	::=	UPDATE Table:t SET Sets:s Where:w
 						{:
 							RESULT = getFactory().createNodeUpdate(t, s, w);
 						:}

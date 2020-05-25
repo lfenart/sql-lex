@@ -259,8 +259,10 @@ public class SQLFactory {
 
 	public Node createNodeSet(Node c, Node v) {
 		Node n = new NodeSet();
-		n.getChildren().add(c);
-		n.getChildren().add(v);
+		NodeOperator nodeOperator = new NodeOperator(Operator.EQUAL);
+		nodeOperator.getChildren().add(c);
+		nodeOperator.getChildren().add(v);
+		n.getChildren().add(nodeOperator);
 		return n;
 	}
 

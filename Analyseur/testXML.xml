@@ -141,20 +141,14 @@
 <text value="Etudiant" />
 </table>
 <set>
+<EQUAL>
 <column>
 <columnName>
 <text value="numero" />
 </columnName>
 </column>
 <integer value="1" />
-</set>
-<set>
-<column>
-<columnName>
-<text value="nom" />
-</columnName>
-</column>
-<text value="Studer" />
+</EQUAL>
 </set>
 <where>
 <EQUAL>

@@ -4,7 +4,7 @@ INSERT INTO Etudiant (numero,nom) VALUES(2, 'Quentin');
 INSERT INTO Etudiant (numero,nom) VALUES(1, 'Lucas');
 DROP TABLE Etudiant;
 SELECT numero FROM Etudiant where 1 = numero group by numero order by numero ;
-UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
+UPDATE Etudiant SET numero = 1 WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
 //Select numero from Etudiant where 1 = Etudiant.numero;
 //SELECT * from Etudiant;
