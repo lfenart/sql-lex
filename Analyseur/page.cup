@@ -83,6 +83,8 @@ nonterminal Node	Value;
 nonterminal Node	Values;
 nonterminal Node	Where, WhereOpt;
 
+nonterminal Node	AsTableOpt;
+
 nonterminal JoinType	JoinType;
 nonterminal Operator	Compare;
 
@@ -162,10 +164,10 @@ AsOpt	::=
 		|	As:a	{: RESULT = a; :}
 		;
 
-Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name); :}
+Column	::=	ColumnName:name	{: RESULT = getFactory().createNodeColumn(name, null); :}
 		|	TableAlias:alias POINT ColumnName:name
 			{:
-				RESULT = getFactory().createNodeColumn(alias, name);
+				RESULT = getFactory().createNodeColumn(name, alias);
 			:}
 		;
 
@@ -411,8 +413,12 @@ Tables	::=	Table:t				{: RESULT = getFactory().createNodeBlock(); RESULT.getChil
 TableAlias	::=	ID:alias	{: RESULT = getFactory().createNodeTableAlias(getFactory().createNodeText(alias)); :}
 			;
 
-TableExpression	::=	ID:name JoinOpt:j  {: RESULT = getFactory().createNodeTableExpression(name, j); :}
+TableExpression	::=	ID:name AsTableOpt:alias JoinOpt:j  {: RESULT = getFactory().createNodeTableExpression(name, alias, j); :}
      			;
+     			
+AsTableOpt	::=
+			|	AS Table:t	{: RESULT = getFactory().createNodeAs(t); :}
+			;
 
 Term	::= Value:v		{: RESULT = v; :}
 		|	Column:c	{: RESULT = c; :}

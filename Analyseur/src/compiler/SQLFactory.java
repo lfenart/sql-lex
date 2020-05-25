@@ -276,9 +276,10 @@ public class SQLFactory {
 		return n;
 	}
 
-	public Node createNodeTableExpression(String name, Node join) {
+	public Node createNodeTableExpression(String name, Node alias, Node join) {
 		Node n = new NodeTableExpression();
 		n.getChildren().add(new NodeText(name));
+		n.getChildren().add(alias);
 		n.getChildren().add(join);
 		return n;
 	}

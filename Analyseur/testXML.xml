@@ -187,19 +187,36 @@
 <EQUAL>
 <integer value="1" />
 <column>
-<tableAlias>
-<text value="Etudiant" />
-</tableAlias>
 <columnName>
 <text value="numero" />
 </columnName>
+<tableAlias>
+<text value="Etudiant" />
+</tableAlias>
 </column>
 </EQUAL>
 </where>
 </select>
 <select>
 <selectExpression>
-<wildcard />
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+<tableAlias>
+<text value="Etudiant" />
+</tableAlias>
+</column>
+</selectExpression>
+<selectExpression>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+<tableAlias>
+<text value="Etudiant" />
+</tableAlias>
+</column>
 </selectExpression>
 <from>
 <table>
@@ -241,5 +258,87 @@
 <text value="Etudiant" />
 </table>
 </from>
+</select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
+</column>
+</selectExpression>
+<selectExpression>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
+</column>
+</selectExpression>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+<tableAlias>
+<text value="Etudiant2" />
+</tableAlias>
+</column>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+<as>
+<table>
+<text value="e" />
+</table>
+</as>
+<join value="INNER">
+<table>
+<text value="Etudiant2" />
+</table>
+<on>
+<integer value="1" />
+</on>
+</join>
+</table>
+</from>
+</select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
+</column>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+<as>
+<table>
+<text value="e" />
+</table>
+</as>
+</table>
+</from>
+<where>
+<EQUAL>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+</column>
+<text value="Quentin" />
+</EQUAL>
+</where>
 </select>
 </root>

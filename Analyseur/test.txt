@@ -6,10 +6,12 @@ DROP TABLE Etudiant;
 SELECT numero FROM Etudiant where 1 = numero;
 UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
-// Select numero from Etudiant where 1 = Etudiant.numero;
+Select numero from Etudiant where 1 = Etudiant.numero;
 SELECT * from Etudiant;
 SELECT numero as num FROM Etudiant;
 SELECT COUNT(numero) FROM Etudiant;
+SELECT * from Etudiant as e inner join Etudiant2 on 1;
+SELECT e.numero from Etudiant as e where nom = 'Quentin';
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);
@@ -23,5 +25,4 @@ SELECT COUNT(numero) FROM Etudiant;
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
 
 // A faire
-// SELECT COUNT(numero) from Etudiant;
-// SELECT Etudiant.numero from Etudiant where nom = 'Quentin';
+// SELECT e.nom as x from Etudiant as e where x = 'Quentin';

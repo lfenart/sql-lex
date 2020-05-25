@@ -33,8 +33,9 @@ public class CompilerDocument {
 			p.parse();
 			Visitor xmlVisitor = new XmlVisitor();
 			Visitor semanticVisitor = new SemanticVisitor();
-			context.getRoot().accept(xmlVisitor);
+//			context.getRoot().accept(xmlVisitor);
 			context.getRoot().accept(semanticVisitor);
+			context.getRoot().accept(xmlVisitor);
 		} catch (Exception e) {
 			e.printStackTrace();
 			context.addError("FileNotFoundException");

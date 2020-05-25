@@ -137,7 +137,8 @@ public class SemanticVisitor extends Visitor {
 		Node nodeColumnName = nodeColumn.getChildren().get(0);
 		NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
 		String columnName = nodeText.getValue();
-		if (nodeColumn.getChildren().size() == 1) { // pas d'alias
+		Node tableAlias = nodeColumn.getChildren().get(1);
+		if (tableAlias == null) { // pas d'alias
 			for (Table t : this.currentTables.values()) {
 				int index = t.getColumns().indexOf(new Column(columnName));
 				if (index != -1) {
@@ -157,7 +158,19 @@ public class SemanticVisitor extends Visitor {
 			}
 
 		} else {
-			// TODO
+			Table t = this.currentTables.get(((NodeText) tableAlias.getChildren().get(0)).getValue());
+			int index = t.getColumns().indexOf(new Column(columnName));
+			if (index != -1) {
+				Column column = t.getColumns().get(index);
+				switch (column.getType()) {
+				case "CHAR":
+				case "VARCHAR":
+					this.type = "Text";
+					break;
+				default:
+					this.type = "Number";
+				}
+			}
 		}
 	}
 
@@ -404,6 +417,7 @@ public class SemanticVisitor extends Visitor {
 			this.visitNode(nodeRoot);
 		} catch (SemanticError e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -421,10 +435,15 @@ public class SemanticVisitor extends Visitor {
 		if (table == null) {
 			throw new SemanticError("Error: table not found: " + tableName);
 		}
-		// TODO: pas d'alias pour le moment
 		String tableAlias = tableName;
+		Node nodeAs = nodeTable.getChildren().get(1);
+		if (nodeAs != null) {
+			Node nodeTableAlias = nodeAs.getChildren().get(0);
+			NodeText nodeText = (NodeText) nodeTableAlias.getChildren().get(0);
+			tableAlias = nodeText.getValue();
+		}
 		this.currentTables.put(tableAlias, table);
-		Node nodeJoin = nodeTable.getChildren().get(1);
+		Node nodeJoin = nodeTable.getChildren().get(2);
 		if (nodeJoin != null) {
 			nodeTable = nodeJoin.getChildren().get(0);
 			nodeTableName = (NodeText) nodeTable.getChildren().get(0);
@@ -433,59 +452,76 @@ public class SemanticVisitor extends Visitor {
 			if (table == null) {
 				throw new SemanticError("Error: table not found: " + tableName);
 			}
-			// TODO: pas d'alias pour le moment
 			tableAlias = tableName;
+			nodeAs = nodeTable.getChildren().get(1);
+			if (nodeAs != null) {
+				Node nodeTableAlias = nodeAs.getChildren().get(0);
+				NodeText nodeText = (NodeText) nodeTableAlias.getChildren().get(0);
+				tableAlias = nodeText.getValue();
+			}
 			this.currentTables.put(tableAlias, table);
 			Node nodeOn = nodeJoin.getChildren().get(1);
 			if (nodeOn != null) {
 				nodeOn.accept(this);
 			}
 		}
-		if (nodeSelect.getChildren().get(0).getChildren().get(0).getClass() == NodeWildcard.class) {
+		if (nodeSelect.getChildren().get(0).getChildren().get(0) instanceof NodeWildcard) {
 			NodeBlock block = new NodeBlock();
 			List<NodeSelectExpression> columns = new ArrayList<NodeSelectExpression>();
-			for (int i = 0; i < table.getColumns().size(); i++) {
-				NodeSelectExpression selectExpression = new NodeSelectExpression();
-				NodeColumn column = new NodeColumn();
-				NodeColumnName columnName = new NodeColumnName();
-				NodeText text = new NodeText(table.getColumns().get(i).getName());
-				columnName.getChildren().add(text);
-				column.getChildren().add(columnName);
-				selectExpression.getChildren().add(column);
-				columns.add(selectExpression);
+			for (String key : this.currentTables.keySet()) {
+				Table t = this.currentTables.get(key);
+				for (int i = 0; i < t.getColumns().size(); i++) {
+					NodeSelectExpression selectExpression = new NodeSelectExpression();
+					NodeColumn column = new NodeColumn();
+					NodeColumnName columnName = new NodeColumnName();
+					NodeText text = new NodeText(t.getColumns().get(i).getName());
+					columnName.getChildren().add(text);
+					column.getChildren().add(columnName);
+					text = new NodeText(key);
+					Node alias = new NodeTableAlias();
+					alias.getChildren().add(text);
+					column.getChildren().add(alias);
+					selectExpression.getChildren().add(column);
+					columns.add(selectExpression);
+				}
 			}
 			block.getChildren().addAll(columns);
 			nodeSelect.getChildren().set(0, block);
 			this.visitSelect(nodeSelect);
-		} else if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0)
-				.getClass() == NodeFunction.class) {
-			int occurences = 0;
+		} else if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0) instanceof NodeFunction) {
+			boolean occurence = false;
 			String columnName = ((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0)
 					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue();
 			for (Table t : this.currentTables.values()) {
 				if (t.containsColumn(columnName)) {
-					occurences++;
+					if (occurence) {
+						throw new SemanticError("Error: ambiguous column name: " + columnName);
+					}
+					occurence = true;
 				}
 			}
-			if (occurences == 0) {
+			if (!occurence) {
 				throw new SemanticError("Error: no such column: " + columnName);
-			}
-			if (occurences > 1) {
-				throw new SemanticError("Error: ambiguous column name: " + columnName);
 			}
 		} else {
 			List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
 			for (Node expression : selectExpressions) {
 				boolean occurence = false;
-				String columnName = ((NodeText) expression.getChildren().get(0).getChildren().get(0).getChildren()
-						.get(0)).getValue();
-				for (Table t : this.currentTables.values()) {
-					if (t.containsColumn(columnName)) {
-						if (occurence) { // On a déjà trouvé la colonne dans une autre table
-							throw new SemanticError("Error: ambiguous column name: " + columnName);
+				Node column = expression.getChildren().get(0);
+				String columnName = ((NodeText) column.getChildren().get(0).getChildren().get(0)).getValue();
+				Node alias = column.getChildren().get(1);
+				if (alias == null) {
+					for (Table t : this.currentTables.values()) {
+						if (t.containsColumn(columnName)) {
+							if (occurence) { // On a déjà trouvé la colonne dans une autre table
+								throw new SemanticError("Error: ambiguous column name: " + columnName);
+							}
+							occurence = true;
 						}
-						occurence = true;
 					}
+				} else {
+					Table t = this.currentTables.get(((NodeText) alias.getChildren().get(0)).getValue());
+					occurence = t.containsColumn(columnName);
 				}
 				if (!occurence) { // La colonne n'existe dans aucune des tables
 					throw new SemanticError("Error: no such column: " + columnName);
@@ -600,9 +636,10 @@ public class SemanticVisitor extends Visitor {
 				break;
 			}
 		}
-		if (!datatype)
+		if (!datatype) {
 			throw new SemanticError("Type error : " + ((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0)
 					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+		}
 
 	}
 
