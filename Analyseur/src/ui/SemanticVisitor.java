@@ -86,19 +86,14 @@ public class SemanticVisitor extends Visitor {
 
 	public Node getNodeTable(Node n) {
 		Node result = null;
-		if (n.getClass() == NodeSelect.class)
+		if (n.getClass() == NodeSelect.class) {
 			result = this.getNodeTable(n.getChildren().get(1));
-		else if (n.getClass() != NodeTable.class && n.getClass() != NodeTableExpression.class)
+		} else if (n.getClass() != NodeTable.class && n.getClass() != NodeTableExpression.class) {
 			result = this.getNodeTable(n.getChildren().get(0));
-		else
+		} else {
 			result = n;
-		return result;
-	}
-
-	public void testColumnInTable(Table table, String column) {
-		if (!table.containsColumn(column)) {
-			throw new SemanticError("Error: no such column: " + column);
 		}
+		return result;
 	}
 
 	public String getColumnName(Node n) {
@@ -121,9 +116,11 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitBlock(NodeBlock nodeBlock) {
 		// TODO Auto-generated method stub
-		for (Node n : nodeBlock.getChildren())
-			if (n != null)
+		for (Node n : nodeBlock.getChildren()) {
+			if (n != null) {
 				n.accept(this);
+			}
+		}
 	}
 
 	@Override
@@ -142,9 +139,6 @@ public class SemanticVisitor extends Visitor {
 			for (Table t : this.currentTables.values()) {
 				int index = t.getColumns().indexOf(new Column(columnName));
 				if (index != -1) {
-					if (this.type != null) {
-						throw new SemanticError("Error: ambiguous column name: " + columnName);
-					}
 					Column column = t.getColumns().get(index);
 					switch (column.getType()) {
 					case "CHAR":
@@ -154,7 +148,8 @@ public class SemanticVisitor extends Visitor {
 					default:
 						this.type = "Number";
 					}
-				}
+				} else
+					throw new SemanticError("Error: ambiguous column name: " + columnName);
 			}
 
 		} else {
@@ -192,7 +187,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitCreate(NodeCreate nodeCreate) {
-		System.out.println("Creation");
 		Node nodeTable = nodeCreate.getChildren().get(0);
 		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
 		String tableName = nodeTableName.getValue();
@@ -220,8 +214,15 @@ public class SemanticVisitor extends Visitor {
 			}
 			columns.add(c);
 		}
-		// primary key à ajouter
 		Table table = new Table(tableName, columns, null);
+		for (Node n : nodeCreate.getChildren()) {
+			if (n != null) {
+				if (n.getClass() == NodePrimaryKey.class) {
+					table.setPrimaryKey(
+							((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+				}
+			}
+		}
 		this.tables.put(tableName, table);
 	}
 
@@ -233,26 +234,8 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitDelete(NodeDelete nodeDelete) {
 		// TODO Auto-generated method stub
-		Table table = this.testTable(this.getNodeTable(nodeDelete));
-		this.testColumnInTable(table, this.getColumnName(nodeDelete));
-		boolean datatype = false;
-		for (Column c : table.getColumns()) {
-			if (c.getName().equalsIgnoreCase(((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-				if (nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(0).getChildren().get(0)
-						.getChildren().get(0).getClass() == NodeText.class && c.getType().contains("CHAR")) {
-					datatype = true;
-				}
-				if (nodeDelete.getChildren().get(1).getChildren().get(0).getChildren().get(1)
-						.getClass() == NodeInteger.class && c.getType().contains("INT")) {
-					datatype = true;
-				}
-				break;
-			}
-		}
-		if (!datatype)
-			throw new SemanticError("Type error : " + ((NodeText) nodeDelete.getChildren().get(1).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+		this.testTable(this.getNodeTable(nodeDelete));
+		this.visitNode(nodeDelete);
 
 	}
 
@@ -285,12 +268,11 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitGroup(NodeGroup nodeGroup) {
 		// TODO Auto-generated method stub
-
+		this.visitNode(nodeGroup);
 	}
 
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
-		System.out.println("Insert");
 		this.currentTables = new HashMap<String, Table>();
 		String tableName = ((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0))
 				.getValue();
@@ -391,13 +373,13 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitOrder(NodeOrder nodeOrder) {
 		// TODO Auto-generated method stub
-
+		this.visitNode(nodeOrder);
 	}
 
 	@Override
 	public void visitOrderBy(NodeOrderBy nodeOrderBy) {
 		// TODO Auto-generated method stub
-
+		this.visitNode(nodeOrderBy);
 	}
 
 	@Override
@@ -423,9 +405,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
-		// TODO ajouter * et COUNT
-
-		System.out.println("Select");
 		this.currentTables = new HashMap<String, Table>();
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
@@ -521,12 +500,17 @@ public class SemanticVisitor extends Visitor {
 					}
 				} else {
 					Table t = this.currentTables.get(((NodeText) alias.getChildren().get(0)).getValue());
+					if (t == null) {
+						throw new SemanticError(
+								"Error: no such table: " + ((NodeText) alias.getChildren().get(0)).getValue());
+					}
 					occurence = t.containsColumn(columnName);
 				}
 				if (!occurence) { // La colonne n'existe dans aucune des tables
 					throw new SemanticError("Error: no such column: " + columnName);
 				}
 			}
+
 			for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
 				Node n = nodeSelect.getChildren().get(i);
 				if (n != null) {
@@ -544,8 +528,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSet(NodeSet nodeSet) {
-		// TODO Auto-generated method stub
-
+		this.visitBinaryOperator(nodeSet);
 	}
 
 	@Override
@@ -582,65 +565,8 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitUpdate(NodeUpdate nodeUpdate) {
 		// TODO Auto-generated method stub
-		Table table = this.testTable(this.getNodeTable(nodeUpdate));
-		boolean column = false;
-		for (int i = 0; i < table.getColumns().size(); i++) {
-			if (table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(1)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
-				column = true;
-		}
-		if (!column)
-			throw new SemanticError("Error: no such column: " + ((NodeText) nodeUpdate.getChildren().get(1)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		boolean datatype = false;
-		for (Column c : table.getColumns()) {
-			if (c.getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-				if (nodeUpdate.getChildren().get(1).getChildren().get(0).getChildren().get(1)
-						.getClass() == NodeInteger.class && c.getType().contains("INT")) {
-					datatype = true;
-				}
-				if (nodeUpdate.getChildren().get(1).getChildren().get(0).getChildren().get(1)
-						.getClass() == NodeText.class && c.getType().contains("CHAR")) {
-					datatype = true;
-				}
-				break;
-			}
-		}
-		if (!datatype)
-			throw new SemanticError("Type error : " + ((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-
-		column = false;
-		for (int i = 0; i < table.getColumns().size(); i++) {
-			if (table.getColumns().get(i).getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(2)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()))
-				column = true;
-		}
-		if (!column)
-			throw new SemanticError("Error: no such column: " + ((NodeText) nodeUpdate.getChildren().get(1)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-
-		datatype = false;
-		for (Column c : table.getColumns()) {
-			if (c.getName().equalsIgnoreCase(((NodeText) nodeUpdate.getChildren().get(2).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue())) {
-				if (nodeUpdate.getChildren().get(2).getChildren().get(0).getChildren().get(1)
-						.getClass() == NodeInteger.class && c.getType().contains("INT")) {
-					datatype = true;
-				}
-				if (nodeUpdate.getChildren().get(2).getChildren().get(0).getChildren().get(1)
-						.getClass() == NodeText.class && c.getType().contains("CHAR")) {
-					datatype = true;
-				}
-				break;
-			}
-		}
-		if (!datatype) {
-			throw new SemanticError("Type error : " + ((NodeText) nodeUpdate.getChildren().get(1).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
-		}
-
+		this.testTable(this.getNodeTable(nodeUpdate));
+		this.visitNode(nodeUpdate);
 	}
 
 	@Override

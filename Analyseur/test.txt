@@ -3,8 +3,8 @@ CREATE TABLE Etudiant2 (numero INT);
 INSERT INTO Etudiant (numero,nom) VALUES(2, 'Quentin');
 INSERT INTO Etudiant (numero,nom) VALUES(1, 'Lucas');
 DROP TABLE Etudiant;
-SELECT numero FROM Etudiant where 1 = numero;
-UPDATE Etudiant SET numero = 1, nom = 'Studer' WHERE numero = 1;
+SELECT numero FROM Etudiant where 1 = numero group by numero order by numero ;
+UPDATE Etudiant SET numero = 1 WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
 Select numero from Etudiant where 1 = Etudiant.numero;
 SELECT * from Etudiant;
@@ -21,8 +21,13 @@ SELECT e.numero from Etudiant as e where nom = 'Quentin';
 // SELECT n FROM Etudiant;
 // SELECT numero from Etudiant where 1 = 'Quentin';
 // CREATE TABLE Etudiant3 (numero INT, numero VARCHAR(16));
-// SELECT nom from Etudiant INNER JOIN Etudiant2 ON 1 = numero;
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
 
 // A faire
 // SELECT e.nom as x from Etudiant as e where x = 'Quentin';
+
+
+// Erreurs a faire
+
+// numero ambigu
+// SELECT nom from Etudiant INNER JOIN Etudiant2 ON 1 = numero;

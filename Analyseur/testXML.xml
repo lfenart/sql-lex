@@ -121,6 +121,20 @@
 </column>
 </EQUAL>
 </where>
+<groupBy>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</groupBy>
+<orderBy>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+</orderBy>
 </select>
 <update>
 <table>
@@ -134,14 +148,6 @@
 </column>
 <integer value="1" />
 </set>
-<set>
-<column>
-<columnName>
-<text value="nom" />
-</columnName>
-</column>
-<text value="Studer" />
-</set>
 <where>
 <EQUAL>
 <column>
@@ -152,6 +158,19 @@
 <integer value="1" />
 </EQUAL>
 </where>
+</update>
+<update>
+<table>
+<text value="Etudiant" />
+</table>
+<set>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<integer value="1" />
+</set>
 </update>
 <delete>
 <from>
