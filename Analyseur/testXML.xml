@@ -159,19 +159,6 @@
 </EQUAL>
 </where>
 </update>
-<update>
-<table>
-<text value="Etudiant" />
-</table>
-<set>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<integer value="1" />
-</set>
-</update>
 <delete>
 <from>
 <table>
