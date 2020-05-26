@@ -387,19 +387,4 @@
 </EQUAL>
 </where>
 </select>
-<create>
-<table>
-<text value="Etudiant" />
-</table>
-<data>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<type>
-<INT
- /></type>
-</data>
-</create>
 </root>

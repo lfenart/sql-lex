@@ -15,7 +15,7 @@ SELECT e.numero from Etudiant as e where nom = 'Quentin';
 SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 
 // Erreurs
- CREATE TABLE Etudiant (numero INT);
+// CREATE TABLE Etudiant (numero INT);
 // SELECT numero FROM e;
 // SELECT numero FROM Etudiant INNER JOIN x ON 1;
 // SELECT numero FROM Etudiant INNER JOIN Etudiant2 ON 1;

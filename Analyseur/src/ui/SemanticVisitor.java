@@ -409,7 +409,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
-		System.out.println("select");
 		this.currentTables = new HashMap<String, Table>();
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
