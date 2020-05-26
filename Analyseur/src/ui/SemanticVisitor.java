@@ -135,10 +135,15 @@ public class SemanticVisitor extends Visitor {
 		NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
 		String columnName = nodeText.getValue();
 		Node tableAlias = nodeColumn.getChildren().get(1);
-		if (tableAlias == null) { // pas d'alias au niveau de la table
+		if (tableAlias == null) { // pas d'alias
+			boolean occurence = false;
 			for (Table t : this.currentTables.values()) {
 				int index = t.getColumns().indexOf(new Column(columnName));
 				if (index != -1) {
+					if (occurence) {
+						throw new SemanticError("Error: ambiguous column name: " + columnName);
+					}
+					occurence = true;
 					Column column = t.getColumns().get(index);
 					switch (column.getType()) {
 					case "CHAR":
@@ -148,8 +153,7 @@ public class SemanticVisitor extends Visitor {
 					default:
 						this.type = "Number";
 					}
-				} else
-					throw new SemanticError("Error: ambiguous column name: " + columnName);
+				}
 			}
 
 		} else {
@@ -208,7 +212,7 @@ public class SemanticVisitor extends Visitor {
 				c.setTypeSize(nodeType.getSize());
 			}
 
-			// probablement à modifier
+			// probablement ï¿½ modifier
 			if (n.getChildren().size() > 2) {
 				c.setNotNull(true);
 			}
@@ -405,6 +409,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
+		System.out.println("select");
 		this.currentTables = new HashMap<String, Table>();
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
@@ -492,7 +497,7 @@ public class SemanticVisitor extends Visitor {
 				if (alias == null) {
 					for (Table t : this.currentTables.values()) {
 						if (t.containsColumn(columnName)) {
-							if (occurence) { // On a déjà trouvé la colonne dans une autre table
+							if (occurence) { // On a dï¿½jï¿½ trouvï¿½ la colonne dans une autre table
 								throw new SemanticError("Error: ambiguous column name: " + columnName);
 							}
 							occurence = true;
