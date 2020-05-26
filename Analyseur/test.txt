@@ -12,6 +12,7 @@ SELECT numero as num FROM Etudiant;
 SELECT COUNT(numero) FROM Etudiant;
 SELECT * from Etudiant as e inner join Etudiant2 on 1;
 SELECT e.numero from Etudiant as e where nom = 'Quentin';
+SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);
@@ -22,9 +23,6 @@ SELECT e.numero from Etudiant as e where nom = 'Quentin';
 // SELECT numero from Etudiant where 1 = 'Quentin';
 // CREATE TABLE Etudiant3 (numero INT, numero VARCHAR(16));
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
-
-// A faire
-// SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 
 
 // Erreurs a faire

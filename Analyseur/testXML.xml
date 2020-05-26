@@ -159,19 +159,6 @@
 </EQUAL>
 </where>
 </update>
-<update>
-<table>
-<text value="Etudiant" />
-</table>
-<set>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-<integer value="1" />
-</set>
-</update>
 <delete>
 <from>
 <table>
@@ -360,4 +347,59 @@
 </EQUAL>
 </where>
 </select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
+</column>
+<as>
+<columnAlias>
+<text value="x" />
+</columnAlias>
+</as>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+<as>
+<table>
+<text value="e" />
+</table>
+</as>
+</table>
+</from>
+<where>
+<EQUAL>
+<column>
+<columnName>
+<text value="nom" />
+</columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
+</column>
+<text value="Quentin" />
+</EQUAL>
+</where>
+</select>
+<create>
+<table>
+<text value="Etudiant" />
+</table>
+<data>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+</column>
+<type>
+<INT
+ /></type>
+</data>
+</create>
 </root>

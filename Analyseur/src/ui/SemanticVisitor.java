@@ -135,7 +135,7 @@ public class SemanticVisitor extends Visitor {
 		NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
 		String columnName = nodeText.getValue();
 		Node tableAlias = nodeColumn.getChildren().get(1);
-		if (tableAlias == null) { // pas d'alias
+		if (tableAlias == null) { // pas d'alias au niveau de la table
 			for (Table t : this.currentTables.values()) {
 				int index = t.getColumns().indexOf(new Column(columnName));
 				if (index != -1) {
@@ -510,7 +510,19 @@ public class SemanticVisitor extends Visitor {
 					throw new SemanticError("Error: no such column: " + columnName);
 				}
 			}
-
+			if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().size()>1) {
+				if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
+					String columnAlias=(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1).getChildren().get(0).getChildren().get(0)).getValue());
+					Node column = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0);
+					if(nodeSelect.getChildren().get(2)!=null) {
+						for(int i=0;i<nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().size();i++ ) {
+							 if(nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i) instanceof NodeColumn) {
+								 nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+							 }
+						}
+					}
+				}
+			}
 			for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
 				Node n = nodeSelect.getChildren().get(i);
 				if (n != null) {
