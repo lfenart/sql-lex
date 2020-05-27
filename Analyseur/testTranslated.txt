@@ -20,7 +20,7 @@ SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 // SELECT numero FROM Etudiant INNER JOIN x ON 1;
 // SELECT numero FROM Etudiant INNER JOIN Etudiant2 ON 1;
 // SELECT n FROM Etudiant;
-SELECT numero from Etudiant where 1 = 'Quentin';
+// SELECT numero from Etudiant where 1 = 'Quentin';
 // CREATE TABLE Etudiant3 (numero INT, numero VARCHAR(16));
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
 // SELECT nom from Etudiant2 INNER JOIN Etudiant ON 1 = numero;

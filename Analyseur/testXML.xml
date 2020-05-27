@@ -387,24 +387,4 @@
 </EQUAL>
 </where>
 </select>
-<select>
-<selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-</column>
-</selectExpression>
-<from>
-<table>
-<text value="Etudiant" />
-</table>
-</from>
-<where>
-<EQUAL>
-<integer value="1" />
-<text value="Quentin" />
-</EQUAL>
-</where>
-</select>
 </root>
