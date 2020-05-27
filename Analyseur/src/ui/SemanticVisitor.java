@@ -57,9 +57,13 @@ import Objects.Table;
 
 public class SemanticVisitor extends Visitor {
 
+	private enum Type {
+		TEXT, NUMBER
+	}
+
 	private Map<String, Table> tables;
 	private Map<String, Table> currentTables = new HashMap<>();
-	private String type;
+	private Type type;
 
 	public SemanticVisitor() {
 		this.tables = new HashMap<>();
@@ -67,7 +71,7 @@ public class SemanticVisitor extends Visitor {
 
 	private void visitBinaryOperator(Node n) {
 		n.getChildren().get(0).accept(this);
-		String type1 = this.type;
+		Type type1 = this.type;
 		n.getChildren().get(1).accept(this);
 		if (!type1.equals(this.type)) {
 			throw new SemanticError("Error: wrong type");
@@ -125,7 +129,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitBoolean(NodeBoolean nodeBoolean) {
-		this.type = "Number";
+		this.type = Type.NUMBER;
 	}
 
 	@Override
@@ -148,10 +152,10 @@ public class SemanticVisitor extends Visitor {
 					switch (column.getType()) {
 					case "CHAR":
 					case "VARCHAR":
-						this.type = "Text";
+						this.type = Type.TEXT;
 						break;
 					default:
-						this.type = "Number";
+						this.type = Type.NUMBER;
 					}
 				}
 			}
@@ -164,10 +168,10 @@ public class SemanticVisitor extends Visitor {
 				switch (column.getType()) {
 				case "CHAR":
 				case "VARCHAR":
-					this.type = "Text";
+					this.type = Type.TEXT;
 					break;
 				default:
-					this.type = "Number";
+					this.type = Type.NUMBER;
 				}
 			}
 		}
@@ -250,7 +254,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitDouble(NodeDouble nodeDouble) {
-		this.type = "Number";
+		this.type = Type.NUMBER;
 	}
 
 	@Override
@@ -282,7 +286,7 @@ public class SemanticVisitor extends Visitor {
 				.getValue();
 		Table table = this.tables.get(tableName);
 		List<Node> columns = nodeInsert.getChildren().get(1).getChildren();
-		List<String> columnType = new ArrayList<>();
+		List<Type> columnType = new ArrayList<>();
 		for (Node column : columns) {
 			Node nodeColumnName = column.getChildren().get(0);
 			NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
@@ -294,10 +298,10 @@ public class SemanticVisitor extends Visitor {
 			switch (c.getType()) {
 			case "VARCHAR":
 			case "CHAR":
-				columnType.add("Text");
+				columnType.add(Type.TEXT);
 				break;
 			default:
-				columnType.add("Number");
+				columnType.add(Type.NUMBER);
 			}
 		}
 		List<Node> values = nodeInsert.getChildren().get(2).getChildren().get(0).getChildren();
@@ -315,7 +319,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitInteger(NodeInteger nodeInteger) {
-		this.type = "Number";
+		this.type = Type.NUMBER;
 	}
 
 	@Override
@@ -514,15 +518,18 @@ public class SemanticVisitor extends Visitor {
 					throw new SemanticError("Error: no such column: " + columnName);
 				}
 			}
-			if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().size()>1) {
-				if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
-					String columnAlias=(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1).getChildren().get(0).getChildren().get(0)).getValue());
+			if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().size() > 1) {
+				if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
+					String columnAlias = (((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren()
+							.get(1).getChildren().get(0).getChildren().get(0)).getValue());
 					Node column = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0);
-					if(nodeSelect.getChildren().get(2)!=null) {
-						for(int i=0;i<nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().size();i++ ) {
-							 if(nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i) instanceof NodeColumn) {
-								 nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
-							 }
+					if (nodeSelect.getChildren().get(2) != null) {
+						for (int i = 0; i < nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
+								.size(); i++) {
+							if (nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
+									.get(i) instanceof NodeColumn) {
+								nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+							}
 						}
 					}
 				}
@@ -565,7 +572,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitText(NodeText nodeText) {
-		this.type = "Text";
+		this.type = Type.TEXT;
 	}
 
 	@Override
