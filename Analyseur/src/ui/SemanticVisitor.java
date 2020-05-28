@@ -228,13 +228,26 @@ public class SemanticVisitor extends Visitor {
 			columns.add(c);
 		}
 		Table table = new Table(tableName, columns, null);
+		boolean verifiedPrimaryKey=false;
+		Node primaryKey=null;
+		String primaryKeyValue="";
 		for (Node n : nodeCreate.getChildren()) {
 			if (n != null) {
 				if (n.getClass() == NodePrimaryKey.class) {
-					table.setPrimaryKey(
-							((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+					primaryKey=n;
 				}
 			}
+		}
+		if(primaryKey!=null) {
+			primaryKeyValue=((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue();
+			for(Column c : columns) {
+				if(((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue().equalsIgnoreCase(c.getName())) {
+					table.setPrimaryKey(
+							((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+					verifiedPrimaryKey=true;
+				}
+			}
+			if(!verifiedPrimaryKey) throw new ColumnNotFoundException(primaryKeyValue);
 		}
 		this.tables.put(tableName, table);
 	}
