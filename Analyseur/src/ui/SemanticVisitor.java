@@ -69,6 +69,7 @@ public class SemanticVisitor extends Visitor {
 		n.getChildren().get(0).accept(this);
 		String type1 = this.type;
 		n.getChildren().get(1).accept(this);
+		if(type1!=null)
 		if (!type1.equals(this.type)) {
 			throw new SemanticError("Error: wrong type");
 		}
@@ -170,6 +171,10 @@ public class SemanticVisitor extends Visitor {
 					this.type = "Number";
 				}
 			}
+			else {
+				throw new SemanticError("Error: ambiguous column name: " + columnName);
+			}
+			
 		}
 	}
 
@@ -509,6 +514,7 @@ public class SemanticVisitor extends Visitor {
 								"Error: no such table: " + ((NodeText) alias.getChildren().get(0)).getValue());
 					}
 					occurence = t.containsColumn(columnName);
+					
 				}
 				if (!occurence) { // La colonne n'existe dans aucune des tables
 					throw new SemanticError("Error: no such column: " + columnName);
@@ -518,10 +524,15 @@ public class SemanticVisitor extends Visitor {
 				if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
 					String columnAlias=(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1).getChildren().get(0).getChildren().get(0)).getValue());
 					Node column = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0);
-					if(nodeSelect.getChildren().get(2)!=null) {
+					if(nodeSelect.getChildren().get(2)!=null) {						
 						for(int i=0;i<nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().size();i++ ) {
 							 if(nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i) instanceof NodeColumn) {
-								 nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+								 if(((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue().equalsIgnoreCase(columnAlias)) {
+									 nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+								 }
+								 else {
+									 throw new SemanticError("Error: no such aliasColumn: "+ ((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue());
+								 }
 							 }
 						}
 					}
