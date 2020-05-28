@@ -54,12 +54,24 @@ import Instruction.NodeWhere;
 import Instruction.NodeWildcard;
 import Objects.Column;
 import Objects.Table;
+import exception.AmbiguousColumnException;
+import exception.ColumnNotFoundException;
+import exception.DuplicateColumnException;
+import exception.DuplicateTableException;
+import exception.InsertException;
+import exception.SemanticError;
+import exception.TableNotFoundException;
+import exception.WrongTypeException;
 
 public class SemanticVisitor extends Visitor {
 
+	private enum Type {
+		TEXT, NUMBER
+	}
+
 	private Map<String, Table> tables;
 	private Map<String, Table> currentTables = new HashMap<>();
-	private String type;
+	private Type type;
 
 	public SemanticVisitor() {
 		this.tables = new HashMap<>();
@@ -67,56 +79,48 @@ public class SemanticVisitor extends Visitor {
 
 	private void visitBinaryOperator(Node n) {
 		n.getChildren().get(0).accept(this);
-		String type1 = this.type;
+		Type type1 = this.type;
 		n.getChildren().get(1).accept(this);
-		if(type1!=null)
 		if (!type1.equals(this.type)) {
-			throw new SemanticError("Error: wrong type");
+			throw new WrongTypeException(type1.toString(), this.type.toString());
 		}
 	}
 
 	public Table testTable(Node n) {
-		Table table = null;
-		if (this.tables.containsKey(((NodeText) n.getChildren().get(0)).getValue())) {
-			table = this.tables.get(((NodeText) n.getChildren().get(0)).getValue());
+		String tableName = ((NodeText) n.getChildren().get(0)).getValue();
+		Table table = this.tables.get(tableName);
+		if (table == null) {
+			throw new TableNotFoundException(tableName);
 		}
-		if (table == null)
-			throw new SemanticError("Error: table not found: " + ((NodeText) n.getChildren().get(0)).getValue());
 		return table;
 	}
 
 	public Node getNodeTable(Node n) {
-		Node result = null;
 		if (n.getClass() == NodeSelect.class) {
-			result = this.getNodeTable(n.getChildren().get(1));
-		} else if (n.getClass() != NodeTable.class && n.getClass() != NodeTableExpression.class) {
-			result = this.getNodeTable(n.getChildren().get(0));
+			return this.getNodeTable(n.getChildren().get(1));
+		} else if ((n instanceof NodeTable) || (n instanceof NodeTableExpression)) {
+			return n;
 		} else {
-			result = n;
+			return this.getNodeTable(n.getChildren().get(0));
 		}
-		return result;
 	}
 
 	public String getColumnName(Node n) {
-		String result = null;
-		if (n.getClass() == NodeDelete.class)
-			result = this.getColumnName(n.getChildren().get(1));
-		else if (n.getClass() == NodeText.class)
-			result = ((NodeText) n).getValue();
-		else
-			result = this.getColumnName(n.getChildren().get(0));
-		return result;
+		if (n instanceof NodeDelete) {
+			return this.getColumnName(n.getChildren().get(1));
+		} else if (n instanceof NodeText) {
+			return ((NodeText) n).getValue();
+		} else {
+			return this.getColumnName(n.getChildren().get(0));
+		}
 	}
 
 	@Override
 	public void visitAs(NodeAs nodeAs) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitBlock(NodeBlock nodeBlock) {
-		// TODO Auto-generated method stub
 		for (Node n : nodeBlock.getChildren()) {
 			if (n != null) {
 				n.accept(this);
@@ -126,7 +130,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitBoolean(NodeBoolean nodeBoolean) {
-		this.type = "Number";
+		this.type = Type.NUMBER;
 	}
 
 	@Override
@@ -142,21 +146,23 @@ public class SemanticVisitor extends Visitor {
 				int index = t.getColumns().indexOf(new Column(columnName));
 				if (index != -1) {
 					if (occurence) {
-						throw new SemanticError("Error: ambiguous column name: " + columnName);
+						throw new AmbiguousColumnException(columnName);
 					}
 					occurence = true;
 					Column column = t.getColumns().get(index);
 					switch (column.getType()) {
 					case "CHAR":
 					case "VARCHAR":
-						this.type = "Text";
+						this.type = Type.TEXT;
 						break;
 					default:
-						this.type = "Number";
+						this.type = Type.NUMBER;
 					}
 				}
 			}
-
+			if (!occurence) {
+				throw new ColumnNotFoundException(columnName);
+			}
 		} else {
 			Table t = this.currentTables.get(((NodeText) tableAlias.getChildren().get(0)).getValue());
 			int index = t.getColumns().indexOf(new Column(columnName));
@@ -165,16 +171,14 @@ public class SemanticVisitor extends Visitor {
 				switch (column.getType()) {
 				case "CHAR":
 				case "VARCHAR":
-					this.type = "Text";
+					this.type = Type.TEXT;
 					break;
 				default:
-					this.type = "Number";
+					this.type = Type.NUMBER;
 				}
+			} else {
+				throw new ColumnNotFoundException(columnName);
 			}
-			else {
-				throw new SemanticError("Error: ambiguous column name: " + columnName);
-			}
-			
 		}
 	}
 
@@ -200,7 +204,7 @@ public class SemanticVisitor extends Visitor {
 		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
 		String tableName = nodeTableName.getValue();
 		if (tables.containsKey(tableName)) {
-			throw new SemanticError("Error: table " + tableName + " already exists");
+			throw new DuplicateTableException(tableName);
 		}
 		List<Column> columns = new ArrayList<Column>();
 		List<Node> nodeColumns = nodeCreate.getChildren().get(1).getChildren();
@@ -209,7 +213,7 @@ public class SemanticVisitor extends Visitor {
 					.getValue();
 			Column c = new Column(columnName);
 			if (columns.contains(c)) {
-				throw new SemanticError("Error: duplicate column name: " + c.getName());
+				throw new DuplicateColumnException(columnName);
 			}
 			NodeType nodeType = (NodeType) n.getChildren().get(1);
 			c.setType(nodeType.getType().name());
@@ -255,7 +259,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitDouble(NodeDouble nodeDouble) {
-		this.type = "Number";
+		this.type = Type.NUMBER;
 	}
 
 	@Override
@@ -287,40 +291,40 @@ public class SemanticVisitor extends Visitor {
 				.getValue();
 		Table table = this.tables.get(tableName);
 		List<Node> columns = nodeInsert.getChildren().get(1).getChildren();
-		List<String> columnType = new ArrayList<>();
+		List<Type> columnType = new ArrayList<>();
 		for (Node column : columns) {
 			Node nodeColumnName = column.getChildren().get(0);
 			NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
 			String columnName = nodeText.getValue();
 			if (!table.containsColumn(columnName)) {
-				throw new SemanticError("Error: no such column: " + columnName);
+				throw new ColumnNotFoundException(columnName);
 			}
 			Column c = table.getColumns().get(table.getColumns().indexOf(new Column(columnName)));
 			switch (c.getType()) {
 			case "VARCHAR":
 			case "CHAR":
-				columnType.add("Text");
+				columnType.add(Type.TEXT);
 				break;
 			default:
-				columnType.add("Number");
+				columnType.add(Type.NUMBER);
 			}
 		}
 		List<Node> values = nodeInsert.getChildren().get(2).getChildren().get(0).getChildren();
 		if (columns.size() != values.size()) {
-			throw new SemanticError("Error: " + values.size() + " values for " + columns.size() + " columns");
+			throw new InsertException(values.size(), columns.size());
 		}
 		for (int i = 0; i < columns.size(); i++) {
 			Node val = values.get(i);
 			val.accept(this);
 			if (!columnType.get(i).equals(this.type)) {
-				throw new SemanticError("Error: wrong type");
+				throw new WrongTypeException(columnType.get(i).toString(), this.type.toString());
 			}
 		}
 	}
 
 	@Override
 	public void visitInteger(NodeInteger nodeInteger) {
-		this.type = "Number";
+		this.type = Type.NUMBER;
 	}
 
 	@Override
@@ -421,7 +425,7 @@ public class SemanticVisitor extends Visitor {
 		String tableName = nodeTableName.getValue();
 		Table table = this.tables.get(tableName);
 		if (table == null) {
-			throw new SemanticError("Error: table not found: " + tableName);
+			throw new TableNotFoundException(tableName);
 		}
 		String tableAlias = tableName;
 		Node nodeAs = nodeTable.getChildren().get(1);
@@ -438,7 +442,7 @@ public class SemanticVisitor extends Visitor {
 			tableName = nodeTableName.getValue();
 			table = this.tables.get(tableName);
 			if (table == null) {
-				throw new SemanticError("Error: table not found: " + tableName);
+				throw new TableNotFoundException(tableName);
 			}
 			tableAlias = tableName;
 			nodeAs = nodeTable.getChildren().get(1);
@@ -483,13 +487,13 @@ public class SemanticVisitor extends Visitor {
 			for (Table t : this.currentTables.values()) {
 				if (t.containsColumn(columnName)) {
 					if (occurence) {
-						throw new SemanticError("Error: ambiguous column name: " + columnName);
+						throw new AmbiguousColumnException(columnName);
 					}
 					occurence = true;
 				}
 			}
 			if (!occurence) {
-				throw new SemanticError("Error: no such column: " + columnName);
+				throw new ColumnNotFoundException(columnName);
 			}
 		} else {
 			List<Node> selectExpressions = nodeSelect.getChildren().get(0).getChildren();
@@ -502,38 +506,35 @@ public class SemanticVisitor extends Visitor {
 					for (Table t : this.currentTables.values()) {
 						if (t.containsColumn(columnName)) {
 							if (occurence) { // On a d�j� trouv� la colonne dans une autre table
-								throw new SemanticError("Error: ambiguous column name: " + columnName);
+								throw new AmbiguousColumnException(columnName);
 							}
 							occurence = true;
 						}
 					}
 				} else {
-					Table t = this.currentTables.get(((NodeText) alias.getChildren().get(0)).getValue());
+					String name = ((NodeText) alias.getChildren().get(0)).getValue();
+					Table t = this.currentTables.get(name);
 					if (t == null) {
-						throw new SemanticError(
-								"Error: no such table: " + ((NodeText) alias.getChildren().get(0)).getValue());
+						throw new TableNotFoundException(name);
 					}
 					occurence = t.containsColumn(columnName);
-					
 				}
 				if (!occurence) { // La colonne n'existe dans aucune des tables
-					throw new SemanticError("Error: no such column: " + columnName);
+					throw new ColumnNotFoundException(columnName);
 				}
 			}
-			if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().size()>1) {
-				if(nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
-					String columnAlias=(((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1).getChildren().get(0).getChildren().get(0)).getValue());
+			if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().size() > 1) {
+				if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
+					String columnAlias = (((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren()
+							.get(1).getChildren().get(0).getChildren().get(0)).getValue());
 					Node column = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0);
-					if(nodeSelect.getChildren().get(2)!=null) {						
-						for(int i=0;i<nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().size();i++ ) {
-							 if(nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i) instanceof NodeColumn) {
-								 if(((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue().equalsIgnoreCase(columnAlias)) {
-									 nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
-								 }
-								 else {
-									 throw new SemanticError("Error: no such aliasColumn: "+ ((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue());
-								 }
-							 }
+					if (nodeSelect.getChildren().get(2) != null) {
+						for (int i = 0; i < nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
+								.size(); i++) {
+							if (nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
+									.get(i) instanceof NodeColumn) {
+								nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+							}
 						}
 					}
 				}
@@ -576,7 +577,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitText(NodeText nodeText) {
-		this.type = "Text";
+		this.type = Type.TEXT;
 	}
 
 	@Override

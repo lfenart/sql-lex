@@ -252,7 +252,7 @@ Factor	::=	Term:t					{: RESULT = t; :}
 		|	Factor:f DIV Term:t		{: RESULT = getFactory().createNodeDiv(f, t); :}
 		;
 
-From	::=	FROM TableExpression:t AsTableOpt:a{: RESULT = getFactory().createNodeFrom(t,a); :}
+From	::=	FROM TableExpression:t {: RESULT = getFactory().createNodeFrom(t); :}
 		;
 
 Function	::= ID:name OPEN_PARENTHESIS Column:c CLOSE_PARENTHESIS
