@@ -152,7 +152,7 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="numero" />
+<text value="prenom" />
 </columnName>
 </column>
 <integer value="1" />
@@ -205,24 +205,7 @@
 </select>
 <select>
 <selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-<tableAlias>
-<text value="Etudiant" />
-</tableAlias>
-</column>
-</selectExpression>
-<selectExpression>
-<column>
-<columnName>
-<text value="nom" />
-</columnName>
-<tableAlias>
-<text value="Etudiant" />
-</tableAlias>
-</column>
+<wildcard />
 </selectExpression>
 <from>
 <table>
@@ -267,34 +250,7 @@
 </select>
 <select>
 <selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-<tableAlias>
-<text value="e" />
-</tableAlias>
-</column>
-</selectExpression>
-<selectExpression>
-<column>
-<columnName>
-<text value="nom" />
-</columnName>
-<tableAlias>
-<text value="e" />
-</tableAlias>
-</column>
-</selectExpression>
-<selectExpression>
-<column>
-<columnName>
-<text value="numero" />
-</columnName>
-<tableAlias>
-<text value="Etudiant2" />
-</tableAlias>
-</column>
+<wildcard />
 </selectExpression>
 <from>
 <table>
@@ -380,11 +336,8 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="nom" />
+<text value="x" />
 </columnName>
-<tableAlias>
-<text value="e" />
-</tableAlias>
 </column>
 <text value="Quentin" />
 </EQUAL>

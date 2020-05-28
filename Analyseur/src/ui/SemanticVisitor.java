@@ -265,7 +265,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitDrop(NodeDrop nodeDrop) {
 		// TODO Auto-generated method stub
-
+		this.testTable(nodeDrop.getChildren().get(0).getChildren().get(0));
 	}
 
 	@Override
