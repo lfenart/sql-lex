@@ -533,7 +533,10 @@ public class SemanticVisitor extends Visitor {
 								.size(); i++) {
 							if (nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
 									.get(i) instanceof NodeColumn) {
-								nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+								if(((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue().equalsIgnoreCase(columnAlias)) {
+									nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+								}
+								else throw new AmbiguousColumnException(((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().get(i).getChildren().get(0).getChildren().get(0)).getValue());
 							}
 						}
 					}
