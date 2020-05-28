@@ -82,7 +82,7 @@ public class SemanticVisitor extends Visitor {
 		Type type1 = this.type;
 		n.getChildren().get(1).accept(this);
 		if (!type1.equals(this.type)) {
-			throw new WrongTypeException();
+			throw new WrongTypeException(type1.toString(), this.type.toString());
 		}
 	}
 
@@ -317,7 +317,7 @@ public class SemanticVisitor extends Visitor {
 			Node val = values.get(i);
 			val.accept(this);
 			if (!columnType.get(i).equals(this.type)) {
-				throw new WrongTypeException();
+				throw new WrongTypeException(columnType.get(i).toString(), this.type.toString());
 			}
 		}
 	}
