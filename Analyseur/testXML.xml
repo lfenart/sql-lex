@@ -340,8 +340,11 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="nom" />
+<text value="prenom" />
 </columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
 </column>
 <text value="Quentin" />
 </EQUAL>
@@ -377,11 +380,8 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="nom" />
+<text value="x" />
 </columnName>
-<tableAlias>
-<text value="e" />
-</tableAlias>
 </column>
 <text value="Quentin" />
 </EQUAL>

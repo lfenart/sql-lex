@@ -11,7 +11,7 @@ SELECT * from Etudiant;
 SELECT numero as num FROM Etudiant;
 SELECT COUNT(numero) FROM Etudiant;
 SELECT * from Etudiant as e inner join Etudiant2 on 1;
-SELECT e.numero from Etudiant as e where nom = 'Quentin';
+SELECT e.numero from Etudiant as e where e.prenom = 'Quentin';
 SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 
 // Erreurs

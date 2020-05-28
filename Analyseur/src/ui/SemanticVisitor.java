@@ -159,7 +159,9 @@ public class SemanticVisitor extends Visitor {
 					}
 				}
 			}
-
+			if (!occurence) {
+				throw new SemanticError("Error: column " + columnName + " does not exist");
+			}
 		} else {
 			Table t = this.currentTables.get(((NodeText) tableAlias.getChildren().get(0)).getValue());
 			int index = t.getColumns().indexOf(new Column(columnName));
@@ -173,6 +175,8 @@ public class SemanticVisitor extends Visitor {
 				default:
 					this.type = Type.NUMBER;
 				}
+			} else {
+				throw new SemanticError("Error: column " + columnName + " does not exist");
 			}
 		}
 	}
