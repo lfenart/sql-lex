@@ -390,4 +390,11 @@
 </EQUAL>
 </where>
 </select>
+<delete>
+<from>
+<table>
+<text value="toto" />
+</table>
+</from>
+</delete>
 </root>

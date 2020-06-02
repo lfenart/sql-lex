@@ -67,7 +67,7 @@ nonterminal Node	Column, Columns;
 nonterminal Node	ColumnName, TableAlias, ColumnAlias;
 nonterminal Node	Data, Datas, DataType;
 nonterminal Node 	Expression, Expressions;
-nonterminal Node	From, Into;
+nonterminal Node	From, FromDelete, Into;
 nonterminal Node	Function;
 nonterminal Node	GroupBy, GroupByOpt;
 nonterminal Node	Join, JoinOpt, JoinSpecification;
@@ -118,7 +118,7 @@ CreateInstruction	::=	CREATE TABLE Table:t OPEN_PARENTHESIS Datas:d PrimaryKeyOp
 						:}
 					;
 
-DeleteInstruction	::=	DELETE From:f WhereOpt:w
+DeleteInstruction	::=	DELETE FromDelete:f WhereOpt:w
 						{:
 							RESULT = getFactory().createNodeDelete(f, w);
 						:}
@@ -254,6 +254,9 @@ Factor	::=	Term:t					{: RESULT = t; :}
 
 From	::=	FROM TableExpression:t {: RESULT = getFactory().createNodeFrom(t); :}
 		;
+		
+FromDelete	::=	FROM Table:t	{: RESULT = getFactory().createNodeFrom(t); :}
+			;
 
 Function	::= ID:name OPEN_PARENTHESIS Column:c CLOSE_PARENTHESIS
 				{:

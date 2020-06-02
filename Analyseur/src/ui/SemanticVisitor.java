@@ -69,13 +69,9 @@ public class SemanticVisitor extends Visitor {
 		TEXT, NUMBER
 	}
 
-	private Map<String, Table> tables;
+	private Map<String, Table> tables = new HashMap<>();
 	private Map<String, Table> currentTables = new HashMap<>();
 	private Type type;
-
-	public SemanticVisitor() {
-		this.tables = new HashMap<>();
-	}
 
 	private void visitBinaryOperator(Node n) {
 		n.getChildren().get(0).accept(this);
@@ -93,26 +89,6 @@ public class SemanticVisitor extends Visitor {
 			throw new TableNotFoundException(tableName);
 		}
 		return table;
-	}
-
-	public Node getNodeTable(Node n) {
-		if (n.getClass() == NodeSelect.class) {
-			return this.getNodeTable(n.getChildren().get(1));
-		} else if ((n instanceof NodeTable) || (n instanceof NodeTableExpression)) {
-			return n;
-		} else {
-			return this.getNodeTable(n.getChildren().get(0));
-		}
-	}
-
-	public String getColumnName(Node n) {
-		if (n instanceof NodeDelete) {
-			return this.getColumnName(n.getChildren().get(1));
-		} else if (n instanceof NodeText) {
-			return ((NodeText) n).getValue();
-		} else {
-			return this.getColumnName(n.getChildren().get(0));
-		}
 	}
 
 	@Override
@@ -184,8 +160,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitColumnAlias(NodeColumnAlias nodeColumnAlias) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -194,8 +168,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitConcat(NodeConcat nodeConcat) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -228,13 +200,30 @@ public class SemanticVisitor extends Visitor {
 			columns.add(c);
 		}
 		Table table = new Table(tableName, columns, null);
+		boolean verifiedPrimaryKey = false;
+		Node primaryKey = null;
+		String primaryKeyValue = "";
 		for (Node n : nodeCreate.getChildren()) {
 			if (n != null) {
 				if (n.getClass() == NodePrimaryKey.class) {
-					table.setPrimaryKey(
-							((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue());
+					primaryKey = n;
 				}
 			}
+		}
+		if (primaryKey != null) {
+			primaryKeyValue = ((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0))
+					.getValue();
+			for (Column c : columns) {
+				if (((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()
+						.equalsIgnoreCase(c.getName())) {
+					table.setPrimaryKey(
+							((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0))
+									.getValue());
+					verifiedPrimaryKey = true;
+				}
+			}
+			if (!verifiedPrimaryKey)
+				throw new ColumnNotFoundException(primaryKeyValue);
 		}
 		this.tables.put(tableName, table);
 	}
@@ -246,8 +235,9 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitDelete(NodeDelete nodeDelete) {
-		// TODO Auto-generated method stub
-		this.testTable(this.getNodeTable(nodeDelete));
+		Node from = nodeDelete.getChildren().get(0);
+		Node table = from.getChildren().get(0);
+		this.testTable(table);
 		this.visitNode(nodeDelete);
 
 	}
@@ -264,8 +254,7 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitDrop(NodeDrop nodeDrop) {
-		// TODO Auto-generated method stub
-
+		this.testTable(nodeDrop.getChildren().get(0).getChildren().get(0));
 	}
 
 	@Override
@@ -274,13 +263,10 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitFunction(NodeFunction nodeFunction) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitGroup(NodeGroup nodeGroup) {
-		// TODO Auto-generated method stub
 		this.visitNode(nodeGroup);
 	}
 
@@ -329,14 +315,10 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitInto(NodeInto nodeInto) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitJoin(NodeJoin nodeJoin) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -351,26 +333,18 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitNodeUplus(NodeUplus nodeUplus) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitNodeValues(NodeValues nodeValues) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitNot(NodeNot nodeNot) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitNull(NodeNull nodeNull) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -385,13 +359,11 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitOrder(NodeOrder nodeOrder) {
-		// TODO Auto-generated method stub
 		this.visitNode(nodeOrder);
 	}
 
 	@Override
 	public void visitOrderBy(NodeOrderBy nodeOrderBy) {
-		// TODO Auto-generated method stub
 		this.visitNode(nodeOrderBy);
 	}
 
@@ -402,8 +374,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitPrimary(NodePrimaryKey nodePrimaryKey) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -533,25 +503,27 @@ public class SemanticVisitor extends Visitor {
 								.size(); i++) {
 							if (nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
 									.get(i) instanceof NodeColumn) {
-								nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+								if (((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
+										.get(i).getChildren().get(0).getChildren().get(0)).getValue()
+												.equalsIgnoreCase(columnAlias)) {
+									nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
+								} else {
+									throw new AmbiguousColumnException(
+											((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0)
+													.getChildren().get(i).getChildren().get(0).getChildren().get(0))
+															.getValue());
+								}
 							}
 						}
 					}
 				}
 			}
-			for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
-				Node n = nodeSelect.getChildren().get(i);
-				if (n != null) {
-					n.accept(this);
-				}
-			}
+			this.visitNode(nodeSelect);
 		}
 	}
 
 	@Override
 	public void visitSelectExpression(NodeSelectExpression nodeSelectExpression) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -565,14 +537,10 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitTable(NodeTableExpression nodeTable) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitTableAlias(NodeTableAlias nodeTableAlias) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -586,21 +554,17 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitUminus(NodeUminus nodeUminus) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void visitUpdate(NodeUpdate nodeUpdate) {
-		// TODO Auto-generated method stub
-		this.testTable(this.getNodeTable(nodeUpdate));
+		Node table = nodeUpdate.getChildren().get(0);
+		this.testTable(table);
 		this.visitNode(nodeUpdate);
 	}
 
 	@Override
 	public void visitUsing(NodeUsing nodeUsing) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -610,8 +574,6 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitWildcard(NodeWildcard nodeWildcard) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
