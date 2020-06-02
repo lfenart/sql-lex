@@ -192,7 +192,6 @@ public class SemanticVisitor extends Visitor {
 			if (nodeType.getSize() != null) {
 				c.setTypeSize(nodeType.getSize());
 			}
-
 			// probablement � modifier
 			if (n.getChildren().size() > 2) {
 				c.setNotNull(true);
@@ -222,8 +221,9 @@ public class SemanticVisitor extends Visitor {
 					verifiedPrimaryKey = true;
 				}
 			}
-			if (!verifiedPrimaryKey)
+			if (!verifiedPrimaryKey) {
 				throw new ColumnNotFoundException(primaryKeyValue);
+			}
 		}
 		this.tables.put(tableName, table);
 	}
