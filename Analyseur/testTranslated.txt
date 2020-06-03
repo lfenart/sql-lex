@@ -6,13 +6,15 @@ DROP TABLE Etudiant;
 SELECT numero FROM Etudiant where 1 = numero group by numero order by numero ;
 UPDATE Etudiant SET numero = 1 WHERE numero = 1;
 DELETE FROM Etudiant WHERE numero = 1;
-Select numero from Etudiant where 1 = Etudiant.numero;
+Select numeuro from Etudiant where 1 = Etudiant.numero;
 SELECT * from Etudiant;
 SELECT numero as num FROM Etudiant;
 SELECT COUNT(numero) FROM Etudiant;
 SELECT * from Etudiant as e inner join Etudiant2 on 1;
 SELECT e.numero from Etudiant as e where e.nom = 'Quentin';
-SELECT e.nom as x from Etudiant as e where x = 'Quentin';
+SELECT e.nom as x from Etudiant as e where x = 'Quentin' ;
+
+
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);
@@ -24,4 +26,4 @@ SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 // CREATE TABLE Etudiant3 (numero INT, numero VARCHAR(16));
 // INSERT INTO Etudiant (numero,nom) VALUES('2', 'Quentin');
 // SELECT nom from Etudiant2 INNER JOIN Etudiant ON 1 = numero;
-DELETE FROM toto;
+// DELETE FROM toto;

@@ -90,6 +90,10 @@ public class SemanticVisitor extends Visitor {
 		}
 		return table;
 	}
+	
+	public String getName(Node n) {
+		return ((NodeText) n.getChildren().get(0).getChildren().get(0)).getValue();
+	}
 
 	@Override
 	public void visitAs(NodeAs nodeAs) {
@@ -112,9 +116,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitColumn(NodeColumn nodeColumn) {
 		this.type = null;
-		Node nodeColumnName = nodeColumn.getChildren().get(0);
-		NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
-		String columnName = nodeText.getValue();
+		String columnName = this.getName(nodeColumn);
 		Node tableAlias = nodeColumn.getChildren().get(1);
 		if (tableAlias == null) { // pas d'alias
 			boolean occurence = false;
@@ -172,17 +174,14 @@ public class SemanticVisitor extends Visitor {
 
 	@Override
 	public void visitCreate(NodeCreate nodeCreate) {
-		Node nodeTable = nodeCreate.getChildren().get(0);
-		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
-		String tableName = nodeTableName.getValue();
+		String tableName = this.getName(nodeCreate);
 		if (tables.containsKey(tableName)) {
 			throw new DuplicateTableException(tableName);
 		}
 		List<Column> columns = new ArrayList<Column>();
 		List<Node> nodeColumns = nodeCreate.getChildren().get(1).getChildren();
 		for (Node n : nodeColumns) {
-			String columnName = ((NodeText) n.getChildren().get(0).getChildren().get(0).getChildren().get(0))
-					.getValue();
+			String columnName = this.getName(n.getChildren().get(0));
 			Column c = new Column(columnName);
 			if (columns.contains(c)) {
 				throw new DuplicateColumnException(columnName);
@@ -210,14 +209,10 @@ public class SemanticVisitor extends Visitor {
 			}
 		}
 		if (primaryKey != null) {
-			primaryKeyValue = ((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0))
-					.getValue();
+			primaryKeyValue = this.getName(primaryKey.getChildren().get(0));
 			for (Column c : columns) {
-				if (((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue()
-						.equalsIgnoreCase(c.getName())) {
-					table.setPrimaryKey(
-							((NodeText) primaryKey.getChildren().get(0).getChildren().get(0).getChildren().get(0))
-									.getValue());
+				if (primaryKeyValue.equalsIgnoreCase(c.getName())) {
+					table.setPrimaryKey(primaryKeyValue);
 					verifiedPrimaryKey = true;
 				}
 			}
@@ -273,15 +268,12 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitInsert(NodeInsert nodeInsert) {
 		this.currentTables = new HashMap<String, Table>();
-		String tableName = ((NodeText) nodeInsert.getChildren().get(0).getChildren().get(0).getChildren().get(0))
-				.getValue();
+		String tableName = this.getName(nodeInsert.getChildren().get(0));
 		Table table = this.tables.get(tableName);
 		List<Node> columns = nodeInsert.getChildren().get(1).getChildren();
 		List<Type> columnType = new ArrayList<>();
 		for (Node column : columns) {
-			Node nodeColumnName = column.getChildren().get(0);
-			NodeText nodeText = (NodeText) nodeColumnName.getChildren().get(0);
-			String columnName = nodeText.getValue();
+			String columnName = this.getName(column);
 			if (!table.containsColumn(columnName)) {
 				throw new ColumnNotFoundException(columnName);
 			}
@@ -391,8 +383,7 @@ public class SemanticVisitor extends Visitor {
 		this.currentTables = new HashMap<String, Table>();
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
-		NodeText nodeTableName = (NodeText) nodeTable.getChildren().get(0);
-		String tableName = nodeTableName.getValue();
+		String tableName = this.getName(nodeFrom);
 		Table table = this.tables.get(tableName);
 		if (table == null) {
 			throw new TableNotFoundException(tableName);
@@ -407,9 +398,7 @@ public class SemanticVisitor extends Visitor {
 		this.currentTables.put(tableAlias, table);
 		Node nodeJoin = nodeTable.getChildren().get(2);
 		if (nodeJoin != null) {
-			nodeTable = nodeJoin.getChildren().get(0);
-			nodeTableName = (NodeText) nodeTable.getChildren().get(0);
-			tableName = nodeTableName.getValue();
+			tableName = this.getName(nodeJoin);
 			table = this.tables.get(tableName);
 			if (table == null) {
 				throw new TableNotFoundException(tableName);
@@ -417,9 +406,7 @@ public class SemanticVisitor extends Visitor {
 			tableAlias = tableName;
 			nodeAs = nodeTable.getChildren().get(1);
 			if (nodeAs != null) {
-				Node nodeTableAlias = nodeAs.getChildren().get(0);
-				NodeText nodeText = (NodeText) nodeTableAlias.getChildren().get(0);
-				tableAlias = nodeText.getValue();
+				tableAlias = this.getName(nodeAs);
 			}
 			this.currentTables.put(tableAlias, table);
 			Node nodeOn = nodeJoin.getChildren().get(1);
@@ -452,8 +439,8 @@ public class SemanticVisitor extends Visitor {
 			this.visitSelect(nodeSelect);
 		} else if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0) instanceof NodeFunction) {
 			boolean occurence = false;
-			String columnName = ((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0)
-					.getChildren().get(0).getChildren().get(0).getChildren().get(0)).getValue();
+			Node column = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0);
+			String columnName = this.getName(column);
 			for (Table t : this.currentTables.values()) {
 				if (t.containsColumn(columnName)) {
 					if (occurence) {
@@ -470,7 +457,7 @@ public class SemanticVisitor extends Visitor {
 			for (Node expression : selectExpressions) {
 				boolean occurence = false;
 				Node column = expression.getChildren().get(0);
-				String columnName = ((NodeText) column.getChildren().get(0).getChildren().get(0)).getValue();
+				String columnName = this.getName(column);
 				Node alias = column.getChildren().get(1);
 				if (alias == null) {
 					for (Table t : this.currentTables.values()) {
@@ -495,24 +482,17 @@ public class SemanticVisitor extends Visitor {
 			}
 			if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().size() > 1) {
 				if (nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(1) instanceof NodeAs) {
-					String columnAlias = (((NodeText) nodeSelect.getChildren().get(0).getChildren().get(0).getChildren()
-							.get(1).getChildren().get(0).getChildren().get(0)).getValue());
-					Node column = nodeSelect.getChildren().get(0).getChildren().get(0).getChildren().get(0);
-					if (nodeSelect.getChildren().get(2) != null) {
-						for (int i = 0; i < nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
-								.size(); i++) {
-							if (nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
-									.get(i) instanceof NodeColumn) {
-								if (((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0).getChildren()
-										.get(i).getChildren().get(0).getChildren().get(0)).getValue()
-												.equalsIgnoreCase(columnAlias)) {
-									nodeSelect.getChildren().get(2).getChildren().get(0).getChildren().set(i, column);
-								} else {
-									throw new AmbiguousColumnException(
-											((NodeText) nodeSelect.getChildren().get(2).getChildren().get(0)
-													.getChildren().get(i).getChildren().get(0).getChildren().get(0))
-															.getValue());
-								}
+					Node selectedExpression = nodeSelect.getChildren().get(0).getChildren().get(0);
+					String columnAlias = this.getName(selectedExpression.getChildren().get(1));
+					Node column = selectedExpression.getChildren().get(0);
+					for(int i=2;i<nodeSelect.getChildren().size();i++) {
+						if (nodeSelect.getChildren().get(i) != null) {
+							Node whereColumn = nodeSelect.getChildren().get(i).getChildren().get(0).getChildren().get(0);
+							if (this.getName(whereColumn).equalsIgnoreCase(columnAlias)) {
+								nodeSelect.getChildren().get(i).getChildren().get(0).getChildren().set(0, column);
+
+							} else if(!(this.getName(whereColumn).equalsIgnoreCase((this.getName(column))))){
+								throw new AmbiguousColumnException(this.getName(whereColumn));
 							}
 						}
 					}
