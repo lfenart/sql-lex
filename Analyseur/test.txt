@@ -12,9 +12,9 @@ SELECT numero as num FROM Etudiant;
 SELECT COUNT(numero) FROM Etudiant;
 SELECT * from Etudiant as e inner join Etudiant2 on 1;
 SELECT e.numero from Etudiant as e where e.nom = 'Quentin';
-SELECT e.nom as x from Etudiant as e where x = 'Quentin' ;
-
-
+SELECT e.nom as x from Etudiant as e where x = 'Quentin';
+SELECT e.numero, e.nom as x from Etudiant as e where x = 'Quentin';
+SELECT e.numero, nom as x from Etudiant as e INNER JOIN Etudiant2 on 1 where x = 'Quentin';
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);
