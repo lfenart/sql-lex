@@ -70,7 +70,8 @@ public class SemanticVisitor extends Visitor {
 	}
 
 	private Map<String, Table> tables = new HashMap<>();
-	private Map<String, Table> currentTables = new HashMap<>();
+	private Map<String, Table> currentTables;
+	private Map<String, Type> currentColumnAliases;
 	private Type type;
 
 	private void visitBinaryOperator(Node n) {
@@ -139,7 +140,10 @@ public class SemanticVisitor extends Visitor {
 				}
 			}
 			if (!occurence) {
-				throw new ColumnNotFoundException(columnName);
+				this.type = this.currentColumnAliases.get(columnName);
+				if (this.type == null) {
+					throw new ColumnNotFoundException(columnName);
+				}
 			}
 		} else {
 			Table t = this.currentTables.get(((NodeText) tableAlias.getChildren().get(0)).getValue());
@@ -381,6 +385,7 @@ public class SemanticVisitor extends Visitor {
 	@Override
 	public void visitSelect(NodeSelect nodeSelect) {
 		this.currentTables = new HashMap<String, Table>();
+		this.currentColumnAliases = new HashMap<String, Type>();
 		Node nodeSelectExpressions = nodeSelect.getChildren().get(0);
 		Node nodeFrom = nodeSelect.getChildren().get(1);
 		Node nodeTable = nodeFrom.getChildren().get(0);
@@ -470,15 +475,16 @@ public class SemanticVisitor extends Visitor {
 								throw new AmbiguousColumnException(columnName);
 							}
 							occurence = true;
+							table = t;
 						}
 					}
 				} else {
 					String name = ((NodeText) alias.getChildren().get(0)).getValue();
-					Table t = this.currentTables.get(name);
-					if (t == null) {
+					table = this.currentTables.get(name);
+					if (table == null) {
 						throw new TableNotFoundException(name);
 					}
-					occurence = t.containsColumn(columnName);
+					occurence = table.containsColumn(columnName);
 				}
 				if (!occurence) { // La colonne n'existe dans aucune des tables
 					throw new ColumnNotFoundException(columnName);
@@ -486,17 +492,14 @@ public class SemanticVisitor extends Visitor {
 				if (expression.getChildren().size() > 1) {
 					if (expression.getChildren().get(1) instanceof NodeAs) {
 						String columnAlias = this.getName(expression.getChildren().get(1));
-						for (int i = 2; i < nodeSelect.getChildren().size(); i++) {
-							if (nodeSelect.getChildren().get(i) != null) {
-								Node whereColumn = nodeSelect.getChildren().get(i).getChildren().get(0).getChildren()
-										.get(0);
-								if (this.getName(whereColumn).equalsIgnoreCase(columnAlias)) {
-									nodeSelect.getChildren().get(i).getChildren().get(0).getChildren().set(0, column);
-
-								} else if (!(this.getName(whereColumn).equalsIgnoreCase((this.getName(column))))) {
-									throw new AmbiguousColumnException(this.getName(whereColumn));
-								}
-							}
+						int index = table.getColumns().indexOf(new Column(columnName));
+						switch (table.getColumns().get(index).getType()) {
+						case "CHAR":
+						case "VARCHAR":
+							this.currentColumnAliases.put(columnAlias, Type.TEXT);
+							break;
+						default:
+							this.currentColumnAliases.put(columnAlias, Type.NUMBER);
 						}
 					}
 				}

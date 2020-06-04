@@ -15,6 +15,7 @@ SELECT e.numero from Etudiant as e where e.nom = 'Quentin';
 SELECT e.nom as x from Etudiant as e where x = 'Quentin';
 SELECT e.numero, e.nom as x from Etudiant as e where x = 'Quentin';
 SELECT e.numero, nom as x from Etudiant as e INNER JOIN Etudiant2 on 1 where x = 'Quentin';
+SELECT e.numero as x from Etudiant as e where 2 * (x + 1) = 10;
 
 // Erreurs
 // CREATE TABLE Etudiant (numero INT);

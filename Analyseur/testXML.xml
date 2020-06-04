@@ -380,11 +380,8 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="nom" />
+<text value="x" />
 </columnName>
-<tableAlias>
-<text value="e" />
-</tableAlias>
 </column>
 <text value="Quentin" />
 </EQUAL>
@@ -430,11 +427,8 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="nom" />
+<text value="x" />
 </columnName>
-<tableAlias>
-<text value="e" />
-</tableAlias>
 </column>
 <text value="Quentin" />
 </EQUAL>
@@ -485,10 +479,53 @@
 <EQUAL>
 <column>
 <columnName>
-<text value="nom" />
+<text value="x" />
 </columnName>
 </column>
 <text value="Quentin" />
+</EQUAL>
+</where>
+</select>
+<select>
+<selectExpression>
+<column>
+<columnName>
+<text value="numero" />
+</columnName>
+<tableAlias>
+<text value="e" />
+</tableAlias>
+</column>
+<as>
+<columnAlias>
+<text value="x" />
+</columnAlias>
+</as>
+</selectExpression>
+<from>
+<table>
+<text value="Etudiant" />
+<as>
+<table>
+<text value="e" />
+</table>
+</as>
+</table>
+</from>
+<where>
+<EQUAL>
+<mult>
+<integer value="2" />
+<plus>
+<column>
+<columnName>
+<text value="x" />
+</columnName>
+</column>
+<integer value="1" />
+</plus>
+</mult>
+<integer value="10" />
 </EQUAL>
 </where>
 </select>
